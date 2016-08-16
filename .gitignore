@@ -2,7 +2,7 @@
 .classpath
 .DS_Store
 .settings
-.properties
+*.properties
 /build/
 /src/main/webapp/
 /target

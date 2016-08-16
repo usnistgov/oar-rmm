@@ -26,7 +26,7 @@ import gov.nist.mml.domain.nestedpod.Publisher;
 
 public class Record {
 
-//@Id private String id;
+	@Id private String id;
 
 	@JsonProperty("@type")
 	private @TextIndexed String type;
@@ -44,7 +44,7 @@ public class Record {
 	private @TextIndexed ContactPoint contactPoint;
 	private @TextIndexed String[] language;
 	private @TextIndexed String license;
-	@Id private @TextIndexed String identifier;
+	private @TextIndexed String identifier;
 	
 	public String getType() {
 		return type;
