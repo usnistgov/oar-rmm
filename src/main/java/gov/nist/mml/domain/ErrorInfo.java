@@ -10,46 +10,19 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.domain.nestedpod;
+package gov.nist.mml.domain;
 
-import org.springframework.data.annotation.Id;
 
-public class Distribution{
-	@Id private String id;
-	//private String downloadUrl;
-	private String mediaType;
-	private String description;
-	private String accessURL;
+public class ErrorInfo {
+    public final String url;
+    public final String ex;
+    public final String message;
+    public final String httpStatus;
 
-	public String getDescription(){
-		return description;
-	}
-	
-	public void setDescription(String desc){
-		description = desc;
-	}
-	
-//	public String getdownloadUrl(){
-//		return downloadUrl;
-//	}
-//	
-//	public void setDownloadUrl(String durl){
-//		downloadUrl = durl;
-//	}
-	
-	public String getmediaType(){
-		return mediaType;
-	}
-	
-	public void setMediaType(String mtype){
-		this.mediaType = mtype;
-	}
-	
-	public String getAccessURL(){
-		return accessURL;
-	}
-	
-	public void setAccessURL(String durl){
-		accessURL = durl;
-	}
+    public ErrorInfo(String url, Exception ex, String message, String httpStatus) {
+        this.url = url;
+        this.ex = ex.getLocalizedMessage();
+        this.message = message;
+        this.httpStatus = httpStatus;
+    }
 }

@@ -45,6 +45,7 @@ public class Record {
 	private @TextIndexed String[] language;
 	private @TextIndexed String license;
 	private @TextIndexed String identifier;
+	private @TextIndexed String[] theme;
 	
 	public String getType() {
 		return type;
@@ -84,19 +85,9 @@ public class Record {
 		return accessLevel;
 	}
 
-	public void setAccessLevele(String accessLevel) {
+	public void setAccessLevel(String accessLevel) {
 		this.accessLevel = accessLevel;
 	}
-	
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String accessLevel) {
-		this.accessLevel = accessLevel;
-	}
-	
-	
 	public Distribution[] getDistribution() {
 		return distribution;
 	}
@@ -142,6 +133,13 @@ public class Record {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description ) {
+		this.description = description;
+	}
 	
 	public ContactPoint getContactPoint() {
 		return contactPoint;
@@ -171,6 +169,12 @@ public class Record {
 		this.identifier = identifier;
 	}
 	
-	
+	public String[] getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String[] theme) {
+		this.theme = theme;
+	}
 }
 

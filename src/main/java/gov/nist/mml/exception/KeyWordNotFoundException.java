@@ -10,46 +10,17 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.domain.nestedpod;
+package gov.nist.mml.exception;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class Distribution{
-	@Id private String id;
-	//private String downloadUrl;
-	private String mediaType;
-	private String description;
-	private String accessURL;
+/**
+ * @author dsn1
+ *
+ */
+@ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Resource Not Found") //404
+public class KeyWordNotFoundException extends Exception {
 
-	public String getDescription(){
-		return description;
-	}
 	
-	public void setDescription(String desc){
-		description = desc;
-	}
-	
-//	public String getdownloadUrl(){
-//		return downloadUrl;
-//	}
-//	
-//	public void setDownloadUrl(String durl){
-//		downloadUrl = durl;
-//	}
-	
-	public String getmediaType(){
-		return mediaType;
-	}
-	
-	public void setMediaType(String mtype){
-		this.mediaType = mtype;
-	}
-	
-	public String getAccessURL(){
-		return accessURL;
-	}
-	
-	public void setAccessURL(String durl){
-		accessURL = durl;
-	}
 }

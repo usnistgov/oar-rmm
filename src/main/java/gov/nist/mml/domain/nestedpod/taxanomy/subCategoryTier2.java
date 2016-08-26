@@ -10,46 +10,24 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.domain.nestedpod;
+package gov.nist.mml.domain.nestedpod.taxanomy;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 
-public class Distribution{
+/**
+ * @author dsn1
+ *
+ */
+public class subCategoryTier2 {
+
 	@Id private String id;
-	//private String downloadUrl;
-	private String mediaType;
-	private String description;
-	private String accessURL;
-
-	public String getDescription(){
-		return description;
+	private @TextIndexed String researchCategory;
+	public String getresearchCategory(){
+		return researchCategory;
 	}
 	
-	public void setDescription(String desc){
-		description = desc;
-	}
-	
-//	public String getdownloadUrl(){
-//		return downloadUrl;
-//	}
-//	
-//	public void setDownloadUrl(String durl){
-//		downloadUrl = durl;
-//	}
-	
-	public String getmediaType(){
-		return mediaType;
-	}
-	
-	public void setMediaType(String mtype){
-		this.mediaType = mtype;
-	}
-	
-	public String getAccessURL(){
-		return accessURL;
-	}
-	
-	public void setAccessURL(String durl){
-		accessURL = durl;
+	public void setresearchCategory(String researchCategory){
+		this.researchCategory = researchCategory;
 	}
 }

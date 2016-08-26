@@ -1,3 +1,4 @@
+
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of
  * the Federal Government in the course of their official duties. Pursuant to title 17 Section 105
@@ -10,49 +11,42 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.controller;
+package gov.nist.mml.controller.Taxanomy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.nist.mml.domain.Record;
-import gov.nist.mml.repositories.RecordRepository;
+import com.google.common.net.MediaType;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import gov.nist.mml.repositories.TaxanomyRepository;
+import gov.nist.mml.domain.Taxanomy;
 @RestController
-@Api(value = "Test api to Delete data from database", tags = "Delete API")
-public class DeleteController {
+@Api(value = "Test api for inserting data in the POD", tags = "Save API")
+public class InsertTaxanomyController {
 	
-	private Logger logger = LoggerFactory.getLogger(SearchController.class);
+	private Logger logger = LoggerFactory.getLogger(InsertTaxanomyController.class);
 
 	@Autowired
-    private RecordRepository recordRepository;
+    private TaxanomyRepository TaxanomyRepository;
 
 	@Autowired
-    public DeleteController(RecordRepository repo) { 
-        recordRepository = repo;
+    public InsertTaxanomyController(TaxanomyRepository repo) { 
+        TaxanomyRepository = repo;
     }
 	
-	@ApiOperation(value = "Delete an entry from POD list",nickname = "deleteOne")
-	@RequestMapping(value = "/records/delete", method = RequestMethod.GET, produces = "application/json")
-	public String deleteRecord(@RequestParam String identifier) {
+	@ApiOperation(value = "Insert new entery in the database.",nickname = "save one")
+	@RequestMapping(value = "/taxanomy/save", method = RequestMethod.POST, produces = "application/json")
+	public Taxanomy savePod(@RequestBody Taxanomy Taxanomy) {
 	      //do something fancy
-	     //recordRepository.delete(identifier);
-		 return "{\"Messgae\":\" Operation not allowed.\"}";
-	}
-	
-	@ApiOperation(value = "Delete all entries from POD list",nickname = "deleteAll")
-	@RequestMapping(value = "/records/deleteall", method = RequestMethod.GET, produces = "application/json")
-	public String deleteAll() {
-	      //do something fancy
-	      //recordRepository.deleteAll();
-	      return "{\"Messgae\":\" Operation not allowed.\"}";
+	      return TaxanomyRepository.save(Taxanomy);
 	}
 }

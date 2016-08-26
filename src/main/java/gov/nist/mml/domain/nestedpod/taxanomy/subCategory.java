@@ -10,46 +10,38 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.domain.nestedpod;
+package gov.nist.mml.domain.nestedpod.taxanomy;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 
-public class Distribution{
-	@Id private String id;
-	//private String downloadUrl;
-	private String mediaType;
-	private String description;
-	private String accessURL;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	public String getDescription(){
-		return description;
+/**
+ * @author dsn1
+ *
+ */
+public class subCategory {
+	
+//@Id private String id;
+	
+	private @TextIndexed String subResearchCategory;
+//	@JsonProperty("subCategories")
+//	private @TextIndexed subCategoryTier2[] subCategories;
+	
+	public String getsubResearchCategory(){
+		return subResearchCategory;
 	}
 	
-	public void setDescription(String desc){
-		description = desc;
+	public void setsubResearchCategory(String subResearchCategory){
+		this.subResearchCategory = subResearchCategory;
 	}
 	
-//	public String getdownloadUrl(){
-//		return downloadUrl;
+//	public subCategoryTier2[] getSubCategoryTier2() {
+//		return subCategories;
 //	}
-//	
-//	public void setDownloadUrl(String durl){
-//		downloadUrl = durl;
+//	public void setSubCategoryTier2(subCategoryTier2[] subCategories) {
+//		this.subCategories = subCategories;
 //	}
-	
-	public String getmediaType(){
-		return mediaType;
-	}
-	
-	public void setMediaType(String mtype){
-		this.mediaType = mtype;
-	}
-	
-	public String getAccessURL(){
-		return accessURL;
-	}
-	
-	public void setAccessURL(String durl){
-		accessURL = durl;
-	}
+
 }

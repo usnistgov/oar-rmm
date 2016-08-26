@@ -27,6 +27,13 @@ import gov.nist.mml.domain.nestedpod.ContactPoint;
 import gov.nist.mml.domain.nestedpod.Distribution;
 import gov.nist.mml.domain.nestedpod.Publisher;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 
 @RepositoryRestResource
 public interface RecordRepository extends MongoRepository<Record, String> {
@@ -49,28 +56,43 @@ public interface RecordRepository extends MongoRepository<Record, String> {
 	List<Record> findByLicense(@Param("licence") String licence);
 	
 	//Generic Search
-	List<Record> findAllBy(TextCriteria criteria);
-    List<Record> findTitleTypeBy(TextCriteria criteria); // Need to do more research for multiple field search
+	List<Record> findAllBy(TextCriteria criteria,Pageable pageable);
+	List<Record> findAllBy(Criteria criteria);
+	
+	//Get all entries with paginationa and sorting
+	List<Record> findAllBy(Pageable pageable);
+	
+	//Get Pages using criteria
+	Page<Record> findAll(Pageable pageable);
+	
+    
+	List<Record> findByTitleContainingIgnoreCase(String title);
+    List<Record> findByTypeContainingIgnoreCase(String type);
+    List<Record> findByKeywordContainingIgnoreCase(String keyword);
+    List<Record> findByPublisherContainingIgnoreCase(String publisher);
+	List<Record> findByReferencesContainingIgnoreCase(String references);
+	List<Record> findByLandingPageContainingIgnoreCase(String landingpage);
+	List<Record> findByAccessLevelContainingIgnoreCase(String accessLevel);
+	List<Record> findByDistributionContainingIgnoreCase(String distribution);
+	List<Record> findByModifiedContainingIgnoreCase(String modified);
+	List<Record> findByDescriptionContainingIgnoreCase(String dscription);
+	List<Record> findByContactPointContainingIgnoreCase(String contactPoint);
 
+	
+	List<Record> findByBureauCodeContainingIgnoreCase(String bureau);
+		List<Record> findByLanguageContainingIgnoreCase(String language);
+	List<Record> findByLicenseContainingIgnoreCase(String license);
+	List<Record> findByProgramCodeContainingIgnoreCase(String programCode);
+
+    
+    //Does not work
+    List<Record> findAllBy(Query query);
+    
     //Extra methods to create more advanced search
     //These are called from SearchController
-	List<Record> findByTitleContaining(String title);
-	
+    List<Record> findTitleBy(TextCriteria criteria);
+	List<Record> findTitleTypeBy(TextCriteria criteria); // Need to do more research for multiple field search
+
    
-    List<Record> findByTypeContaining(String type);
-    List<Record> findByKeywordContaining(String keyword);
-	List<Record> findByProgramCodeContaining(String programCode);
-	List<Record> findByLandingPageContaining(String landingpage);
-	List<Record> findByAccessLevelContaining(String accessLevel);
-	List<Record> findByDistributionContaining(String distribution);
-	List<Record> findByModifiedContaining(String modified);
-	List<Record> findByPublisherContaining(String publisher);
-	List<Record> findByReferencesContaining(String references);
-	List<Record> findByBureauCodeContaining(String bureau);
-	List<Record> findByDescriptionContaining(String dscription);
-	List<Record> findByContactPointContaining(String contactPoint);
-	List<Record> findByLanguageContaining(String language);
-	List<Record> findByLicenseContaining(String license);
-   
-}
+   }
 

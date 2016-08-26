@@ -19,11 +19,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ResourceNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = -3332292346834265371L;
-
+private String requestUrl = "";
 	public ResourceNotFoundException(int id){
 		super("EmployeeNotFoundException with id="+id);
 	}
 	public ResourceNotFoundException(){
 		super("Resource you are looking for is not available.");
+	}
+	public ResourceNotFoundException(String requestUrl){
+		
+		super("Resource you are looking for is not available.");
+		this.setRequestUrl(requestUrl);
+	}
+	
+	public String getRequestUrl(){
+		return this.requestUrl;
+	}
+	public void setRequestUrl(String url){
+		this.requestUrl = url;
 	}
 }
