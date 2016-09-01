@@ -43,33 +43,36 @@ public class GlobalExceptionHandler {
 	  @ResponseBody
 	  public ErrorInfo  myError(Exception exception) {
 	    logger.info("----Caught IOException----");
-	    ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"General Exception",HttpStatus.BAD_REQUEST.toString());
+	    ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"General Exception",HttpStatus.CONFLICT.toString());
         return errInfo;
 	  }
 	  
 	  @ResponseStatus(HttpStatus.BAD_REQUEST)
 	  @ExceptionHandler(IllegalArgumentException.class)
 	  @ResponseBody
-	  public String Illegal(IllegalArgumentException exception) {
+	  public ErrorInfo Illegal(IllegalArgumentException exception) {
             logger.info("----Caught KeywordNotFoundException----");
-            return "This is the test of error"+exception.getMessage();
+            ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"IllegalArgumentException",HttpStatus.BAD_REQUEST.toString());
+            return errInfo;
 	  }
 	  
 	  @ResponseStatus(HttpStatus.NOT_FOUND)
 	  @ExceptionHandler(KeyWordNotFoundException.class)
 	  @ResponseBody
-	  public String notFound(Exception exception) {
+	  public ErrorInfo notFound(Exception exception) {
             logger.info("----Caught KeywordNotFoundException----");
-            return exception.getMessage();
+            ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
+            return errInfo;
 	  }
 	  
 	  
 	  @ResponseStatus(HttpStatus.NOT_FOUND)
 	  @ExceptionHandler(ResourceNotFoundException.class)
 	  @ResponseBody
-	  public String ResourceNotFound(ResourceNotFoundException exception) {
+	  public ErrorInfo ResourceNotFound(ResourceNotFoundException exception) {
             logger.info("----Caught KeywordNotFoundException----");
-            return exception.getMessage();
+            ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
+            return errInfo;
 	  }
 	  
 	  @ResponseStatus(HttpStatus.BAD_REQUEST)

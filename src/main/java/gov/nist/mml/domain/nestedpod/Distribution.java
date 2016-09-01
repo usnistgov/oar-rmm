@@ -13,36 +13,30 @@
 package gov.nist.mml.domain.nestedpod;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Distribution{
 	@Id private String id;
-	//private String downloadUrl;
-	private String mediaType;
-	private String description;
-	private String accessURL;
+	@JsonProperty("@type")
+	private @TextIndexed String type;
+	private @TextIndexed String accessURL;
+	private @TextIndexed String conformsTo;
+	private @TextIndexed String describedBy; //url
+	private @TextIndexed String describedByType;
+	private @TextIndexed String description;
+	private @TextIndexed String downloadURL;
+	private @TextIndexed String mediaType;
+	private @TextIndexed String format;
+	private @TextIndexed String title;
+	
+	public String getType() {
+		return type;
+	}
 
-	public String getDescription(){
-		return description;
-	}
-	
-	public void setDescription(String desc){
-		description = desc;
-	}
-	
-//	public String getdownloadUrl(){
-//		return downloadUrl;
-//	}
-//	
-//	public void setDownloadUrl(String durl){
-//		downloadUrl = durl;
-//	}
-	
-	public String getmediaType(){
-		return mediaType;
-	}
-	
-	public void setMediaType(String mtype){
-		this.mediaType = mtype;
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	public String getAccessURL(){
@@ -52,4 +46,70 @@ public class Distribution{
 	public void setAccessURL(String durl){
 		accessURL = durl;
 	}
+	
+	public String getConformsTo() {
+		return conformsTo;
+	}
+
+	public void setConformsTo(String conformsTo) {
+		this.conformsTo = conformsTo;
+	}
+	
+	public String getDescribedBy() {
+		return describedBy;
+	}
+
+	public void setDescribedBy(String describedBy) {
+		this.describedBy = describedBy;
+	}
+	
+
+	public String getDescribedByType() {
+		return describedByType;
+	}
+
+	public void setDescribedByType(String describedByType) {
+		this.describedByType = describedByType;
+	}
+	
+	public String getDescription(){
+		return description;
+	}
+	
+	public void setDescription(String desc){
+		description = desc;
+	}
+	
+	public String getdownloadURL(){
+		return downloadURL;
+	}
+	
+	public void setDownloadURL(String durl){
+		downloadURL = durl;
+	}
+	
+	public String getmediaType(){
+		return mediaType;
+	}
+	
+	public void setMediaType(String mtype){
+		this.mediaType = mtype;
+	}
+	
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	
 }

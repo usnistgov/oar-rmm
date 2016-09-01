@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,7 +57,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import static org.springframework.data.mongodb.core.query.Query.query;
 @RestController
-@Api(value = "Test api for searching all data", tags = "Search API")
+@Api(value = "Test api for searching EDI/PDL data", tags = "Search API")
 public class SearchController {
 	
 	private Logger logger = LoggerFactory.getLogger(SearchController.class);
@@ -164,6 +165,10 @@ public class SearchController {
 			throw new IOException("Check all the request parameters.");
     }
 	
+    
+    private void parseSearchPhrase(){
+    	
+    }
 //	    @ApiOperation(value = "Search All the entries using text search.",nickname = "seatrchbyphrase")
 //		@RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
 //		public List<Record> SearchByText (@RequestParam String searchPhrase,@RequestParam int page, @RequestParam int pagesize ) {
@@ -174,16 +179,23 @@ public class SearchController {
 //			return RecordRepository.findAllBy(criteria,new PageRequest(page,pagesize,Sort.Direction.DESC,"title"));
 //		}
 		
-		@RequestMapping(value = {"/records/searchbyTitle"}, method = RequestMethod.GET, produces="application/json")
-		public List<Record> SearchByTitle (@RequestParam String title) {
-	    
-			logger.info("Requested searchbyTitle:"+title);
-			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(title);
-			//Criteria cr1 = Criteria.where("title").regex(Pattern.compile(title, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-			
-			//return RecordRepository.findTitleBy(criteria);
-			return RecordRepository.findByTitleContainingIgnoreCase(title);
-	    }
+    @RequestMapping(value = {"/records/search/{id}"}, method = RequestMethod.GET, produces="application/json")
+	public List<Record> SearchById (@PathVariable String id,Pageable p){
+			return RecordRepository.findByIdentifier(id, p);
+	}
+    
+//    
+//    
+//		@RequestMapping(value = {"/records/searchbyTitle"}, method = RequestMethod.GET, produces="application/json")
+//		public List<Record> SearchByTitle (@RequestParam String title) {
+//	    
+//			logger.info("Requested searchbyTitle:"+title);
+//			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(title);
+//			//Criteria cr1 = Criteria.where("title").regex(Pattern.compile(title, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+//			
+//			//return RecordRepository.findTitleBy(criteria);
+//			return RecordRepository.findByTitleContainingIgnoreCase(title);
+//	    }
 		
 		@RequestMapping(value = {"/records/searchbyType"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByType(@RequestParam String type) {

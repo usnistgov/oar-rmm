@@ -19,6 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -54,14 +55,12 @@ public class SearchTaxanomyController {
        taxRepository = repo;
     }
 	
-	
-	
 	@RequestMapping(value = {"/taxanomy"}, method = RequestMethod.GET, produces="application/json")
-	public List<Taxanomy> SearchAll (Pageable p) {
+	public Page<Taxanomy> SearchAll (Pageable p) {
     
 		logger.info("Requested searchAll:");
 		
-		List<Taxanomy> taxEntries = (List<Taxanomy>) taxRepository.findAll(p);
+		Page<Taxanomy> taxEntries =  taxRepository.findAll(p);
     	return taxEntries;
     }
 	

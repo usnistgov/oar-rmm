@@ -30,7 +30,7 @@ public class Taxanomy {
 	@Id private String id;
 	private @TextIndexed String keyIdentifier;
 	private @TextIndexed String researchCategory;
-	//private @TextIndexed subCategory[] subCategories;
+	private @TextIndexed subCategory[] subCategories;
 
 	
 	public String getresearchCategory() {
@@ -41,13 +41,13 @@ public class Taxanomy {
 	}
 	
 	
-//	public subCategory[] getsubCategories() {
-//		return this.subCategories;
-//	}
-//	public void setSubCategories(subCategory[] subcategories) {
-//		this.subCategories = subcategories;
-//	}
-//	
+	public subCategory[] getsubCategories() {
+		return this.subCategories;
+	}
+	public void setSubCategories(subCategory[] subcategories) {
+		this.subCategories = subcategories;
+	}
+	
 	
 	public String getkeyIdentifier() {
 		return keyIdentifier;

@@ -10,7 +10,7 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.domain.nestedpod.taxanomy;
+package gov.nist.mml.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
@@ -21,26 +21,53 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author dsn1
  *
  */
-public class subCategory {
-	
+public class Catalog {
 	@Id private String id;
-	private @TextIndexed String subResearchCategory;
-//	@JsonProperty("subCategories")
-//	private @TextIndexed subCategoryTier2[] subCategories;
+	@JsonProperty("@context")
+	private @TextIndexed String context;
+	@JsonProperty("@id")
+	private @TextIndexed String catalogId;
+	@JsonProperty("@type")
+	private @TextIndexed String type;
+	private @TextIndexed String conformsTo;
+	private @TextIndexed String describedBy;
+	@JsonProperty("dataset")
+	private Record record;
 	
-	public String getsubResearchCategory(){
-		return subResearchCategory;
+	public String getContext() {
+		return context;
 	}
-	
-	public void setsubResearchCategory(String subResearchCategory){
-		this.subResearchCategory = subResearchCategory;
-	}
-	
-//	public subCategoryTier2[] getSubCategoryTier2() {
-//		return subCategories;
-//	}
-//	public void setSubCategoryTier2(subCategoryTier2[] subCategories) {
-//		this.subCategories = subCategories;
-//	}
 
+	public void setcontext(String context) {
+		this.context = context;
+	}
+	
+	public String getCatalogId() {
+		return catalogId;
+	}
+
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getConformsTo() {
+		return conformsTo;
+	}
+
+	public void setConformsTo(String conformsTo) {
+		this.conformsTo = conformsTo;
+	}
+	public String getDescribedBy() {
+		return describedBy;
+	}
+
+	public void setDescribedBy(String describedBy) {
+		this.describedBy = describedBy;
+	}
 }

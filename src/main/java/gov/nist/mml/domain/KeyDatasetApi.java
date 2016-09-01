@@ -10,7 +10,7 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.domain.nestedpod.taxanomy;
+package gov.nist.mml.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
@@ -21,26 +21,42 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author dsn1
  *
  */
-public class subCategory {
-	
-	@Id private String id;
-	private @TextIndexed String subResearchCategory;
-//	@JsonProperty("subCategories")
-//	private @TextIndexed subCategoryTier2[] subCategories;
-	
-	public String getsubResearchCategory(){
-		return subResearchCategory;
-	}
-	
-	public void setsubResearchCategory(String subResearchCategory){
-		this.subResearchCategory = subResearchCategory;
-	}
-	
-//	public subCategoryTier2[] getSubCategoryTier2() {
-//		return subCategories;
-//	}
-//	public void setSubCategoryTier2(subCategoryTier2[] subCategories) {
-//		this.subCategories = subCategories;
-//	}
+public class KeyDatasetApi {
 
+	@Id private String id;
+	private @TextIndexed String name;
+	private @TextIndexed String infoUrl;
+	private @TextIndexed String documentUrl;
+	private @TextIndexed String apiUrl;
+	
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getInfoUrl() {
+		return infoUrl;
+	}
+	public void setInfoUrl(String infoUrl) {
+		this.infoUrl = infoUrl;
+	}
+	public String getDocumentUrl() {
+		return documentUrl;
+	}
+
+	public void setDocumentUrl(String documentUrl ) {
+		this.documentUrl = documentUrl;
+	}
+	public String getApiUrl() {
+		return documentUrl;
+	}
+
+	public void setApiUrl(String apiUrl ) {
+		this.apiUrl = apiUrl;
+	}
+	
+	
 }

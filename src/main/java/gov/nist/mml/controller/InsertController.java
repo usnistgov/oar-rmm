@@ -15,15 +15,15 @@ package gov.nist.mml.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.net.MediaType;
-
+import gov.nist.mml.domain.KeyDatasetApi;
 import gov.nist.mml.domain.Record;
+import gov.nist.mml.repositories.KeyDatasetApiRepository;
 import gov.nist.mml.repositories.RecordRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +38,9 @@ public class InsertController {
     private RecordRepository recordRepository;
 
 	@Autowired
+    private KeyDatasetApiRepository keyDatasetApiRepository;
+	
+	@Autowired
     public InsertController(RecordRepository repo) { 
         recordRepository = repo;
     }
@@ -46,6 +49,14 @@ public class InsertController {
 	@RequestMapping(value = "/records/save", method = RequestMethod.POST, produces = "application/json")
 	public Record savePod(@RequestBody Record record) {
 	      //do something fancy
+		 logger.info("adding new entry in Records"+record.toString());
 	      return recordRepository.save(record);
+	}
+	
+	@RequestMapping(value = "/KeyDatasetApi/save", method = RequestMethod.POST, produces = "application/json")
+	public KeyDatasetApi saveApi(@RequestBody KeyDatasetApi keydata) {
+	      //do something fancy
+		  logger.info("adding new entry in keydatasetapi"+keydata.toString());
+	      return keyDatasetApiRepository.save(keydata);
 	}
 }

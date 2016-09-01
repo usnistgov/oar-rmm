@@ -10,37 +10,29 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.domain.nestedpod.taxanomy;
+package gov.nist.mml.repositories;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-/**
- * @author dsn1
- *
- */
-public class subCategory {
-	
-	@Id private String id;
-	private @TextIndexed String subResearchCategory;
-//	@JsonProperty("subCategories")
-//	private @TextIndexed subCategoryTier2[] subCategories;
-	
-	public String getsubResearchCategory(){
-		return subResearchCategory;
-	}
-	
-	public void setsubResearchCategory(String subResearchCategory){
-		this.subResearchCategory = subResearchCategory;
-	}
-	
-//	public subCategoryTier2[] getSubCategoryTier2() {
-//		return subCategories;
-//	}
-//	public void setSubCategoryTier2(subCategoryTier2[] subCategories) {
-//		this.subCategories = subCategories;
-//	}
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import org.springframework.data.mongodb.core.query.TextCriteria;
+
+import gov.nist.mml.domain.KeyDatasetApi;
+
+import org.springframework.data.domain.Pageable;
+
+
+@RepositoryRestResource
+public interface KeyDatasetApiRepository extends MongoRepository<KeyDatasetApi, String> {
+		
+	//Generic Search
+	List<KeyDatasetApi> findAllBy(TextCriteria criteria,Pageable pageable);
+	
+   List<KeyDatasetApi> findByNameContainingIgnoreCase(String name);
+	
+   
 }
+

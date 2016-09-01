@@ -65,6 +65,8 @@ public interface RecordRepository extends MongoRepository<Record, String> {
 	//Get Pages using criteria
 	Page<Record> findAll(Pageable pageable);
 	
+	//Get by identifier
+	List<Record> findByIdentifier(String id, Pageable p);
     
 	List<Record> findByTitleContainingIgnoreCase(String title);
     List<Record> findByTypeContainingIgnoreCase(String type);
