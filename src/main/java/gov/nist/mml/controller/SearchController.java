@@ -14,6 +14,7 @@ package gov.nist.mml.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,6 +47,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import gov.nist.mml.repositories.RecordRepository;
+import gov.nist.mml.utilities.ProcessRequest;
+import gov.nist.mml.domain.catalog;
 import gov.nist.mml.domain.Record;
 import gov.nist.mml.domain.nestedpod.ContactPoint;
 import gov.nist.mml.domain.nestedpod.Distribution;
@@ -56,6 +59,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import static org.springframework.data.mongodb.core.query.Query.query;
+import gov.nist.mml.repositories.CatalogRepository;;
 @RestController
 @Api(value = "Test api for searching EDI/PDL data", tags = "Search API")
 public class SearchController {
@@ -64,6 +68,9 @@ public class SearchController {
 
 	@Autowired
     private RecordRepository RecordRepository;
+	
+	@Autowired
+    private CatalogRepository catRepository;
 
 	@Autowired
     public SearchController(RecordRepository repo) { 
@@ -72,8 +79,15 @@ public class SearchController {
 	
 	@Autowired
 	MongoOperations mongoOps ;
+
+	@ApiOperation(value = "Get data.json format data.",nickname = "PDL",
+				  notes = "This will return the high level data.json fields, dataset is part of it.")
+	@RequestMapping(value = {"/catalog"}, method = RequestMethod.GET, produces="application/json")
+	public List<catalog> Search ( )throws IOException {
+	    List<catalog> pdlEntries = catRepository.findAll();
+	    return pdlEntries;
+	}
 	
-	@RequestMapping(value = {"/records"}, method = RequestMethod.GET, produces="application/json")
 	@ApiImplicitParams({
         @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
                 value = "Results page you want to retrieve (0..N)"),
@@ -84,120 +98,112 @@ public class SearchController {
                         "Default sort order is ascending. " +
                         "Multiple sort criteria are supported.")
     })
+	@ApiOperation(value = "List all dataset records.",nickname = "Allrecords")
+	@RequestMapping(value = {"/records"}, method = RequestMethod.GET, produces="application/json")
 	public List<Record> SearchAll (@ApiIgnore Pageable p) {
     
 		logger.info("Requested searchAll:");
-		
 		List<Record> pdlEntries = RecordRepository.findAllBy(p);
     	return pdlEntries;
     }
 	
-	//*** This is the main /search method which accepts various kinds of request parameters including 
+	  @ApiOperation(value = "Search records using any search phrase.",nickname = "searchanything",
+			  		notes = " searchphrase can accept any combination of words and do text search in complete database."
+			  				+ " Logical operations can also be performed by doing following combinations "
+			  				+ " e.g. "
+			  				+ "\n 1. /records/search?searchphrase=chemistry srd 69 data  ---> This will search all the words  "
+			  				+ "\n 2. /records/search?searchphrase=chemistry \"srd 69\" data  ---> This will search OR operation between phrase \"srd 69\" and other words "
+			  				+ "\n 3. /records/search?searchphrase=\"chemistry srd 69 data\"  ---> This will search complete phrase."
+			  				+ "\n 4. /records/search?searchphrase=\"chemistry\" \"srd 69\" \"data\"  ---> This will do \"AND\" operation between all words. ")
+	  @ApiImplicitParams({
+	      @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+	              value = "Results page you want to retrieve (0..N)"),
+	      @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+	              value = "Number of records per page."),
+	      @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+	              value = "Sorting criteria in the format: property(,asc|desc). " +
+	                      "Default sort order is ascending. " +
+	                      "Multiple sort criteria are supported.")
+	  })
+	  @RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
+	  public List<Record> Search (@ApiIgnore Pageable p,@RequestParam  String searchphrase )
+			   throws IOException {
+	  	  /** this is added only for swagger-ui to work once it is fixed we will use Map parameters directly **/  
+		  	TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(searchphrase);
+			Query query = TextQuery.queryText(textCriteria);
+	        return mongoOps.find(query.with(p), Record.class);
+	  }
+
+	
+	//*** This is commented because SwaggerUI does not work with Map parameters
+	//This is the main /search method which accepts various kinds of request parameters including 
     // advanced search with logical operations on the columns/fields
     // This search api can take any key=value pair.
     // for logical operations "logicalOp" will accept and/or op
     // for searching any text use "searchPhrase" 
     /// This was added for SwaggerUI to show the options for pageable
-    @ApiOperation(value = "pageable.",nickname = "searchpage")
-	 @ApiImplicitParams({
-        @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                value = "Results page you want to retrieve (0..N)"),
-        @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                value = "Number of records per page."),
-        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                value = "Sorting criteria in the format: property(,asc|desc). " +
-                        "Default sort order is ascending. " +
-                        "Multiple sort criteria are supported.")
-    })
-    @RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> Search (@ApiIgnore Pageable p,@RequestParam @ApiIgnore  Map<String,String> params )
-		   throws IOException {
-    	
-    	Boolean logical =false; TextCriteria textCriteria = null; Criteria criteria = null;
-    	ArrayList<Criteria> criterias = new ArrayList<Criteria>();
-    	Query  mainQuery = null,textQuery =null; 
-    	
-    	if(!params.entrySet().isEmpty()){
-    		
-    		for (Entry<String, String> entry : params.entrySet()) {
-    			
-    			switch(entry.getKey().toLowerCase()){
-    			
-    			case "logicalop":  if(!entry.getValue().isEmpty()&& entry.getValue().equalsIgnoreCase("or") ) 
-    	    								logical = false;
-    								if(!entry.getValue().isEmpty()&& entry.getValue().equalsIgnoreCase("and") ) 
-    										logical = true;
-    								break;
-    			case "searchphrase": if(!entry.getValue().isEmpty()) {
-    									textCriteria = TextCriteria.forDefaultLanguage().matchingAny(entry.getValue());
-    									textQuery = TextQuery.queryText(textCriteria);}
-    								break;
-    			case "page": break;
-    			case "size": break;
-    			case "sort": break;
-    			default :
-    					Criteria cri =  Criteria.where(entry.getKey()).regex(Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-    	    			criterias.add(cri);
-    	    			break;
-    			}
-    		}	
-    		if(!criterias.isEmpty()){
-    			if(!logical)
-    				criteria = new Criteria().orOperator(criterias.toArray(new Criteria[criterias.size()]));
-    			if(logical)
-    				criteria =new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()]));
-    			
-        	}
-    		if(textQuery!=null){
-    			if(criteria == null)
-    				mainQuery = textQuery;
-    			else
-    				mainQuery = textQuery.addCriteria(criteria);
-    		}
-			else
-				mainQuery = query(criteria);
-	    }
-    	
-    	logger.info("Requested searchAll:");
-		if(mainQuery != null)
-			return mongoOps.find(mainQuery.with(p), Record.class);
-		else 
-			throw new IOException("Check all the request parameters.");
-    }
+//    @ApiOperation(value = "pageable.",nickname = "searchpage")
+//	 @ApiImplicitParams({
+//        @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+//                value = "Results page you want to retrieve (0..N)"),
+//        @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+//                value = "Number of records per page."),
+//        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+//                value = "Sorting criteria in the format: property(,asc|desc). " +
+//                        "Default sort order is ascending. " +
+//                        "Multiple sort criteria are supported.")
+//    })
+//    @RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
+//	public List<Record> Search (@ApiIgnore Pageable p,@RequestParam @ApiIgnore  Map<String,String> params )
+//		   throws IOException {
+//    	
+//          ProcessRequest processRequest = new ProcessRequest();
+//          //return processRequest.handleRequest(params);
+//          return mongoOps.find(processRequest.handleRequest(params).with(p), Record.class);
+//    }
 	
-    
-    private void parseSearchPhrase(){
-    	
-    }
-//	    @ApiOperation(value = "Search All the entries using text search.",nickname = "seatrchbyphrase")
-//		@RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
-//		public List<Record> SearchByText (@RequestParam String searchPhrase,@RequestParam int page, @RequestParam int pagesize ) {
-//	    
-//			logger.info("Requested searchPhrase:"+searchPhrase);
-//			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(searchPhrase);
-//			//return RecordRepository.findAllBy(criteria,new PageRequest(1,1,Sort.Direction.DESC,"title"));
-//			return RecordRepository.findAllBy(criteria,new PageRequest(page,pagesize,Sort.Direction.DESC,"title"));
-//		}
-		
+//	 @ApiOperation(value = "pageable.",nickname = "searchpage")
+//	 @ApiImplicitParams({
+//        @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+//                value = "Results page you want to retrieve (0..N)"),
+//        @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+//                value = "Number of records per page."),
+//        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+//                value = "Sorting criteria in the format: property(,asc|desc). " +
+//                        "Default sort order is ascending. " +
+//                        "Multiple sort criteria are supported.")
+//    })
+//    @RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
+//	public List<Record> Search (@ApiIgnore Pageable p,@RequestParam @ApiIgnore  Map<String,String> params )
+//		   throws IOException {
+//    	
+//          ProcessRequest processRequest = new ProcessRequest();
+//          //return processRequest.handleRequest(params);
+//          return mongoOps.find(processRequest.handleRequest(params).with(p), Record.class);
+//    }
+	
+ 
+
+	@ApiOperation(value = "Get the record using identifier.",nickname = "searchbyID",
+				  notes= "We plan to use DOI once it is ready or plan to write code our own unique identfier. "	)
     @RequestMapping(value = {"/records/search/{id}"}, method = RequestMethod.GET, produces="application/json")
 	public List<Record> SearchById (@PathVariable String id,Pageable p){
 			return RecordRepository.findByIdentifier(id, p);
 	}
     
-//    
-//    
-//		@RequestMapping(value = {"/records/searchbyTitle"}, method = RequestMethod.GET, produces="application/json")
-//		public List<Record> SearchByTitle (@RequestParam String title) {
-//	    
-//			logger.info("Requested searchbyTitle:"+title);
-//			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(title);
-//			//Criteria cr1 = Criteria.where("title").regex(Pattern.compile(title, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-//			
-//			//return RecordRepository.findTitleBy(criteria);
-//			return RecordRepository.findByTitleContainingIgnoreCase(title);
-//	    }
+	 @ApiOperation(value = "Search record by title.",nickname = "searchbyTitle",
+			  notes= "It can search with full title or any world in title."	)
+	 @RequestMapping(value = {"/records/searchbyTitle"}, method = RequestMethod.GET, produces="application/json")
+	 public List<Record> SearchByTitle (@RequestParam String title) {
+	    
+			logger.info("Requested searchbyTitle:"+title);
+			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(title);
+			//Criteria cr1 = Criteria.where("title").regex(Pattern.compile(title, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));			
+			//return RecordRepository.findTitleBy(criteria);
+			return RecordRepository.findByTitleContainingIgnoreCase(title);
+	   }
 		
-		@RequestMapping(value = {"/records/searchbyType"}, method = RequestMethod.GET, produces="application/json")
+	 @RequestMapping(value = {"/records/searchbyType"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByType(@RequestParam String type) {
 			
 			logger.info("Requested searchbyType:"+type);
@@ -321,6 +327,8 @@ public class SearchController {
 			return RecordRepository.findByLanguageContainingIgnoreCase(license);
 	    	
 	    }
+		
+		
 	/*@Bean
 	public CommonsRequestLoggingFilter loggingFilter() {
 		final CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();

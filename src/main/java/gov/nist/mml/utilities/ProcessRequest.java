@@ -36,12 +36,11 @@ import gov.nist.mml.domain.Record;
 public class ProcessRequest {
 
 	
-	@Autowired
-	MongoOperations mongoOps ;
+	
 	
 	private Logger logger = LoggerFactory.getLogger(ProcessRequest.class);
 	
-	public List<Record> handleRequest(Pageable p,Map<String,String> params) throws IOException{
+	public Query handleRequest(Map<String,String> params) throws IOException{
 	Boolean logical =false; TextCriteria textCriteria = null; Criteria criteria = null;
 	ArrayList<Criteria> criterias = new ArrayList<Criteria>();
 	Query  mainQuery = null,textQuery =null; 
@@ -52,14 +51,16 @@ public class ProcessRequest {
 			
 			switch(entry.getKey().toLowerCase()){
 			
-			case "logicalop":  if(!entry.getValue().isEmpty()&& entry.getValue().equalsIgnoreCase("or") ) 
-	    								logical = false;
-								if(!entry.getValue().isEmpty()&& entry.getValue().equalsIgnoreCase("and") ) 
+			case "logicalop":  
+							if("or".equalsIgnoreCase(entry.getValue())) 
+										logical = false;
+							if("and".equalsIgnoreCase(entry.getValue())) 
 										logical = true;
 								break;
+								
 			case "searchphrase": if(!entry.getValue().isEmpty()) {
-									textCriteria = TextCriteria.forDefaultLanguage().matchingAny(entry.getValue());
-									textQuery = TextQuery.queryText(textCriteria);}
+										textQuery  = parseSearchPhrase(entry.getValue());
+									}
 								break;
 			case "page": break;
 			case "size": break;
@@ -89,8 +90,26 @@ public class ProcessRequest {
 	
 	logger.info("Requested searchAll:");
 	if(mainQuery != null)
-		return mongoOps.find(mainQuery.with(p), Record.class);
+		//return mongoOps.find(mainQuery.with(p), Record.class);
+		return mainQuery;
 	else 
 		throw new IOException("Check all the request parameters.");
+	}
+	
+	/**
+	 * 
+	 */
+	private Query parseSearchPhrase(String phrase){
+		
+		TextCriteria textCriteria = null;
+		Query q = null;
+//		boolean b = Pattern.matches("AND", phrase);
+//		String[] test1 = null; 
+//		if (b)
+//			test1  = phrase.split("AND");
+		
+		textCriteria = TextCriteria.forDefaultLanguage().matchingAny(phrase);
+		q = TextQuery.queryText(textCriteria);
+		return q;
 	}
 }
