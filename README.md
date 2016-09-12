@@ -11,17 +11,17 @@ This project is designed to develope a web service available publicly for users 
 5. database server access
  
 ## how to deploy
-git clone <oar-rmm> project
-Edit config files for database server acccess (By default uses localhost)
-mvn clean install
-mvn tomcat:deploy
+- git clone <oar-rmm> project
+- Edit config files for database server acccess (By default uses localhost)
+- mvn clean install
+- mvn tomcat:deploy
 
 ## Environment for development
-Java 1.8 : Oralacle Java 8+
-Maven : latest
-MongoDB : version 3.0+
-Tomcat 8+ (Application server)
-Data.json (NIST public data list)
-Other Database files ....
+* Java 1.8 : Oralacle Java 8+
+* Maven : latest
+* MongoDB : version 3.0+
+* Tomcat 8+ (Application server)
+* Data.json (NIST public data list)
+* Other Database files ....
 
 
