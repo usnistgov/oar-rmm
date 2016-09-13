@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>RMMApi Search</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+<h1>Search with RMMApi</h1>
+This page describes the basic and advanced search capabilities of Resource metadata REST api.
+It is created as swagger-ui has some limitations. This page also explains various search options in  details.
+</div>
+<div class="container">
+  <h2>Use /RMMApi/search </h2>
+  
+  <p></p>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Search type</th>
+        <th>Resource endpoint</th>
+        <th>Request Parameters</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Search any phrase</td>
+        <td>/RMMApi/search</td>
+        <td>searchphrase=chemistry</td>
+        <td>It searches the phrase throughout the mongo database and returns all the records which contain this phrase.</td>
+      </tr>
+      <tr>
+        <td>Operarion OR</td>
+        <td>/RMMApi/search</td>
+        <td>searchphrase=chemistry SRD 69</td>
+        <td>It searches given number of phrases throughout the mongo database and returns records with any of given words it finds in it.
+         	It is doing simple "OR" operation
+         </td>
+      </tr>
+       <tr>
+        <td>Operation AND</td>
+        <td>/RMMApi/search</td>
+        <td>searchphrase="chemistry SRD 69"</td>
+        <td>It searches given words in quotes in a record. It is a phrase search. Simple AND operation
+         </td>
+      </tr>
+      
+       <tr>
+        <td>Advanced OR</td>
+        <td>/RMMApi/search</td>
+        <td>searchphrase=chemistry "SRD 69"</td>
+        <td>
+        This option is for doing advanced OR for example you can OR between phrase and words.
+         </td>
+      </tr>
+       <tr>
+        <td>Advanced AND</td>
+        <td>/RMMApi/search</td>
+        <td>searchphrase="chemistry" "SRD 69" "any other phrase"</td>
+        <td>
+         This will perform "AND" operation with given phrases in quotes and fine the records which will fulfill this request.
+         </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container">
+  <h2>Use /RMMApi/advancedsearch</h2>
+  
+  <p>
+  	This serach is seperated only because of swagger limitation.  
+    /advancedsearch endpoint accepts any number of key=value pairs.
+    Following are the example searches that /advancedsearch can perform.
+  </p>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Search type</th>
+        <th>Resource endpoint</th>
+        <th>Request Parameters</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Search any phrase</td>
+        <td>/RMMApi/advancedsearch</td>
+        <td>key=value</td>
+        <td>It seraches any key=value entry in POD schema. E.g advancedsearch?title=Enterprise</td>
+      </tr>
+      <tr>
+        <td>Operarion OR</td>
+        <td>/RMMApi/advancedsearch</td>
+        <td>key=value&key=value&logicalOp=OR</td>
+        <td>This type of request performs OR operation between various fields in POD. For example
+        /records/advancedsearch?title=enterprise&keyword=data&logicalOp=OR
+        this will look any entries/records which contains either title=Enterprise or keyword=data or both.
+         </td>
+      </tr>
+       <tr>
+        <td>Operation AND</td>
+        <td>/RMMApi/advancedsearch</td>
+        <td>key=value&key=value&logicalOp=AND</td>
+        <td>
+        This type of request performs OR operation between various fields in POD. For example
+        /records/advancedsearch?title=enterprise&keyword=data&logicalOp=AND
+        this will look any entries/records which contains both title=Enterprise or keyword=data .
+         </td>
+      </tr> 
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
+
