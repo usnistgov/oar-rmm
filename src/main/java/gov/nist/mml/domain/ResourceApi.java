@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author dsn1
  *
  */
-public class KeyDatasetApi {
+public class ResourceApi {
 
 	@Id private String id;
 	private @TextIndexed String name;
@@ -51,7 +51,7 @@ public class KeyDatasetApi {
 		this.documentUrl = documentUrl;
 	}
 	public String getApiUrl() {
-		return documentUrl;
+		return apiUrl;
 	}
 
 	public void setApiUrl(String apiUrl ) {

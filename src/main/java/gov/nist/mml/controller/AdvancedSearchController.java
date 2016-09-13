@@ -93,9 +93,13 @@ public class AdvancedSearchController {
     // for searching any text use "searchPhrase" 
     /// This was added for SwaggerUI to show the options for pageable
     @ApiOperation(value = "Give combination of keywords  or key value pair to search with pagination and sorting.",
-    		      nickname = "advancedsearch", notes="advancedsearch api accepts any key=value pair from PDL."
-    		      		+ " Logical operations can be performed between any number key=value pairs using "
-    		      		+ "\"logicalOp\" operator.")
+    		      nickname = "advancedsearch", notes="/advancedsearch api endpoint accepts any number of key=value pairs seperated by '&' operator."
+    		      		+ " <br> <br> keys should represent field names in data.json"
+    		      		+ " <br> <br> Logical operations can be performed between any number key=value pairs using "
+    		      		+ "\"logicalOp\" operator."
+    		      		+ "<br> <br> For Example:  <a href=\"/RMMApi/apidoc.html\" >Refer document</a>"
+    		      		+ "<br> <br> Note: Please ignore 'p' field below, input your pagination values in page,size and sort fields."
+    		      		+ "<br> <br> Note: Use tools like curl/postman to test this resource as swagger does not allow dynamic, variable number of key=value pairs as input.  ")
 	 @ApiImplicitParams({
         @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
                 value = "Results page you want to retrieve (0..N)"),

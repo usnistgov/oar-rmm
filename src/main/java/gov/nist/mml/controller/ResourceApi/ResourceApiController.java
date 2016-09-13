@@ -10,53 +10,44 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.controller;
+package gov.nist.mml.controller.ResourceApi;
+
+import java.io.IOException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.nist.mml.controller.SearchController;
 import gov.nist.mml.domain.ResourceApi;
-import gov.nist.mml.domain.Record;
+import gov.nist.mml.domain.catalog;
 import gov.nist.mml.repositories.ResourceApiRepository;
-import gov.nist.mml.repositories.RecordRepository;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * @author dsn1
+ *
+ */
 @RestController
-@Api(value = "Test api for inserting data in the POD", tags = "Save API")
-public class InsertController {
-	
-	private Logger logger = LoggerFactory.getLogger(SearchController.class);
+@Api(value = "Get Resource api", tags = "Search ResourceApis")
+public class ResourceApiController {
 
-	@Autowired
-    private RecordRepository recordRepository;
-
-	@Autowired
-    private ResourceApiRepository ResourceApiRepository;
+	private Logger logger = LoggerFactory.getLogger(ResourceApiController.class);
 	
 	@Autowired
-    public InsertController(RecordRepository repo) { 
-        recordRepository = repo;
-    }
+    private ResourceApiRepository resourceapiRepository;
 	
-	@ApiOperation(value = "Insert new entery in the database.",nickname = "save one")
-	@RequestMapping(value = "/records/save", method = RequestMethod.POST, produces = "application/json")
-	public Record savePod(@RequestBody Record record) {
-	      //do something fancy
-		 logger.info("adding new entry in Records"+record.toString());
-	      return recordRepository.save(record);
-	}
-	
-	@RequestMapping(value = "/ResourceApi/save", method = RequestMethod.POST, produces = "application/json")
-	public ResourceApi saveApi(@RequestBody ResourceApi keydata) {
-	      //do something fancy
-		  logger.info("adding new entry in ResourceApi"+keydata.toString());
-	      return ResourceApiRepository.save(keydata);
+	@ApiOperation(value = "Get NIST open data api list.",nickname = "ResourceApi",
+			  notes = "Returns the list of NIST API available publicly.")
+	@RequestMapping(value = {"/ResourceApi"}, method = RequestMethod.GET, produces="application/json")
+	public List<ResourceApi> Search ( )throws IOException {
+		List<ResourceApi> apiEntries = resourceapiRepository.findAll();
+		return apiEntries;
 	}
 }

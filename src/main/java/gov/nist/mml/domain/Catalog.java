@@ -14,6 +14,7 @@ package gov.nist.mml.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -35,6 +36,7 @@ public class catalog {
 	private @TextIndexed String conformsTo;
 	private @TextIndexed String describedBy;
 	@JsonProperty("dataset") @Field("dataset")
+	//@DBRef
 	private @TextIndexed Record[] records;
 	
 	public String getContext() {

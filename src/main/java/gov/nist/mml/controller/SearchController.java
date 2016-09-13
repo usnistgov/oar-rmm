@@ -61,7 +61,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import gov.nist.mml.repositories.CatalogRepository;;
 @RestController
-@Api(value = "Test api for searching EDI/PDL data", tags = "Search API")
+@Api(value = "Api endpoints to search EDI/PDL data", tags = "Search API")
 public class SearchController {
 	
 	private Logger logger = LoggerFactory.getLogger(SearchController.class);
@@ -80,7 +80,7 @@ public class SearchController {
 	@Autowired
 	MongoOperations mongoOps ;
 
-	@ApiOperation(value = "Get data.json format data.",nickname = "PDL",
+	@ApiOperation(value = "Get complete data.json.",nickname = "PDL",
 				  notes = "This will return the high level data.json fields, dataset is part of it.")
 	@RequestMapping(value = {"/catalog"}, method = RequestMethod.GET, produces="application/json")
 	public List<catalog> Search ( )throws IOException {
@@ -111,10 +111,13 @@ public class SearchController {
 			  		notes = " searchphrase can accept any combination of words and do text search in complete database."
 			  				+ " Logical operations can also be performed by doing following combinations "
 			  				+ " e.g. "
-			  				+ "\n 1. /records/search?searchphrase=chemistry srd 69 data  ---> This will search all the words  "
-			  				+ "\n 2. /records/search?searchphrase=chemistry \"srd 69\" data  ---> This will search OR operation between phrase \"srd 69\" and other words "
-			  				+ "\n 3. /records/search?searchphrase=\"chemistry srd 69 data\"  ---> This will search complete phrase."
-			  				+ "\n 4. /records/search?searchphrase=\"chemistry\" \"srd 69\" \"data\"  ---> This will do \"AND\" operation between all words. ")
+			  				+ "<br> <br> 1. /records/search?searchphrase=chemistry srd 69 data  --> search all the words  "
+			  				+ "<br> <br> 2. /records/search?searchphrase=chemistry \"srd 69\" data  --> search OR  between phrase \"srd 69\" and other words "
+			  				+ "<br> <br> 3. /records/search?searchphrase=\"chemistry srd 69 data\"  --> search complete phrase. AND"
+			  				+ "<br> <br> 4. /records/search?searchphrase=\"chemistry\" \"srd 69\" \"data\"  --> \"OR\" operation between all \"AND\" phrases "
+			  				+ "<br> <br> To get more information <a href=\"/RMMApi/apidoc.html\" >Refer document</a>. "
+			  				+ "<br> <br> Note: Please ignore 'p' field below, input your pagination values in page,size and sort fields.")
+    		      		
 	  @ApiImplicitParams({
 	      @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
 	              value = "Results page you want to retrieve (0..N)"),

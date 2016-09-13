@@ -20,18 +20,18 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import org.springframework.data.mongodb.core.query.TextCriteria;
 
-import gov.nist.mml.domain.KeyDatasetApi;
+import gov.nist.mml.domain.ResourceApi;
 
 import org.springframework.data.domain.Pageable;
 
 
 @RepositoryRestResource
-public interface KeyDatasetApiRepository extends MongoRepository<KeyDatasetApi, String> {
+public interface ResourceApiRepository extends MongoRepository<ResourceApi, String> {
 		
 	//Generic Search
-	List<KeyDatasetApi> findAllBy(TextCriteria criteria,Pageable pageable);
+	List<ResourceApi> findAllBy(TextCriteria criteria,Pageable pageable);
 	
-   List<KeyDatasetApi> findByNameContainingIgnoreCase(String name);
+   List<ResourceApi> findByNameContainingIgnoreCase(String name);
 	
    
 }
