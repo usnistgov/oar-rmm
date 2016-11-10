@@ -64,8 +64,8 @@ public class SwaggerConfiguration {
     ApiInfo apiInfo =
         new ApiInfo("Resource api", 
         		"This REST api exposes data listing from NIST POD schema. There are various search options along with Insert, Delete and Update.",
-        		"Sprint-3.0",
-        		"This is internal service used by NIST PDL curators.", 
+        		"Build-1.0",
+        		"This is an internal service used by NIST PDL curators.", 
         		"deoyani@nist.gov",
         		"NIST Public licence", 
         		"Licence URL");

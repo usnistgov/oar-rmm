@@ -15,6 +15,7 @@ package gov.nist.mml.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,15 +42,15 @@ public class DeleteController {
     }
 	
 	@ApiOperation(value = "Delete an entry from POD list",nickname = "deleteOne")
-	@RequestMapping(value = "/records/delete", method = RequestMethod.GET, produces = "application/json")
-	public String deleteRecord(@RequestParam String identifier) {
+	@RequestMapping(value = "/catalog/records/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	public String deleteRecord(@PathVariable String id) {
 	      //do something fancy
-	     //recordRepository.delete(identifier);
+	     //recordRepository.delete(id);
 		 return "{\"Messgae\":\" Operation not allowed.\"}";
 	}
 	
 	@ApiOperation(value = "Delete all entries from POD list",nickname = "deleteAll")
-	@RequestMapping(value = "/records/deleteall", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/catalog/records/deleteall", method = RequestMethod.DELETE, produces = "application/json")
 	public String deleteAll() {
 	      //do something fancy
 	      //recordRepository.deleteAll();

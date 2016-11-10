@@ -77,6 +77,7 @@ It is created as swagger-ui has some limitations. This page also explains variou
     /advancedsearch endpoint accepts any number of key=value pairs.
     Following are the example searches that /advancedsearch can perform.
   </p>
+  
   <table class="table table-striped">
     <thead>
       <tr>
@@ -87,12 +88,21 @@ It is created as swagger-ui has some limitations. This page also explains variou
       </tr>
     </thead>
     <tbody>
+    
       <tr>
         <td>Search any phrase</td>
         <td>/RMMApi/advancedsearch</td>
         <td>key=value</td>
-        <td>It seraches any key=value entry in POD schema. E.g advancedsearch?title=Enterprise</td>
+        <td>It searches any key=value entry in POD schema. E.g advancedsearch?title=Enterprise</td>
       </tr>
+       <tr>
+        <td>Searchphrase and theme/any other key</td>
+        <td>/RMMApi/advancedsearch</td>
+        <td>key=value&searchphrase=value&logicalOp=AND</td>
+        <td>
+        This type of request searches the phrase in given theme records.
+         </td>
+      </tr> 
       <tr>
         <td>Operarion OR</td>
         <td>/RMMApi/advancedsearch</td>

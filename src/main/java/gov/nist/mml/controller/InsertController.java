@@ -46,7 +46,7 @@ public class InsertController {
     }
 	
 	@ApiOperation(value = "Insert new entery in the database.",nickname = "save one")
-	@RequestMapping(value = "/records/save", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/catalog/records/save", method = RequestMethod.POST, produces = "application/json")
 	public Record savePod(@RequestBody Record record) {
 	      //do something fancy
 		 logger.info("adding new entry in Records"+record.toString());
