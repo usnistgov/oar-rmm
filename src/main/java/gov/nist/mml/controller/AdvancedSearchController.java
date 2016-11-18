@@ -39,6 +39,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +113,7 @@ public class AdvancedSearchController {
         
     })
     @RequestMapping(value = {"/records/advancedsearch"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> Search (@ApiIgnore Pageable p)//,@RequestParam @ApiIgnore  Map<String,String> params )
+	public List<Record> Search (@ApiIgnore @PageableDefault(size=1000)  Pageable p)//,@RequestParam @ApiIgnore  Map<String,String> params )
 		   throws IOException {
     	/**
     	 * Following code is not needed but added for swagger-ui to work.
@@ -124,8 +125,11 @@ public class AdvancedSearchController {
     	      requstParams.put(entry.getKey(), entry.getValue()[0]);
     
     	/***/
-
         ProcessRequest processRequest = new ProcessRequest();
-        return mongoOps.find(processRequest.handleRequest(requstParams).with(p), Record.class);
+        Query q = processRequest.handleRequest(requstParams);
+       
+        if(q==null) return mongoOps.findAll(Record.class);
+        else  
+        return mongoOps.find(q.with(p), Record.class);
     }
 }

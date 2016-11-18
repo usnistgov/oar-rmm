@@ -34,16 +34,16 @@ import org.springframework.data.mongodb.core.query.TextQuery;
 import gov.nist.mml.domain.Record;
 
 public class ProcessRequest {
-
-	
-	
 	
 	private Logger logger = LoggerFactory.getLogger(ProcessRequest.class);
+	
+	boolean theme =false, searchphrase=false;
 	
 	public Query handleRequest(Map<String,String> params) throws IOException{
 	Boolean logical =false; TextCriteria textCriteria = null; Criteria criteria = null;
 	ArrayList<Criteria> criterias = new ArrayList<Criteria>();
 	Query  mainQuery = null,textQuery =null; 
+	
 	
 	if(!params.entrySet().isEmpty()){
 		
@@ -60,17 +60,27 @@ public class ProcessRequest {
 								
 			case "searchphrase": if(!entry.getValue().isEmpty()) {
 										textQuery  = parseSearchPhrase(entry.getValue());
+									}else{
+										searchphrase = true;
 									}
+			
 								break;
 			case "page": break;
 			case "size": break;
 			case "sort": break;
-			default :
+			case "theme" : if(entry.getValue().equalsIgnoreCase("all")) theme = true;
+						   else{
+							   Criteria cri =  Criteria.where(entry.getKey()).regex(Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+				    			criterias.add(cri);
+						   }
+							break;
+		    default :
 					Criteria cri =  Criteria.where(entry.getKey()).regex(Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 	    			criterias.add(cri);
 	    			break;
 			}
 		}	
+		
 		if(!criterias.isEmpty()){
 			if(!logical)
 				criteria = new Criteria().orOperator(criterias.toArray(new Criteria[criterias.size()]));
@@ -84,10 +94,12 @@ public class ProcessRequest {
 			else
 				mainQuery = textQuery.addCriteria(criteria);
 		}
-		else
+		else{
+			if(criteria != null)
 			mainQuery = query(criteria);
+		}
     }
-	
+	if(params.entrySet().size() == 2 && theme && searchphrase) return null;
 	logger.info("Requested searchAll:");
 	if(mainQuery != null)
 		//return mongoOps.find(mainQuery.with(p), Record.class);

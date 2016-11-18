@@ -66,11 +66,11 @@ public class SearchTaxanomyController {
 	
 	    //@ApiOperation(value = "Search All the entries using text search.",nickname = "seatrchbyphrase")
 		@RequestMapping(value = {"/taxanomy/search"}, method = RequestMethod.GET, produces="application/json")
-		public List<Taxanomy> SearchByText (@RequestParam String searchPhrase,@RequestParam int page, @RequestParam int pagesize ) {
+		public List<Taxanomy> SearchByText (@RequestParam String searchPhrase,Pageable p ) {
 	    
 			logger.info("Requested searchPhrase:"+searchPhrase);
 			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(searchPhrase);
-			return taxRepository.findAllBy(criteria,new PageRequest(page,pagesize,Sort.Direction.DESC,"title"));
+			return taxRepository.findAllBy(criteria,p);
 		}
 		
 //		@RequestMapping(value = {"/taxanomy/searchbyName"}, method = RequestMethod.GET, produces="application/json")

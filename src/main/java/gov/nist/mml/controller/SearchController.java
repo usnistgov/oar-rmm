@@ -28,15 +28,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.data.web.PageableDefault;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.util.JSONPObject;
+import org.codehaus.jackson.schema.JsonSchema;
+import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.swagger.annotations.Api;
@@ -55,6 +67,7 @@ import gov.nist.mml.domain.nestedpod.Distribution;
 import gov.nist.mml.domain.nestedpod.Publisher;
 import gov.nist.mml.exception.ResourceNotFoundException;
 
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -73,17 +86,27 @@ public class SearchController {
     private CatalogRepository catRepository;
 
 	@Autowired
+	MongoOperations mongoOps ;
+	
+	@Autowired
     public SearchController(RecordRepository repo) { 
         RecordRepository = repo;
     }
 	
-	@Autowired
-	MongoOperations mongoOps ;
-
+	@ApiImplicitParams({
+        @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+                value = "Results page you want to retrieve (0..N)"),
+        @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+                value = "Number of records per page."),
+        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                value = "Sorting criteria in the format: property(,asc|desc). " +
+                        "Default sort order is ascending. " +
+                        "Multiple sort criteria are supported.")
+    })
 	@ApiOperation(value = "Get complete data.json.",nickname = "PDL",
 				  notes = "This will return the high level data.json fields, dataset is part of it.")
 	@RequestMapping(value = {"/catalog"}, method = RequestMethod.GET, produces="application/json")
-	public List<catalog> Search ( )throws IOException {
+	public List<catalog> Search (@ApiIgnore @PageableDefault(size=1000) Pageable p)throws IOException {
 	    List<catalog> pdlEntries = catRepository.findAll();
 	    return pdlEntries;
 	}
@@ -99,9 +122,9 @@ public class SearchController {
                         "Multiple sort criteria are supported.")
     })
 	@ApiOperation(value = "List all dataset records.",nickname = "Allrecords")
-	@RequestMapping(value = {"/records"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> SearchAll (@ApiIgnore Pageable p) {
-    
+	@RequestMapping(value = {"/catalog/records"}, method = RequestMethod.GET, produces="application/json")
+	public List<Record> SearchAll (@ApiIgnore @PageableDefault(size=1000) Pageable p) {
+		 
 		logger.info("Requested searchAll:");
 		List<Record> pdlEntries = RecordRepository.findAllBy(p);
     	return pdlEntries;
@@ -128,13 +151,24 @@ public class SearchController {
 	                      "Default sort order is ascending. " +
 	                      "Multiple sort criteria are supported.")
 	  })
-	  @RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
-	  public List<Record> Search (@ApiIgnore Pageable p,@RequestParam  String searchphrase )
+	  @RequestMapping(value = {"/catalog/records/search"}, method = RequestMethod.GET, produces="application/json")
+	  public List<Record> Search (@ApiIgnore @PageableDefault(size=1000) Pageable p,@RequestParam  String searchphrase )
 			   throws IOException {
-	  	  /** this is added only for swagger-ui to work once it is fixed we will use Map parameters directly **/  
-		  	TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(searchphrase);
-			Query query = TextQuery.queryText(textCriteria);
-	        return mongoOps.find(query.with(p), Record.class);
+		    
+		    if(searchphrase == null || searchphrase.equals("")) 
+		    	return RecordRepository.findAll();
+		    
+		    else{
+		    	
+		    	logger.info("search phrase in the records. "+searchphrase);
+		    	
+		    	/** this is added only for swagger-ui to work once it is fixed we will use Map parameters directly **/  
+		    	TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(searchphrase);
+		    	Query query = TextQuery.queryText(textCriteria);
+		    	
+		    			
+		    	return mongoOps.find(query.with(p), Record.class);
+	        }
 	  }
 
 	
@@ -156,7 +190,7 @@ public class SearchController {
 //                        "Default sort order is ascending. " +
 //                        "Multiple sort criteria are supported.")
 //    })
-//    @RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
+//    @RequestMapping(value = {"/catalogs/records/search"}, method = RequestMethod.GET, produces="application/json")
 //	public List<Record> Search (@ApiIgnore Pageable p,@RequestParam @ApiIgnore  Map<String,String> params )
 //		   throws IOException {
 //    	
@@ -176,7 +210,7 @@ public class SearchController {
 //                        "Default sort order is ascending. " +
 //                        "Multiple sort criteria are supported.")
 //    })
-//    @RequestMapping(value = {"/records/search"}, method = RequestMethod.GET, produces="application/json")
+//    @RequestMapping(value = {"/catalogs/records/search"}, method = RequestMethod.GET, produces="application/json")
 //	public List<Record> Search (@ApiIgnore Pageable p,@RequestParam @ApiIgnore  Map<String,String> params )
 //		   throws IOException {
 //    	
@@ -189,14 +223,14 @@ public class SearchController {
 
 	@ApiOperation(value = "Get the record using identifier.",nickname = "searchbyID",
 				  notes= "We plan to use DOI once it is ready or plan to write code our own unique identfier. "	)
-    @RequestMapping(value = {"/records/search/{id}"}, method = RequestMethod.GET, produces="application/json")
+    @RequestMapping(value = {"/catalog/records/search/{id}"}, method = RequestMethod.GET, produces="application/json")
 	public List<Record> SearchById (@PathVariable String id,Pageable p){
 			return RecordRepository.findByIdentifier(id, p);
 	}
     
 	 @ApiOperation(value = "Search record by title.",nickname = "searchbyTitle",
 			  notes= "It can search with full title or any world in title."	)
-	 @RequestMapping(value = {"/records/searchbyTitle"}, method = RequestMethod.GET, produces="application/json")
+	 @RequestMapping(value = {"/catalogs/records/searchbyTitle"}, method = RequestMethod.GET, produces="application/json")
 	 public List<Record> SearchByTitle (@RequestParam String title) {
 	    
 			logger.info("Requested searchbyTitle:"+title);
@@ -206,7 +240,7 @@ public class SearchController {
 			return RecordRepository.findByTitleContainingIgnoreCase(title);
 	   }
 		
-	 @RequestMapping(value = {"/records/searchbyType"}, method = RequestMethod.GET, produces="application/json")
+	 @RequestMapping(value = {"/catalogs/records/searchbyType"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByType(@RequestParam String type) {
 			
 			logger.info("Requested searchbyType:"+type);
@@ -214,7 +248,7 @@ public class SearchController {
 			return RecordRepository.findByTypeContainingIgnoreCase(type);
 	    }
 		
-		@RequestMapping(value = {"/records/searchbyKeyword"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchbyKeyword"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByKeyword (@RequestParam String keyword) {
 	    
 			logger.info("Requested keyword:"+keyword);
@@ -222,7 +256,7 @@ public class SearchController {
 			return RecordRepository.findByKeywordContainingIgnoreCase(keyword);
 	    	
 	    }
-		@RequestMapping(value = {"/records/searchByProgramCode"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByProgramCode"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByProgramCode (@RequestParam String programcode) {
 	    
 			logger.info("Requested programcode:"+programcode);
@@ -231,7 +265,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchBylandingPage"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchBylandingPage"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByLandingPage (@RequestParam String landingPage) {
 	    
 			logger.info("Requested landingPage:"+landingPage);
@@ -241,7 +275,7 @@ public class SearchController {
 		}
 		
 		
-		@RequestMapping(value = {"/records/searchByAccessLevel"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByAccessLevel"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByAccessLevel (@RequestParam String accessLevel) {
 	    
 			logger.info("Requested accessLevel:"+accessLevel);
@@ -250,7 +284,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchByDistribution"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByDistribution"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByDistribution (@RequestParam String distribution) {
 	    
 			logger.info("Requested distribution:"+distribution);
@@ -259,7 +293,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchByModified"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByModified"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByModified (@RequestParam String modified) {
 	    
 			logger.info("Requested modified:"+modified);
@@ -268,7 +302,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchByPublisher"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByPublisher"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByPublisher (@RequestParam String publisher) {
 	    
 			logger.info("Requested publisher:"+publisher);
@@ -277,7 +311,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchByReferences"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByReferences"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByReferences (@RequestParam String references) {
 	    
 			logger.info("Requested references:"+references);
@@ -286,7 +320,7 @@ public class SearchController {
 	    	
 	    }
 	
-		@RequestMapping(value = {"/records/searchByBureauCode"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByBureauCode"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByBureauCode (@RequestParam String bureauCode) {
 	    
 			logger.info("Requested references:"+bureauCode);
@@ -295,7 +329,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchByDescription"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByDescription"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchBydescription (@RequestParam String description) {
 	    
 			logger.info("Requested description:"+description);
@@ -304,7 +338,7 @@ public class SearchController {
 	    	
 	    }
 
-		@RequestMapping(value = {"/records/searchByContactPoint"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByContactPoint"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByContactPoint (@RequestParam String contactPoint) {
 	    
 			logger.info("Requested contactPoint:"+contactPoint);
@@ -313,7 +347,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchByLanguage"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByLanguage"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByLanguage (@RequestParam String language) {
 	    
 			logger.info("Requested language:"+language);
@@ -322,7 +356,7 @@ public class SearchController {
 	    	
 	    }
 		
-		@RequestMapping(value = {"/records/searchByLicense"}, method = RequestMethod.GET, produces="application/json")
+		@RequestMapping(value = {"/catalogs/records/searchByLicense"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> SearchByLicense(@RequestParam String license) {
 	    
 			logger.info("Requested license:"+license);
@@ -330,6 +364,45 @@ public class SearchController {
 			return RecordRepository.findByLanguageContainingIgnoreCase(license);
 	    	
 	    }
+
+		
+		/// This is the placeholder for returning list of field names and types.
+		@RequestMapping(value = {"/catalogs/records/fieldsnames"}, method = RequestMethod.GET, produces="application/json")
+		public String getFieldNames(){
+			logger.info("Test");
+			 
+			try{
+			///Gson g = new GsonBuilder().create();
+			//return g.toJson(r);
+			org.codehaus.jackson.map.ObjectMapper mapper = new ObjectMapper();
+		    //There are other configuration options you can set.  This is the one I needed.
+		    mapper.configure(org.codehaus.jackson.map.SerializationConfig.Feature.WRITE_ENUMS_USING_TO_STRING, true);
+
+		    JsonSchema schema = mapper.generateJsonSchema(Record.class);
+
+		    return mapper.defaultPrettyPrintingWriter().writeValueAsString(schema);
+		    		//.writerWithDefaultPrettyPrinter().writeValueAsString(schema);
+			}catch(Exception e){
+				return null;
+			}
+		}
+//		public String[] RecordFieldsNames(){
+//			
+//			logger.info("Get fields names");
+//			//Query q = new BasicQuery(" doc=db.record.findOne(); for (key in doc) print(key); ");
+//			//q.fields();
+//			//return mongoOps.findOne(q, Map.class);
+//			String[] fieldnames = new String[Record.class.getDeclaredFields().length];
+//			int i =-1;
+//			for (java.lang.reflect.Field f : Record.class.getDeclaredFields()) 
+//				fieldnames[++i] = f.getName();
+//			
+//			 
+//				
+//		
+//			//return Record.class.getDeclaredFields();
+//			return fieldnames;
+//		}
 		
 		
 	/*@Bean

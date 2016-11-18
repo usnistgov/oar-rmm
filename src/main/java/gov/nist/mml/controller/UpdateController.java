@@ -12,9 +12,48 @@
  */
 package gov.nist.mml.controller;
 
-import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import gov.nist.mml.domain.Record;
+import gov.nist.mml.repositories.RecordRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Controller
 @Api(value = "Test api for updating existing data entries", tags = "update API")
 public class UpdateController {
+	private Logger logger = LoggerFactory.getLogger(SearchController.class);
 
+	@Autowired
+    private RecordRepository recordRepository;
+
+	@Autowired
+    public UpdateController(RecordRepository repo) { 
+        recordRepository = repo;
+    }
+	
+	@ApiOperation(value = "Delete an entry from POD list",nickname = "deleteOne")
+	@RequestMapping(value = "/catalog/records/{id}", method = RequestMethod.PUT, produces = "application/json")
+	public String updateRecord(@PathVariable String id,@RequestBody Record updateRecord) {
+		logger.info("Update Record.");
+		try{
+		Record recordToChange = recordRepository.findOne(id);
+			   recordToChange.setAccessLevel(updateRecord.getAccessLevel());
+			   recordToChange.setContactPoint(updateRecord.getContactPoint());
+			   
+	   	recordRepository.save(recordToChange);	   
+		}catch(Exception ex){
+			return "{\"Exception\":\" "+ex.getMessage()+"\"}";
+		}
+		finally{
+			return "{\"Messgae\":\" Operation not allowed.\"}";
+		}
+	}
 }
