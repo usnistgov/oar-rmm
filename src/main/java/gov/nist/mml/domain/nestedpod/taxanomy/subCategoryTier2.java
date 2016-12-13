@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
  * @author dsn1
  *
  */
-public class subCategoryTier2 {
+public class SubCategoryTier2 {
 
 	@Id private String id;
 	private @TextIndexed String researchCategory;

@@ -12,32 +12,22 @@
  */
 package gov.nist.mml.configuration;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
 
-
-
-import org.springframework.context.annotation.Configuration;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-//import org.springframework.context.annotation.Import;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-//import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
 
 @Configuration
 @EnableMongoRepositories(basePackages = { "gov.nist.mml" })
@@ -56,32 +46,10 @@ public class MongoDBConfiguration extends AbstractMongoConfiguration {
 	public Mongo mongo() throws Exception {
 		
 		logger.info("MongoDBConfiguration:"+env.getProperty("mongodb.host")+" :"+env.getProperty("mongodb.port"));
-		//return new MongoClient(new ServerAddress(env.getProperty("mongodb.host"),
-		//		Integer.valueOf(env.getProperty("mongodb.port"))));
-		return new MongoClient(new ServerAddress(env.getProperty("MONGODB_1_PORT_3333_TCP_ADDR"),
-				Integer.valueOf(env.getProperty("MONGODB_1_PORT_3333_TCP_PORT"))));
-	}	
-	
-	@Override
-	protected String getDatabaseName() {
-		return env.getProperty("mongodb.name");
-	}
-
-	@Override
-	public String getMappingBasePackage() {
-		return "gov.nist.mml";
-	}
-	
-	
-	/*@Override 
-	@Bean(name="metadataTemplate")
-	public Mongo mongo() throws Exception {
-		
-		logger.info("MongoDBConfiguration:"+env.getProperty("mongodb.host")+" :"+env.getProperty("mongodb.port"));
-		
 		return new MongoClient(new ServerAddress(env.getProperty("mongodb.host"),
 				Integer.valueOf(env.getProperty("mongodb.port"))));
 	}	
+	
 	@Override
 	protected String getDatabaseName() {
 		return env.getProperty("mongodb.name");
@@ -90,10 +58,9 @@ public class MongoDBConfiguration extends AbstractMongoConfiguration {
 	@Override
 	public String getMappingBasePackage() {
 		return "gov.nist.mml";
-	}*/
-//	@Override
-//	public @Bean MongoTemplate mongoTemplate() throws Exception {
-//	      return new MongoTemplate(mongo(), getDatabaseName());
-//	  }
+	}
+	
+	
+	
 
 }

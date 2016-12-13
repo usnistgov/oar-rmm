@@ -14,16 +14,11 @@ package gov.nist.mml.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.nist.mml.domain.Record;
-import gov.nist.mml.repositories.RecordRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -32,28 +27,41 @@ import io.swagger.annotations.ApiOperation;
 public class DeleteController {
 	
 	private Logger logger = LoggerFactory.getLogger(SearchController.class);
-
-	@Autowired
+/**
+ * Following code can be enabled once we decide to enable deleting records feature
+ * @Autowired
     private RecordRepository recordRepository;
 
 	@Autowired
     public DeleteController(RecordRepository repo) { 
         recordRepository = repo;
     }
+ */
+	
 	
 	@ApiOperation(value = "Delete an entry from POD list",nickname = "deleteOne")
 	@RequestMapping(value = "/catalog/records/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public String deleteRecord(@PathVariable String id) {
-	      //do something fancy
-	     //recordRepository.delete(id);
-		 return "{\"Messgae\":\" Operation not allowed.\"}";
+		logger.info("Delete record"+id);
+	     /**
+	      * Only authenticated users should be able to do this.
+	      * Enable this when authentication is implemented
+	      *recordRepository.delete(id);
+	      */
+	     return "{\"Messgae\":\" Operation not allowed.\"}";
 	}
 	
 	@ApiOperation(value = "Delete all entries from POD list",nickname = "deleteAll")
 	@RequestMapping(value = "/catalog/records/deleteall", method = RequestMethod.DELETE, produces = "application/json")
 	public String deleteAll() {
-	      //do something fancy
-	      //recordRepository.deleteAll();
+	      logger.info("Delete All");
+	      
+	      /**
+		      * Only authenticated users should be able to do this.
+		      * Enable this when authentication is implemented
+		      * recordRepository.deleteAll();
+		      */
+
 	      return "{\"Messgae\":\" Operation not allowed.\"}";
 	}
 }
