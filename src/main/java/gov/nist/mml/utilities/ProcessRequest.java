@@ -16,68 +16,68 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 
-import gov.nist.mml.domain.Record;
-
 public class ProcessRequest {
 	
 	private Logger logger = LoggerFactory.getLogger(ProcessRequest.class);
-	
-	boolean theme =false, searchphrase=false;
+	private String[] fieldKeywords =  {"theme","searchphrase"};
+	boolean theme =false; 
+	boolean searchphrase=false;
 	
 	public Query handleRequest(Map<String,String> params) throws IOException{
-	Boolean logical =false; TextCriteria textCriteria = null; Criteria criteria = null;
+	Boolean logical =false; 
+	Criteria criteria = null;
 	ArrayList<Criteria> criterias = new ArrayList<Criteria>();
-	Query  mainQuery = null,textQuery =null; 
+	Query  mainQuery = null;
+	Query  textQuery =null; 
+
 	
-	
+//	if(params.size() ==2 && params.containsKey(fieldKeywords[0]) && params.containsKey(fieldKeywords[1]))
+//	{
+//			if(params.get(fieldKeywords[0]).isEmpty() && params.get(fieldKeywords[1]).isEmpty())
+//				return null;
+//	}
+//	
+//	if(params.size() == 1 && params.containsKey(fieldKeywords[1])){
+//		textQuery  = parseSearchPhrase(params.get(fieldKeywords[1]));
+//	}
 	if(!params.entrySet().isEmpty()){
 		
 		for (Entry<String, String> entry : params.entrySet()) {
 			
 			switch(entry.getKey().toLowerCase()){
 			
-			case "logicalop":  
-							if("or".equalsIgnoreCase(entry.getValue())) 
-										logical = false;
-							if("and".equalsIgnoreCase(entry.getValue())) 
-										logical = true;
-								break;
-								
-			case "searchphrase": if(!entry.getValue().isEmpty()) {
+			case "logicalop": if("or".equalsIgnoreCase(entry.getValue()))
+								logical = false;
+							  if("and".equalsIgnoreCase(entry.getValue())) 
+								logical = true;
+							  break;
+			case "searchphrase": if(!entry.getValue().isEmpty()) 
 										textQuery  = parseSearchPhrase(entry.getValue());
-									}else{
+								 else
 										searchphrase = true;
-									}
-			
-								break;
-			case "page": break;
-			case "size": break;
+								 break;
+			case "page":
+			case "size": 
 			case "sort": break;
-			case "theme" : if(entry.getValue().equalsIgnoreCase("all")) theme = true;
-						   else{
-							   Criteria cri =  Criteria.where(entry.getKey()).regex(Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-				    			criterias.add(cri);
-						   }
+			
+			case "theme" : if("all".equalsIgnoreCase(entry.getValue())) 
+							theme = true;
+						   else
+							   criterias.add(addCriteria(entry.getKey(),entry.getValue()));
 							break;
-		    default :
-					Criteria cri =  Criteria.where(entry.getKey()).regex(Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-	    			criterias.add(cri);
-	    			break;
+		    default :criterias.add(addCriteria(entry.getKey(),entry.getValue()));
+	    			 break;
 			}
 		}	
 		
@@ -88,7 +88,7 @@ public class ProcessRequest {
 				criteria =new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()]));
 			
     	}
-		if(textQuery!=null){
+		if(textQuery != null){
 			if(criteria == null)
 				mainQuery = textQuery;
 			else
@@ -99,10 +99,10 @@ public class ProcessRequest {
 			mainQuery = query(criteria);
 		}
     }
-	if(params.entrySet().size() == 2 && theme && searchphrase) return null;
-	logger.info("Requested searchAll:");
+	if(params.entrySet().size() == 2 && theme && searchphrase) 
+		return null;
+	
 	if(mainQuery != null)
-		//return mongoOps.find(mainQuery.with(p), Record.class);
 		return mainQuery;
 	else 
 		throw new IOException("Check all the request parameters.");
@@ -112,16 +112,14 @@ public class ProcessRequest {
 	 * 
 	 */
 	private Query parseSearchPhrase(String phrase){
+
+		TextCriteria textCriteria =TextCriteria.forDefaultLanguage().matchingAny(phrase);
+		return TextQuery.queryText(textCriteria);
 		
-		TextCriteria textCriteria = null;
-		Query q = null;
-//		boolean b = Pattern.matches("AND", phrase);
-//		String[] test1 = null; 
-//		if (b)
-//			test1  = phrase.split("AND");
+	}
+	
+	private Criteria addCriteria(String key, String value){
+		return Criteria.where(key).regex(Pattern.compile(value, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 		
-		textCriteria = TextCriteria.forDefaultLanguage().matchingAny(phrase);
-		q = TextQuery.queryText(textCriteria);
-		return q;
 	}
 }

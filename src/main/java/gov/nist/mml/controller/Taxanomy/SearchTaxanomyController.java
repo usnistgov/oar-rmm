@@ -10,9 +10,7 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.controller.Taxanomy;
-
-import static org.springframework.data.mongodb.core.query.Query.query;
+package gov.nist.mml.controller.taxanomy;
 
 import java.util.List;
 
@@ -20,22 +18,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import gov.nist.mml.domain.Taxanomy;
-
 import gov.nist.mml.repositories.TaxanomyRepository;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author dsn1
@@ -56,31 +48,19 @@ public class SearchTaxanomyController {
     }
 	
 	@RequestMapping(value = {"/taxanomy"}, method = RequestMethod.GET, produces="application/json")
-	public Page<Taxanomy> SearchAll (Pageable p) {
+	public Page<Taxanomy> searchAll (Pageable p) {
     
 		logger.info("Requested searchAll:");
 		
-		Page<Taxanomy> taxEntries =  taxRepository.findAll(p);
-    	return taxEntries;
+		return taxRepository.findAll(p);
     }
 	
-	    //@ApiOperation(value = "Search All the entries using text search.",nickname = "seatrchbyphrase")
-		@RequestMapping(value = {"/taxanomy/search"}, method = RequestMethod.GET, produces="application/json")
-		public List<Taxanomy> SearchByText (@RequestParam String searchPhrase,Pageable p ) {
+	@RequestMapping(value = {"/taxanomy/search"}, method = RequestMethod.GET, produces="application/json")
+	public List<Taxanomy> searchByText (@RequestParam String searchPhrase,Pageable p ) {
 	    
 			logger.info("Requested searchPhrase:"+searchPhrase);
 			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(searchPhrase);
 			return taxRepository.findAllBy(criteria,p);
-		}
+	}
 		
-//		@RequestMapping(value = {"/taxanomy/searchbyName"}, method = RequestMethod.GET, produces="application/json")
-//		public List<Taxanomy> SearchByTitle (@RequestParam String name) {
-//	    
-//			logger.info("Requested searchbyName:"+name);
-//			TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(name);
-//			//Criteria cr1 = Criteria.where("title").regex(Pattern.compile(title, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-//			
-//			//return RecordRepository.findTitleBy(criteria);
-//			//return taxRepository.findByNameContainingIgnoreCase(name);
-//	    }
 }

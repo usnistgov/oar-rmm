@@ -39,21 +39,22 @@ public class UpdateController {
         recordRepository = repo;
     }
 	
+	@SuppressWarnings("finally")
 	@ApiOperation(value = "Delete an entry from POD list",nickname = "deleteOne")
 	@RequestMapping(value = "/catalog/records/{id}", method = RequestMethod.PUT, produces = "application/json")
 	public String updateRecord(@PathVariable String id,@RequestBody Record updateRecord) {
 		logger.info("Update Record.");
 		try{
-		Record recordToChange = recordRepository.findOne(id);
+			Record recordToChange = recordRepository.findOne(id);
 			   recordToChange.setAccessLevel(updateRecord.getAccessLevel());
 			   recordToChange.setContactPoint(updateRecord.getContactPoint());
 			   
-	   	recordRepository.save(recordToChange);	   
+			recordRepository.save(recordToChange);	   
 		}catch(Exception ex){
-			return "{\"Exception\":\" "+ex.getMessage()+"\"}";
-		}
-		finally{
-			return "{\"Messgae\":\" Operation not allowed.\"}";
+			logger.info(ex.getMessage());
+			throw ex;
+		}finally{
+			return "There is an Error in updating record";
 		}
 	}
 }

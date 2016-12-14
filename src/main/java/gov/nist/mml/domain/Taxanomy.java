@@ -16,21 +16,15 @@ package gov.nist.mml.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import gov.nist.mml.domain.nestedpod.ContactPoint;
-import gov.nist.mml.domain.nestedpod.Distribution;
-import gov.nist.mml.domain.nestedpod.Publisher;
-import gov.nist.mml.domain.nestedpod.taxanomy.subCategory;
+import gov.nist.mml.domain.nestedpod.taxanomy.SubCategory;
 
 
 public class Taxanomy {
 
 	@Id private String id;
-	private @TextIndexed String keyIdentifier;
-	private @TextIndexed String researchCategory;
-	private @TextIndexed subCategory[] subCategories;
+	@TextIndexed private String keyIdentifier;
+	@TextIndexed private String researchCategory;
+	@TextIndexed private SubCategory[] subCategories;
 
 	
 	public String getresearchCategory() {
@@ -41,10 +35,10 @@ public class Taxanomy {
 	}
 	
 	
-	public subCategory[] getsubCategories() {
+	public SubCategory[] getsubCategories() {
 		return this.subCategories;
 	}
-	public void setSubCategories(subCategory[] subcategories) {
+	public void setSubCategories(SubCategory[] subcategories) {
 		this.subCategories = subcategories;
 	}
 	

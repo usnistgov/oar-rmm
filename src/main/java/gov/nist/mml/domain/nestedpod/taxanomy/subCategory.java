@@ -15,19 +15,14 @@ package gov.nist.mml.domain.nestedpod.taxanomy;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * @author dsn1
  *
  */
-public class subCategory {
+public class SubCategory {
 	
 	@Id private String id;
-	private @TextIndexed String subResearchCategory;
-//	@JsonProperty("subCategories")
-//	private @TextIndexed subCategoryTier2[] subCategories;
-	
+	@TextIndexed private String subResearchCategory;
 	public String getsubResearchCategory(){
 		return subResearchCategory;
 	}
@@ -35,12 +30,5 @@ public class subCategory {
 	public void setsubResearchCategory(String subResearchCategory){
 		this.subResearchCategory = subResearchCategory;
 	}
-	
-//	public subCategoryTier2[] getSubCategoryTier2() {
-//		return subCategories;
-//	}
-//	public void setSubCategoryTier2(subCategoryTier2[] subCategories) {
-//		this.subCategories = subCategories;
-//	}
 
 }

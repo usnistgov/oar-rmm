@@ -12,97 +12,67 @@
  */
 package gov.nist.mml.controller;
 
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.springframework.context.annotation.Bean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import gov.nist.mml.repositories.RecordRepository;
-import gov.nist.mml.domain.Record;
-import gov.nist.mml.domain.nestedpod.ContactPoint;
-import gov.nist.mml.domain.nestedpod.Distribution;
-import gov.nist.mml.domain.nestedpod.Publisher;
-import gov.nist.mml.exception.ResourceNotFoundException;
 
-import org.springframework.data.mongodb.core.query.Criteria;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Update.update;
-import static org.springframework.data.mongodb.core.query.Query.query;
+import gov.nist.mml.domain.Record;
+import io.swagger.annotations.Api;
 @RestController
 @Api(value = "Test api for searching all data", tags = "Test API")
 public class TestController {
 
 	private Logger logger = LoggerFactory.getLogger(TestController.class);
 
-	@Autowired
-    private RecordRepository RecordRepository;
-
-	@Autowired
-    public TestController(RecordRepository repo) { 
-        RecordRepository = repo;
-    }
 	
 	@Autowired
 	MongoOperations mongoOps ;
 	@RequestMapping(value = {"/testOr"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> SearchOr (@RequestParam String title, @RequestParam String access) {
+	public List<Record> searchOr (@RequestParam String title, @RequestParam String access) {
     
-		logger.info("Requested search with and:");
+		logger.info("Requested search with Or:");
 		Criteria cr1 = Criteria.where("title").regex(Pattern.compile(title, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 		Criteria cr2 = Criteria.where("accessLevel").is(access);
-		//working
-		//return mongoOps.find(query(where("Title").is("Enterprise Data Inventory")), Record.class);
 				
         return mongoOps.find(query(new Criteria().orOperator(cr1,cr2)), Record.class);
     }
 	
 	
 	@RequestMapping(value = {"/testAnd"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> SearchAnd (@RequestParam String title, @RequestParam String access) {
+	public List<Record> searchAnd (@RequestParam String title, @RequestParam String access) {
     
 		logger.info("Requested search with and:");
 		Criteria cr1 = Criteria.where("title").regex(Pattern.compile(title, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 		Criteria cr2 = Criteria.where("accessLevel").is(access);
-		//working
-		//return mongoOps.find(query(where("Title").is("Enterprise Data Inventory")), Record.class);
-				
+					
         return mongoOps.find(query(new Criteria().andOperator(cr1,cr2)), Record.class);
     }
 	
 	
 	@RequestMapping(value = {"/testAnds"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> SearchAnds (@RequestParam Map<String,String> params) {
+	public List<Record> searchAnds (@RequestParam Map<String,String> params) {
         ArrayList<Criteria> criterias = new ArrayList<Criteria>();
         
-        logger.info("Requested search with and:");
+        logger.info("Requested search with multiple and ops:");
 		for (Entry<String, String> entry : params.entrySet()) {
-		  //System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-		  Criteria cri =  Criteria.where(entry.getKey()).regex(Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+		   Criteria cri =  Criteria.where(entry.getKey()).regex(Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 		  criterias.add(cri);
 		}
-		//Criteria cr1 = Criteria.where("title").regex(Pattern.compile("", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-		//Criteria cr2 = Criteria.where("accessLevel").is("");
-		//working
-		//return mongoOps.find(query(where("Title").is("Enterprise Data Inventory")), Record.class);
-	    return mongoOps.find(query(new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()]))), Record.class);
+		return mongoOps.find(query(new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()]))), Record.class);
     }
 
 }
