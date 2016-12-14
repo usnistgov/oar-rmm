@@ -12,21 +12,14 @@
  */
 package gov.nist.mml.configuration;
 
-import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 
 
 @Configuration
@@ -34,24 +27,7 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 @ComponentScan(basePackages = "gov.nist.mml")
 @Import(RepositoryRestMvcConfiguration.class)
 public class WebappConfiguration extends WebMvcConfigurerAdapter{
-	/*private Logger logger = LoggerFactory.getLogger(WebappConfiguration.class);
-	public WebappConfiguration(){
-		logger.info("Hello Config");
-	}*/
 	
-//	//map static resources by extension
-//    @Bean
-//    public SimpleUrlHandlerMapping resourceServletMapping() {
-//        SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
-//
-//        //make sure static resources are mapped first since we are using
-//        //a slightly different approach
-//        mapping.setOrder(0);
-//        Properties urlProperties = new Properties();
-//         urlProperties.put("/**/*.html", "defaultServletHttpRequestHandler");
-//       mapping.setMappings(urlProperties);
-//        return mapping;
-//    }
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		

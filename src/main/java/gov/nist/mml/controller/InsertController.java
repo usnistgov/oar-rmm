@@ -38,7 +38,7 @@ public class InsertController {
     private RecordRepository recordRepository;
 
 	@Autowired
-    private ResourceApiRepository ResourceApiRepository;
+    private ResourceApiRepository resourceApiRepository;
 	
 	@Autowired
     public InsertController(RecordRepository repo) { 
@@ -57,6 +57,6 @@ public class InsertController {
 	public ResourceApi saveApi(@RequestBody ResourceApi keydata) {
 	      //do something fancy
 		  logger.info("adding new entry in ResourceApi"+keydata.toString());
-	      return ResourceApiRepository.save(keydata);
+	      return resourceApiRepository.save(keydata);
 	}
 }

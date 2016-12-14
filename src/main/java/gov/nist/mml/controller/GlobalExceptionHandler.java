@@ -15,17 +15,15 @@ package gov.nist.mml.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 
 import gov.nist.mml.domain.ErrorInfo;
 import gov.nist.mml.exception.KeyWordNotFoundException;
@@ -43,17 +41,17 @@ public class GlobalExceptionHandler {
 	  @ResponseBody
 	  public ErrorInfo  myError(Exception exception) {
 	    logger.info("----Caught IOException----");
-	    ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"General Exception",HttpStatus.CONFLICT.toString());
-        return errInfo;
+	    return new ErrorInfo(request.getDescription(false), exception,"General Exception",HttpStatus.CONFLICT.toString());
+        
 	  }
 	  
 	  @ResponseStatus(HttpStatus.BAD_REQUEST)
 	  @ExceptionHandler(IllegalArgumentException.class)
 	  @ResponseBody
-	  public ErrorInfo Illegal(IllegalArgumentException exception) {
-            logger.info("----Caught KeywordNotFoundException----");
-            ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"IllegalArgumentException",HttpStatus.BAD_REQUEST.toString());
-            return errInfo;
+	  public ErrorInfo illegal(IllegalArgumentException exception) {
+            logger.info("----This is a ilegal request----");
+            return new ErrorInfo(request.getDescription(false), exception,"IllegalArgumentException",HttpStatus.BAD_REQUEST.toString());
+            
 	  }
 	  
 	  @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -61,18 +59,18 @@ public class GlobalExceptionHandler {
 	  @ResponseBody
 	  public ErrorInfo notFound(Exception exception) {
             logger.info("----Caught KeywordNotFoundException----");
-            ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
-            return errInfo;
+            return new ErrorInfo(request.getDescription(false), exception,"KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
+            
 	  }
 	  
 	  
 	  @ResponseStatus(HttpStatus.NOT_FOUND)
 	  @ExceptionHandler(ResourceNotFoundException.class)
 	  @ResponseBody
-	  public ErrorInfo ResourceNotFound(ResourceNotFoundException exception) {
+	  public ErrorInfo resourceNotFound(ResourceNotFoundException exception) {
             logger.info("----Caught KeywordNotFoundException----");
-            ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
-            return errInfo;
+            return new ErrorInfo(request.getDescription(false), exception,"ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
+            
 	  }
 	  
 	  @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -80,8 +78,6 @@ public class GlobalExceptionHandler {
 	  @ResponseBody
 	  public ErrorInfo badRequest(Exception exception) {
             logger.info("----Caught IOException----");
-            ErrorInfo errInfo = new ErrorInfo(request.getDescription(false), exception,"IOException",HttpStatus.BAD_REQUEST.toString());
-            //return "This is the test of error"+exception.getMessage();
-            return errInfo;
+            return new ErrorInfo(request.getDescription(false), exception,"IOException",HttpStatus.BAD_REQUEST.toString());
 	  }
 } 

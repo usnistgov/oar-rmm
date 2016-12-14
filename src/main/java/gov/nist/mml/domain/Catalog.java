@@ -14,8 +14,6 @@ package gov.nist.mml.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,19 +23,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  */
 
-public class catalog {
+public class Catalog {
 	@Id private String id;
 	@JsonProperty("@context")  @Field("@context")
-	private @TextIndexed String context;
+	@TextIndexed private  String context;
 	@JsonProperty("@id") @Field("@Id")
-	private @TextIndexed String catalogId;
+	@TextIndexed private  String catalogId;
 	@JsonProperty("@type") @Field("@type")
-	private @TextIndexed String type;
-	private @TextIndexed String conformsTo;
-	private @TextIndexed String describedBy;
+	@TextIndexed private String type;
+	@TextIndexed private String conformsTo;
+	@TextIndexed private String describedBy;
 	@JsonProperty("dataset") @Field("dataset")
 	//@DBRef
-	private @TextIndexed Record[] records;
+	@TextIndexed private Record[] records;
 	
 	public String getContext() {
 		return context;

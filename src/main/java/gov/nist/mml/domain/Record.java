@@ -29,35 +29,35 @@ public class Record {
 	@Id private String id;
 
 	@JsonProperty("@type")
-	private @TextIndexed String type;
-	private @TextIndexed(weight=2) String title;
-	private @TextIndexed(weight=3)String description;
-    private @TextIndexed String[] keyword;
-    private @TextIndexed String modified;
-    private @TextIndexed Publisher publisher;
-    private @TextIndexed ContactPoint contactPoint;
-    private @TextIndexed String identifier;
-    private @TextIndexed String accessLevel;
-    private @TextIndexed String[] bureauCode;
-	private @TextIndexed String[] programCode;
-	private @TextIndexed String license;
-	private @TextIndexed String rights;
-	private @TextIndexed String spatial;
-	private @TextIndexed String temporal;
-	private @TextIndexed Distribution[] distribution;
-	private @TextIndexed String accuralPeriodicity;
-	private @TextIndexed String conformsTo;
-	private @TextIndexed boolean dataQuality;
-	private @TextIndexed String describedBy; //url
-	private @TextIndexed String describedByType;
-	private @TextIndexed String isPartOf;
-	private @TextIndexed String issued;
-	private @TextIndexed String[] language;
-	private @TextIndexed String landingPage;
-    private @TextIndexed String primaryITInvestmentUII;
-    private @TextIndexed String[] references;
-    private @TextIndexed String systemOfRecords;
-	private @TextIndexed String[] theme;
+	@TextIndexed private  String type;
+	@TextIndexed(weight=2) private  String title;
+	@TextIndexed(weight=3) private String description;
+	@TextIndexed private  String[] keyword;
+	@TextIndexed private  String modified;
+	@TextIndexed private  Publisher publisher;
+	@TextIndexed private  ContactPoint contactPoint;
+	@TextIndexed private String identifier;
+	@TextIndexed private String accessLevel;
+	@TextIndexed private String[] bureauCode;
+	@TextIndexed private String[] programCode;
+	@TextIndexed private String license;
+	@TextIndexed private String rights;
+	@TextIndexed private String spatial;
+	@TextIndexed private String temporal;
+	@TextIndexed private Distribution[] distribution;
+	@TextIndexed private String accuralPeriodicity;
+	@TextIndexed private  String conformsTo;
+	@TextIndexed private  boolean dataQuality;
+	@TextIndexed  private String describedBy; //url
+	@TextIndexed private  String describedByType;
+	@TextIndexed private String isPartOf;
+	@TextIndexed private String issued;
+	@TextIndexed private String[] language;
+	@TextIndexed private String landingPage;
+	@TextIndexed private String primaryITInvestmentUII;
+	@TextIndexed private String[] references;
+	@TextIndexed private String systemOfRecords;
+	@TextIndexed private String[] theme;
 	
 	public String getType() {
 		return type;

@@ -13,74 +13,37 @@
 package gov.nist.mml.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import gov.nist.mml.domain.Record;
+import gov.nist.mml.utilities.ProcessRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import gov.nist.mml.repositories.RecordRepository;
-import gov.nist.mml.utilities.ProcessRequest;
-import gov.nist.mml.domain.catalog;
-import gov.nist.mml.domain.Record;
-import gov.nist.mml.domain.nestedpod.ContactPoint;
-import gov.nist.mml.domain.nestedpod.Distribution;
-import gov.nist.mml.domain.nestedpod.Publisher;
-import gov.nist.mml.exception.ResourceNotFoundException;
-
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-
-import static org.springframework.data.mongodb.core.query.Query.query;
-import gov.nist.mml.repositories.CatalogRepository;;
+import io.swagger.annotations.ApiOperation;
+import springfox.documentation.annotations.ApiIgnore;;
 @RestController
 @Api(value = "Api for advanced search options", tags = "AdvancedSearch")
 public class AdvancedSearchController {
 	
 	private Logger logger = LoggerFactory.getLogger(SearchController.class);
 
-	@Autowired
-    private RecordRepository RecordRepository;
-	
-	@Autowired
-    private CatalogRepository catRepository;
 
-	@Autowired
-    public AdvancedSearchController(RecordRepository repo) { 
-        RecordRepository = repo;
-    }
-	
 	@Autowired
 	MongoOperations mongoOps ;
 
@@ -113,23 +76,26 @@ public class AdvancedSearchController {
         
     })
     @RequestMapping(value = {"/records/advancedsearch"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> Search (@ApiIgnore @PageableDefault(size=1000)  Pageable p)//,@RequestParam @ApiIgnore  Map<String,String> params )
+	public List<Record> search (@ApiIgnore @PageableDefault(size=1000)  Pageable p)//,@RequestParam @ApiIgnore  Map<String,String> params )
 		   throws IOException {
     	/**
     	 * Following code is not needed but added for swagger-ui to work.
     	 * handlerequest can take directly params from method @requestparam option
     	 **/
+    	logger.info("This is advanced search request:"+request);
     	Map<String,String[]> params = request.getParameterMap();
     	Map<String,String> requstParams = new HashMap<String,String>();
+    	
     	for (Map.Entry<String, String[]> entry : params.entrySet()) 
     	      requstParams.put(entry.getKey(), entry.getValue()[0]);
     
-    	/***/
+    	
         ProcessRequest processRequest = new ProcessRequest();
         Query q = processRequest.handleRequest(requstParams);
        
-        if(q==null) return mongoOps.findAll(Record.class);
+        if(q==null) 
+        	return mongoOps.findAll(Record.class);
         else  
-        return mongoOps.find(q.with(p), Record.class);
+        	return mongoOps.find(q.with(p), Record.class);
     }
 }

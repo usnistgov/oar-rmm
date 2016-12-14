@@ -15,8 +15,6 @@ package gov.nist.mml.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * @author dsn1
  *
@@ -24,10 +22,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ResourceApi {
 
 	@Id private String id;
-	private @TextIndexed String name;
-	private @TextIndexed String infoUrl;
-	private @TextIndexed String documentUrl;
-	private @TextIndexed String apiUrl;
+	@TextIndexed private String name;
+	@TextIndexed private String infoUrl;
+	@TextIndexed private String documentUrl;
+	@TextIndexed private String apiUrl;
 	
 	
 	public String getName() {

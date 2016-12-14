@@ -21,6 +21,28 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Resource Not Found") //404
 public class KeyWordNotFoundException extends Exception {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String requestUrl = "";
+	public KeyWordNotFoundException(int id){
+		super("EmployeeNotFoundException with id="+id);
+	}
+	public KeyWordNotFoundException(){
+		super("Keywords you  are looking for are not available.");
+	}
+	public KeyWordNotFoundException(String requestUrl){
+		
+		super("Keywords not available for given Request."+requestUrl );
+		this.setRequestUrl(requestUrl);
+	}
+	
+	public String getRequestUrl(){
+		return this.requestUrl;
+	}
+	public void setRequestUrl(String url){
+		this.requestUrl = url;
+	}
 	
 }

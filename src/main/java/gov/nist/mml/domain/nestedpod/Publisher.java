@@ -20,8 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Publisher{
 	@Id private String id;
 	@JsonProperty("@type")
-	private @TextIndexed String type;
-	private @TextIndexed String name;
+	@TextIndexed private String type;
+	@TextIndexed private String name;
 	
 	public String getType(){
 		return type;

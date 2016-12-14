@@ -15,24 +15,19 @@ package gov.nist.mml.repositories;
 
 import java.util.List;
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-
-import org.springframework.data.mongodb.core.query.TextCriteria;
 
 import gov.nist.mml.domain.Record;
 import gov.nist.mml.domain.nestedpod.ContactPoint;
 import gov.nist.mml.domain.nestedpod.Distribution;
 import gov.nist.mml.domain.nestedpod.Publisher;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 
 @RepositoryRestResource

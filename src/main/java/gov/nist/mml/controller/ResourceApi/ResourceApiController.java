@@ -10,7 +10,7 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.controller.ResourceApi;
+package gov.nist.mml.controller.resourceApi;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,11 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.nist.mml.controller.SearchController;
 import gov.nist.mml.domain.ResourceApi;
-import gov.nist.mml.domain.catalog;
 import gov.nist.mml.repositories.ResourceApiRepository;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -46,8 +43,9 @@ public class ResourceApiController {
 	@ApiOperation(value = "Get NIST open data api list.",nickname = "ResourceApi",
 			  notes = "Returns the list of NIST API available publicly.")
 	@RequestMapping(value = {"/ResourceApi"}, method = RequestMethod.GET, produces="application/json")
-	public List<ResourceApi> Search ( )throws IOException {
-		List<ResourceApi> apiEntries = resourceapiRepository.findAll();
-		return apiEntries;
+	public List<ResourceApi> search ( )throws IOException {
+		logger.info("gets available resource apis");
+		return resourceapiRepository.findAll();
+		
 	}
 }

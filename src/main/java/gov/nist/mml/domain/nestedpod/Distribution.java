@@ -20,16 +20,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Distribution{
 	@Id private String id;
 	@JsonProperty("@type")
-	private @TextIndexed String type;
-	private @TextIndexed String accessURL;
-	private @TextIndexed String conformsTo;
-	private @TextIndexed String describedBy; //url
-	private @TextIndexed String describedByType;
-	private @TextIndexed String description;
-	private @TextIndexed String downloadURL;
-	private @TextIndexed String mediaType;
-	private @TextIndexed String format;
-	private @TextIndexed String title;
+	@TextIndexed private String type;
+	@TextIndexed private String accessURL;
+	@TextIndexed private String conformsTo;
+	@TextIndexed private String describedBy;
+	@TextIndexed private String describedByType;
+	@TextIndexed private String description;
+	@TextIndexed private String downloadURL;
+	@TextIndexed private String mediaType;
+	@TextIndexed private String format;
+	@TextIndexed private String title;
 	
 	public String getType() {
 		return type;
