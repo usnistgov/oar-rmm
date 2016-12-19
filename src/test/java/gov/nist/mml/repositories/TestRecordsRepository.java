@@ -42,7 +42,6 @@ import com.mongodb.Mongo;
 
 import gov.nist.mml.domain.Record;
 import gov.nist.mml.domain.nestedpod.ContactPoint;
-import gov.nist.mml.domain.nestedpod.Distribution;
 import gov.nist.mml.domain.nestedpod.Publisher;
 
 import static com.lordofthejars.nosqlunit.mongodb.MongoDbRule.MongoDbRuleBuilder.newMongoDbRule;
@@ -99,35 +98,37 @@ public class TestRecordsRepository {
 
 	private Record createRecord(){
 	final Record newRecord = new Record();
-	newRecord.setType("dcat:Dataset");
+	newRecord.setType(new String[]{"dcat:Dataset"});
 	String[] keywords = new String[]{"IR spectrum","InChI" };//,"InChIKey","UV Vis spectrum","boiling point","chemical data","chemical structure","enthalpy","entropy","heat capacity","heat of formation","ionization potential","mass spectrum","retention index","thermochemical data","thermochemistry","thermodynamic data","vapor pressure"};
 	newRecord.setKeyword(keywords);
 	newRecord.setProgramCode(new String[]{"006:052"});
 	newRecord.setLandingPage("http://webbook.nist.gov/chemistry");
 	newRecord.setAccessLevel("public");
+	/*
 	 Distribution db = new Distribution();
-	 db.setDescription("Landing page for the NIST Chemistry WebBook.");
+	 db.setDescription(new String[]{"Landing page for the NIST Chemistry WebBook."});
 	 db.setAccessURL("http://webbook.nist.gov/chemistry/");
 	 db.setMediaType("text/html");
 	newRecord.setDistribution(new Distribution[]{db});
+	*/
 	newRecord.setModified("2013-04-01");
 		Publisher pub = new Publisher();
 		pub.setType("org:Organization");
 		pub.setName("National Institute of Standards and Technology");
 	newRecord.setPublisher(pub);
-	newRecord.setReferences(new String[]{"http://dx.doi.org/10.1021/je000236i"});
+	//newRecord.setReferences(new String[]{"http://dx.doi.org/10.1021/je000236i"});
 	newRecord.setBureauCode(new String[]{"006:55"});
 	
 	newRecord.setTitle("NIST Chemistry WebBook - SRD 69");
-	newRecord.setDescription("The NIST Chemistry WebBook provides users with easy access to chemical and physical property data for chemical species through the internet. The data provided in the site are from collections maintained by the NIST Standard Reference Data Program and outside contributors. Data in the WebBook system are organized by chemical species. The WebBook system allows users to search for chemical species by various means. Once the desired species has been identified, the system will display data for the species.");
+	//newRecord.setDescription("The NIST Chemistry WebBook provides users with easy access to chemical and physical property data for chemical species through the internet. The data provided in the site are from collections maintained by the NIST Standard Reference Data Program and outside contributors. Data in the WebBook system are organized by chemical species. The WebBook system allows users to search for chemical species by various means. Once the desired species has been identified, the system will display data for the species.");
 		ContactPoint cp = new ContactPoint();
-		cp.setFn("Peter Linstrom");
-		cp.sethasmail("mailto:peter.linstrom@nist.gov");
+		//cp.setFn("Peter Linstrom");
+		//cp.sethasmail("mailto:peter.linstrom@nist.gov");
 		cp.setType("vcard:Contact");
 	newRecord.setContactPoint(cp);
-	newRecord.setLanguage(new String[]{"en"});
+	newRecord.setResLanguage(new String[]{"en"});
 	newRecord.setLicense("http://www.nist.gov/data/license.cfm");
-	newRecord.setIdentifier("EBC9DB05EDEE5B0EE043065706812DF85");
+	//newRecord.setIdentifier("EBC9DB05EDEE5B0EE043065706812DF85");
 	return newRecord;
 }
 	

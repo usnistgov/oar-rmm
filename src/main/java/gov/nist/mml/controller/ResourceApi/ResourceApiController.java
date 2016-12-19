@@ -10,7 +10,7 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.controller.resourceApi;
+package gov.nist.mml.controller.ResourceApi;
 
 import java.io.IOException;
 import java.util.List;

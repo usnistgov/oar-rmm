@@ -10,7 +10,7 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.controller.taxanomy;
+package gov.nist.mml.controller.Taxanomy;
 
 import java.util.List;
 

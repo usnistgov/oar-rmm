@@ -8,20 +8,23 @@
  * used. This software can be redistributed and/or modified freely provided that any derivative
  * works bear some notice that they are derived from it, and any modified versions bear some notice
  * that they have been modified.
- * @author: Deoyani Nandrekar-Heinis
+ * @author: Som Kolli
  */
 package gov.nist.mml.domain.nestedpod;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Publisher{
-	@JsonProperty("@type")
-    @TextIndexed private String type;
-    @TextIndexed private String name;
-	private @TextIndexed Publisher subOrganizationOf;
+public class DocumentReference{
+
+    @JsonProperty("@type")
+	private String type;
+	private String location;
+	private String label;
+	private String citation;
+	private String refid;
+	private String refType;
 	
 	public String getType(){
 		return type;
@@ -31,19 +34,42 @@ public class Publisher{
 		this.type = type;
 	}
 	
-	public String getName(){
-		return name;
+	public String getLocation(){
+		return location;
 	}
 	
-	public void setName(String name){
-		this.name = name;
+	public void setLocation(String location){
+		this.location = location;
+	}
+	public String getLabel(){
+		return label;
 	}
 	
-	public Publisher getSubOrganizationOf(){
-		return subOrganizationOf;
+	public void setLabel(String label){
+		this.label = label;
 	}
 	
-	public void setOrganizationOf(Publisher subOrganizationOf){
-		this.subOrganizationOf = subOrganizationOf;
+	public String getCitation(){
+		return citation;
+	}
+	
+	public void setCitation(String citation){
+		this.citation = citation;
+	}
+	
+	public String getRefid(){
+		return refid;
+	}
+	
+	public void setRefid(String refid){
+		this.refid = refid;
+	}
+	
+	public String getRefType(){
+		return refType;
+	}
+	
+	public void setRefType(String refType){
+		this.refType = refType;
 	}
 }

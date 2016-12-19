@@ -17,11 +17,14 @@ import org.springframework.data.annotation.Id;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ContactPoint{
-	@Id private String id;
 	@JsonProperty("@type")
 	private String type;
-	private String hasmail;
+	private String hasEmail;
 	private String fn;
+	private String[] postalAddress;
+	private String phoneNumber;
+	private String timezone;
+	private String proxyFor;
 	
 	public String getType(){
 		return type;
@@ -31,18 +34,51 @@ public class ContactPoint{
 		this.type = type;
 	}
 	
-	public String getHasmail(){
-		return hasmail;
+	public String getHasEmail(){
+		return hasEmail;
 	}
 	
-	public void sethasmail(String hasmail){
-		this.hasmail = hasmail;
+	public void sethasEmail(String hasEmail){
+		this.hasEmail = hasEmail;
 	}
-	public String getFn(){
-		return fn;
+
+    public String getfn(){
+      return fn;
+    }
+  
+    public void setfn(String fn){
+      this.fn = fn;
+    }
+  	
+	public String[] getPostalAddress(){
+		return postalAddress;
 	}
 	
-	public void setFn(String fn){
-		this.fn = fn;
+	public void setPostalAddress(String[] postalAddress){
+		this.postalAddress = postalAddress;
 	}
+	
+	public String getPhoneNumber(){
+		return phoneNumber;
+	}
+	
+	public void setPhoneNumber(String phoneNumber){
+		this.phoneNumber = phoneNumber;
+	}
+	
+    public String getTimezone(){
+      return timezone;
+    }
+  
+    public void setTimezone(String timezone){
+      this.timezone = timezone;
+    }	
+    
+    public String getProxyFor(){
+      return proxyFor;
+    }
+  
+    public void setProxyFor(String proxyFor){
+      this.proxyFor = proxyFor;
+    }       
 }
