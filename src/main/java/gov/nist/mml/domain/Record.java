@@ -40,7 +40,7 @@ public class Record {
     @TextIndexed private String[] keyword;
     @TextIndexed private String modified; 
     @TextIndexed private Publisher publisher;
-    @TextIndexed private Component[] component;
+    @TextIndexed private Component[] components;
     @TextIndexed private ContactPoint contactPoint;
     @TextIndexed private String accessLevel;
     @TextIndexed private String[] bureauCode;
@@ -49,7 +49,7 @@ public class Record {
     @TextIndexed private String rights;
     @TextIndexed private String spatial;
     @TextIndexed private String temporal;
-    @TextIndexed private String accuralPeriodicity;
+    @TextIndexed private String accrualPeriodicity;
     @TextIndexed private String conformsTo;
     @TextIndexed private boolean dataQuality;
     @TextIndexed private String describedBy; 
@@ -137,11 +137,11 @@ public class Record {
 	}
 	
 	public Component[] getComponents() {
-		return component;
+		return components;
 	}
 	
-	public void setComponents(Component[] component) {
-		this.component = component;
+	public void setComponents(Component[] components) {
+		this.components = components;
 	}
 	
 	public ContactPoint getContactPoint() {
@@ -216,12 +216,12 @@ public class Record {
 		this.temporal = temporal;
 	}
 
-	public String getAccuralPeriodicity() {
-		return this.accuralPeriodicity;
+	public String getAccrualPeriodicity() {
+		return this.accrualPeriodicity;
 	}
 	
-	public void setAccuralPeriodicity(String accuralPeriodicity) {
-		this.accuralPeriodicity =  accuralPeriodicity;
+	public void setAccrualPeriodicity(String accrualPeriodicity) {
+		this.accrualPeriodicity =  accrualPeriodicity;
 	}
 	
 	public String getConformsTo() {
