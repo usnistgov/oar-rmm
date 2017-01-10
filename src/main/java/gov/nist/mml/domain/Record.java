@@ -15,68 +15,100 @@ package gov.nist.mml.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonProperty; 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import gov.nist.mml.domain.nestedpod.Component;
 import gov.nist.mml.domain.nestedpod.ContactPoint;
-import gov.nist.mml.domain.nestedpod.Distribution;
+import gov.nist.mml.domain.nestedpod.DocumentReference;
+import gov.nist.mml.domain.nestedpod.Identifier;
+import gov.nist.mml.domain.nestedpod.Person;
 import gov.nist.mml.domain.nestedpod.Publisher;
+import gov.nist.mml.domain.nestedpod.ResourceReference;
 
 //It is a dataset field in the Open data schema
+@Document
 public class Record {
 
 	@Id private String id;
-
 	@JsonProperty("@type")
-	@TextIndexed private  String type;
-	@TextIndexed(weight=2) private  String title;
-	@TextIndexed(weight=3) private String description;
-	@TextIndexed private  String[] keyword;
-	@TextIndexed private  String modified;
-	@TextIndexed private  Publisher publisher;
-	@TextIndexed private  ContactPoint contactPoint;
-	@TextIndexed private String identifier;
-	@TextIndexed private String accessLevel;
-	@TextIndexed private String[] bureauCode;
-	@TextIndexed private String[] programCode;
-	@TextIndexed private String license;
-	@TextIndexed private String rights;
-	@TextIndexed private String spatial;
-	@TextIndexed private String temporal;
-	@TextIndexed private Distribution[] distribution;
-	@TextIndexed private String accuralPeriodicity;
-	@TextIndexed private  String conformsTo;
-	@TextIndexed private  boolean dataQuality;
-	@TextIndexed  private String describedBy; //url
-	@TextIndexed private  String describedByType;
-	@TextIndexed private String isPartOf;
-	@TextIndexed private String issued;
-	@TextIndexed private String[] language;
-	@TextIndexed private String landingPage;
-	@TextIndexed private String primaryITInvestmentUII;
-	@TextIndexed private String[] references;
-	@TextIndexed private String systemOfRecords;
-	@TextIndexed private String[] theme;
-	
-	public String getType() {
+    @TextIndexed private String[] type;
+	@TextIndexed private String resId;
+    @TextIndexed(weight=2) private String title;
+    @TextIndexed(weight=3) private String[] description;
+    @TextIndexed private String[] keyword;
+    @TextIndexed private String modified; 
+    @TextIndexed private Publisher publisher;
+    @TextIndexed private Component[] components;
+    @TextIndexed private ContactPoint contactPoint;
+    @TextIndexed private String accessLevel;
+    @TextIndexed private String[] bureauCode;
+    @TextIndexed private String[] programCode;
+    @TextIndexed private String license;
+    @TextIndexed private String rights;
+    @TextIndexed private String spatial;
+    @TextIndexed private String temporal;
+    @TextIndexed private String accrualPeriodicity;
+    @TextIndexed private String conformsTo;
+    @TextIndexed private boolean dataQuality;
+    @TextIndexed private String describedBy; 
+    @TextIndexed private String describedByType;
+    @TextIndexed private ResourceReference isPartOf;
+    @TextIndexed private String issued;
+    @TextIndexed private String[] resLanguage;
+    @TextIndexed private String landingPage;  
+    @TextIndexed private String primaryITInvestmentUII;
+    @TextIndexed private DocumentReference[] references;
+    @TextIndexed private String systemOfRecords;
+    @TextIndexed private String[] theme;
+    @TextIndexed private String doi;
+    @TextIndexed private String[] abbrev; 
+    @TextIndexed private String[] subtitle;
+    @TextIndexed private String[] aka;
+    @TextIndexed private Person[] authors;
+    @TextIndexed private String ediid;
+    @TextIndexed private Identifier identifier;
+    @TextIndexed private String recommendedCitation;
+    @TextIndexed private String orcidPath;
+
+    public String getID() {
+      return id;
+    }
+
+    public void setID(String id) {
+      this.id = id;
+    }
+    
+    public String getResId() {
+      return resId;
+    }
+
+    public void setResId(String resId) {
+      this.resId = resId;
+    }    
+    
+    public String[] getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(String[] type) {
 		this.type = type;
 	}
+	
 	public String getTitle() {
 		return title;
 	}
+	
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getDescription() {
+	
+	public String[] getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description ) {
+	public void setDescription(String[] description ) {
 		this.description = description;
 	}
 	
@@ -91,6 +123,7 @@ public class Record {
 	public String getModified() {
 		return modified;
 	}
+	
 	public void setModified(String modified) {
 		this.modified = modified;
 	}
@@ -98,22 +131,35 @@ public class Record {
 	public Publisher getPublisher() {
 		return publisher;
 	}
+	
 	public void setPublisher(Publisher publisher) {
 		this.publisher = publisher;
+	}
+	
+	public Component[] getComponents() {
+		return components;
+	}
+	
+	public void setComponents(Component[] components) {
+		this.components = components;
 	}
 	
 	public ContactPoint getContactPoint() {
 		return contactPoint;
 	}
+	
 	public void setContactPoint(ContactPoint contactPoint) {
 		this.contactPoint = contactPoint;
 	}
-	public String getIdentifier() {
+	
+	public Identifier getIdentifier() {
 		return identifier;
 	}
-	public void setIdentifier(String identifier) {
+	
+	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
+	
 	public String getAccessLevel() {
 		return accessLevel;
 	}
@@ -121,12 +167,15 @@ public class Record {
 	public void setAccessLevel(String accessLevel) {
 		this.accessLevel = accessLevel;
 	}
+	
 	public String[] getBureauCode() {
 		return bureauCode;
 	}
+	
 	public void setBureauCode(String[] bureauCode) {
 		this.bureauCode = bureauCode;
 	}
+	
 	public String[] getProgramCode() {
 		return programCode;
 	}
@@ -138,6 +187,7 @@ public class Record {
 	public String getLicense() {
 		return license;
 	}
+	
 	public void setLicense(String license) {
 		this.license = license;
 	}
@@ -145,33 +195,33 @@ public class Record {
 	public String getRights() {
 		return rights;
 	}
+	
 	public void setRights(String rights) {
 		this.rights = rights;
 	}
+	
 	public String getSpatial() {
 		return spatial;
 	}
+	
 	public void setSpatial(String spatial) {
 		this.spatial = spatial;
 	}
+	
 	public String getTemporal() {
 		return temporal;
 	}
+	
 	public void setTemporal(String temporal) {
 		this.temporal = temporal;
 	}
-	public Distribution[] getDistribution() {
-		return distribution;
-	}
-	public void setDistribution(Distribution[] distribution) {
-		this.distribution = distribution;
+
+	public String getAccrualPeriodicity() {
+		return this.accrualPeriodicity;
 	}
 	
-	public String getAccuralPeriodicity() {
-		return this.accuralPeriodicity;
-	}
-	public void setAccuralPeriodicity(String accuralPeriodicity) {
-		this.accuralPeriodicity =  accuralPeriodicity;
+	public void setAccrualPeriodicity(String accrualPeriodicity) {
+		this.accrualPeriodicity =  accrualPeriodicity;
 	}
 	
 	public String getConformsTo() {
@@ -198,7 +248,6 @@ public class Record {
 		this.describedBy = describedBy;
 	}
 	
-
 	public String getDescribedByType() {
 		return describedByType;
 	}
@@ -207,12 +256,11 @@ public class Record {
 		this.describedByType = describedByType;
 	}
 
-	
-	public String getIsPartOf() {
+	public ResourceReference getIsPartOf() {
 		return isPartOf;
 	}
 
-	public void setIsPartOf(String isPartOf) {
+	public void setIsPartOf(ResourceReference isPartOf) {
 		this.isPartOf = isPartOf;
 	}
 	
@@ -224,11 +272,12 @@ public class Record {
 		this.issued = issued;
 	}
 	
-	public String[] getLanguage() {
-		return language;
+	public String[] getResLanguage() {
+		return resLanguage;
 	}
-	public void setLanguage(String[] language) {
-		this.language = language;
+	
+	public void setResLanguage(String[] resLanguage) {
+		this.resLanguage = resLanguage;
 	}
 	
 	public String getLandingPage() {
@@ -238,6 +287,7 @@ public class Record {
 	public void setLandingPage(String landingPage) {
 		this.landingPage = landingPage;
 	}
+	
 	public String getPrimaryITInvestmentUII() {
 		return primaryITInvestmentUII;
 	}
@@ -246,10 +296,11 @@ public class Record {
 		this.primaryITInvestmentUII = primaryITInvestmentUII;
 	}
 	
-	public String[] getReferences() {
+	public DocumentReference[] getReferences() {
 		return references;
 	}
-	public void setReferences(String[] references) {
+	
+	public void setReferences(DocumentReference[] references) {
 		this.references = references;
 	}
 	
@@ -268,5 +319,61 @@ public class Record {
 	public void setTheme(String[] theme) {
 		this.theme = theme;
 	}
-}
+	
+	public String getDoi() {
+		return doi;
+	}
 
+	public void setDoi(String doi) {
+		this.doi = doi;
+	}
+	
+	public String[] getAbbrev() {
+		return abbrev;
+	}
+
+	public void setAbbrev(String[] abbrev) {
+		this.abbrev = abbrev;
+	}
+
+    public String[] getSubtitle() {
+      return subtitle;
+    }
+
+    public void setSubtitle(String[] subtitle) {
+      this.subtitle = subtitle;
+    }
+  
+    public String[] getAka() {
+      return aka;
+    }
+
+    public void setAka(String[] aka) {
+      this.aka = aka;
+    }  
+
+    public Person[] getAuthors() {
+      return authors;
+    }
+
+    public void setAuthors(Person[] authors) {
+      this.authors = authors;
+    }     
+    
+    public String getEdiid() {
+      return ediid;
+    }
+
+    public void setEdiid(String ediid) {
+      this.ediid = ediid;
+    }      
+
+    public String getRecommendedCitation() {
+      return recommendedCitation;
+    }
+
+    public void setRecommendedCitation(String recommendedCitation) {
+      this.recommendedCitation = recommendedCitation;
+    }    
+}
+ 

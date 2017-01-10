@@ -1,1 +1,321 @@
-[{"@type":"dcat:Dataset","keyword":["catalog"],"programCode":["006:052"],"landingPage":"http://www.nist.gov/data","accessLevel":"public","distribution":[{"downloadURL":"http://www.nist.gov/data.json","mediaType":"application/json"}],"modified":"2016-08-05","publisher":{"@type":"org:Organization","name":"National Institute of Standards and Technology"},"references":["http://www.nist.gov/digitalstrategy/"],"bureauCode":["006:55"],"title":"Enterprise Data Inventory","description":"Enterprise data inventory for the National Institute of Standards and Technology.","contactPoint":{"hasEmail":"mailto:iso-data@nist.gov","@type":"vcard:Contact","fn":"iso-data@nist.gov"},"language":["en"],"license":"http://nist.gov/data/license.cfm","identifier":"EBC9DB05EDEA5B0EE043065706812DF81"},{"@type":"dcat:Dataset","keyword":["Atomic","Atomic Spectroscopy","Radon","actinium","aluminium","aluminum","americium","antimony","argon","arsenic","astatine","atom","atomic physics","atomic property","atomic-ions","barium","berkelium","beryllium","bismuth","bohrium","boron","bromine","cadmium","calcium","californium","carbon","cerium","cesium","chlorine","chromium","cobalt","columbium","copernicium","copper","curium","darmstadtium","database","deuterium","doubly-charged","dubnium","dysprosium","einsteinium","element","energy levels","erbium","europium","fermium","flerovium","fluorine","francium","gadolinium","gallium","germanium","gold","ground states","hafnium","hassium","helium","holmium","hydrogen","indium","iodine","ionization potentials","ionization-energies","ionization-limits","ionized-atoms","iridium","iron","krypton","kurchatovium","lanthanum","lawrencium","lead","lithium","livermorium","lutetium","magnesium","manganese","meitnerium","mendelevium","mercury","molybdenum","multiply-charged","neodymium","neon","neptunium","neutral","nickel","niobium","nitrogen","nobelium","osmium","oxygen","palladium","phosphorus","platinum","plutonium","polonium","potassium","praseodymium","promethium","protactinium","quadruply-charged","radium","rhenium","rhodium","roentgenium","rubidium","ruthenium","rutherfordium","samarium","scandium","seaborgium","selenium","silicium","silicon","silver","singly-charged","sodium","spectra","spectral lines","spectroscopy","spectrum","strontium","sulfur","sulphur","tantalum","technetium","tellurium","terbium","thallium","thorium","thulium","tin","titanium","transition probabilities","triply-charged","tritium","tungsten","ununbium","ununhexium","ununoctium","ununpentium","ununquadium","ununseptium","ununtrium","unununium","uranium","vanadium","wavelengths","xenon","ytterbium","yttrium","zinc","zirconium"],"programCode":["006:052"],"landingPage":"http://www.nist.gov/pml/data/asd.cfm","accessLevel":"public","modified":"2013-09-01","publisher":{"@type":"org:Organization","name":"National Institute of Standards and Technology"},"title":"NIST Atomic Spectra Database - SRD 78","bureauCode":["006:55"],"description":"This database provides access and search capability for NIST critically evaluated data on atomic energy levels, wavelengths, and transition probabilities that are reasonably up-to-date. The Atomic Spectroscopy Data Center has carried out these critical compilations. The Data Center is located in the Physical Measurement Laboratory at the National Institute of Standards and Technology (NIST).","contactPoint":{"hasEmail":"mailto:alexander.kramida@nist.gov","@type":"vcard:Contact","fn":"Alexander Kramida"},"language":["en"],"license":"http://www.nist.gov/data/license.cfm","identifier":"EBC9DB05EDEC5B0EE043065706812DF83"},{"@type":"dcat:Dataset","keyword":["NIST chemical kinetics database","arrhenius equation","chemical kinetics","chemical reaction","kinetics","kinetics database","rate coefficient","rate constant","reaction","reaction kinetics","reaction rate constant"],"programCode":["006:052"],"landingPage":"http://kinetics.nist.gov/kinetics/","accessLevel":"public","modified":"2013-03-01","publisher":{"@type":"org:Organization","name":"National Institute of Standards and Technology"},"title":"NIST Chemical Kinetics Database - SRD 17","bureauCode":["006:55"],"description":"The NIST Chemical Kinetics Database includes essentially all reported kinetics results for thermal gas-phase chemical reactions. The database is designed to be searched for kinetics data based on the specific reactants involved, for reactions resulting in specified products, for all the reactions of a particular species, or for various combinations of these. In addition, the bibliography can be searched by author name or combination of names. The database contains in excess of 38,000 separate reaction records for over 11,700 distinct reactant pairs. These data have been abstracted from over 12,000 papers with literature coverage through early 2000. Rate constant records for a specified reaction are found by searching the Reaction Database. All rate constant records for that reaction are returned, with a link to 'Details' on that record. Each rate constant record contains the following information (as available): Reactants and, if defined, reaction products; Rate parameters: A, n, Ea/R, where k = A* (T/298)**n exp[-(Ea/R)/T], where T is the temperature in Kelvins; Uncertainty in A, n, and Ea/R, if reported; Temperature range of experiment or temperature range of validity of a review or theoretical paper; Pressure range and bulk gas of the experiment; Data type of the record (i.e., experimental, relative rate measurement, theoretical calculation, modeling result, etc.). If the result is a relative rate measurement, then the reaction to which the rate is relative is also given; Experimental procedure, including separate fields for the description of the apparatus, the time resolution of the experiment, and the excitation technique. A majority of contemporary chemical kinetics methods are represented. The Kinetics Database is being expanded to include other resources for the convenience of the users. Presently this includes direct links to the corresponding NIST WebBook page for all substances for which such a link is possible. This is indicated by underling and highlighting the species. The WebBook provides thermodynamic, spectral, and other data on the species. Note that the link to the WebBook is opened as a new frame in your browser.","contactPoint":{"hasEmail":"mailto:thomas.allison@nist.gov","@type":"vcard:Contact","fn":"Thomas Allison"},"language":["en"],"license":"http://www.nist.gov/data/license.cfm","identifier":"EBC9DB05EDED5B0EE043065706812DF84"},{"@type":"dcat:Dataset","theme":["Spectroscopy","Chemical thermodynamics & chemical properties","Analytical chemistry","Chemical engineering & processing","Thermochemical properties","Reference data"],"keyword":["IR spectrum","InChI","InChIKey","UV Vis spectrum","boiling point","chemical data","chemical structure","enthalpy","entropy","heat capacity","heat of formation","ionization potential","mass spectrum","retention index","thermochemical data","thermochemistry","thermodynamic data","vapor pressure"],"programCode":["006:052"],"landingPage":"http://webbook.nist.gov/chemistry","accessLevel":"public","distribution":[{"description":"Landing page for the NIST Chemistry WebBook.","accessURL":"http://webbook.nist.gov/chemistry/","mediaType":"text/html"}],"modified":"2013-04-01","publisher":{"@type":"org:Organization","name":"National Institute of Standards and Technology"},"references":["http://dx.doi.org/10.1021/je000236i"],"bureauCode":["006:55"],"title":"NIST Chemistry WebBook - SRD 69","description":"The NIST Chemistry WebBook provides users with easy access to chemical and physical property data for chemical species through the internet. The data provided in the site are from collections maintained by the NIST Standard Reference Data Program and outside contributors. Data in the WebBook system are organized by chemical species. The WebBook system allows users to search for chemical species by various means. Once the desired species has been identified, the system will display data for the species.","contactPoint":{"hasEmail":"mailto:peter.linstrom@nist.gov","@type":"vcard:Contact","fn":"Peter Linstrom"},"language":["en"],"license":"http://www.nist.gov/data/license.cfm","identifier":"EBC9DB05EDEE5B0EE043065706812DF85"}]
+[
+	{
+		"@type": "dcat:Dataset",
+		"keyword": [
+			"catalog"
+		],
+		"programCode": [
+			"006:052"
+		],
+		"landingPage": "http://www.nist.gov/data",
+		"accessLevel": "public",
+		"modified": "2016-08-05",
+		"publisher": {
+			"@type": "org:Organization",
+			"name": "National Institute of Standards and Technology"
+		},
+		"references": [
+			"http://www.nist.gov/digitalstrategy/"
+		],
+		"bureauCode": [
+			"006:55"
+		],
+		"title": "Enterprise Data Inventory",
+		"description": "Enterprise data inventory for the National Institute of Standards and Technology.",
+		"contactPoint": {
+			"hasEmail": "mailto:iso-data@nist.gov",
+			"@type": "vcard:Contact",
+			"fn": "iso-data@nist.gov"
+		},
+		"language": [
+			"en"
+		],
+		"license": "http://nist.gov/data/license.cfm",
+		"identifier": "EBC9DB05EDEA5B0EE043065706812DF81"
+	},
+	{
+		"@type": "dcat:Dataset",
+		"keyword": [
+			"Atomic",
+			"Atomic Spectroscopy",
+			"Radon",
+			"actinium",
+			"aluminium",
+			"aluminum",
+			"americium",
+			"antimony",
+			"argon",
+			"arsenic",
+			"astatine",
+			"atom",
+			"atomic physics",
+			"atomic property",
+			"atomic-ions",
+			"barium",
+			"berkelium",
+			"beryllium",
+			"bismuth",
+			"bohrium",
+			"boron",
+			"bromine",
+			"cadmium",
+			"calcium",
+			"californium",
+			"carbon",
+			"cerium",
+			"cesium",
+			"chlorine",
+			"chromium",
+			"cobalt",
+			"columbium",
+			"copernicium",
+			"copper",
+			"curium",
+			"darmstadtium",
+			"database",
+			"deuterium",
+			"doubly-charged",
+			"dubnium",
+			"dysprosium",
+			"einsteinium",
+			"element",
+			"energy levels",
+			"erbium",
+			"europium",
+			"fermium",
+			"flerovium",
+			"fluorine",
+			"francium",
+			"gadolinium",
+			"gallium",
+			"germanium",
+			"gold",
+			"ground states",
+			"hafnium",
+			"hassium",
+			"helium",
+			"holmium",
+			"hydrogen",
+			"indium",
+			"iodine",
+			"ionization potentials",
+			"ionization-energies",
+			"ionization-limits",
+			"ionized-atoms",
+			"iridium",
+			"iron",
+			"krypton",
+			"kurchatovium",
+			"lanthanum",
+			"lawrencium",
+			"lead",
+			"lithium",
+			"livermorium",
+			"lutetium",
+			"magnesium",
+			"manganese",
+			"meitnerium",
+			"mendelevium",
+			"mercury",
+			"molybdenum",
+			"multiply-charged",
+			"neodymium",
+			"neon",
+			"neptunium",
+			"neutral",
+			"nickel",
+			"niobium",
+			"nitrogen",
+			"nobelium",
+			"osmium",
+			"oxygen",
+			"palladium",
+			"phosphorus",
+			"platinum",
+			"plutonium",
+			"polonium",
+			"potassium",
+			"praseodymium",
+			"promethium",
+			"protactinium",
+			"quadruply-charged",
+			"radium",
+			"rhenium",
+			"rhodium",
+			"roentgenium",
+			"rubidium",
+			"ruthenium",
+			"rutherfordium",
+			"samarium",
+			"scandium",
+			"seaborgium",
+			"selenium",
+			"silicium",
+			"silicon",
+			"silver",
+			"singly-charged",
+			"sodium",
+			"spectra",
+			"spectral lines",
+			"spectroscopy",
+			"spectrum",
+			"strontium",
+			"sulfur",
+			"sulphur",
+			"tantalum",
+			"technetium",
+			"tellurium",
+			"terbium",
+			"thallium",
+			"thorium",
+			"thulium",
+			"tin",
+			"titanium",
+			"transition probabilities",
+			"triply-charged",
+			"tritium",
+			"tungsten",
+			"ununbium",
+			"ununhexium",
+			"ununoctium",
+			"ununpentium",
+			"ununquadium",
+			"ununseptium",
+			"ununtrium",
+			"unununium",
+			"uranium",
+			"vanadium",
+			"wavelengths",
+			"xenon",
+			"ytterbium",
+			"yttrium",
+			"zinc",
+			"zirconium"
+		],
+		"programCode": [
+			"006:052"
+		],
+		"landingPage": "http://www.nist.gov/pml/data/asd.cfm",
+		"accessLevel": "public",
+		"modified": "2013-09-01",
+		"publisher": {
+			"@type": "org:Organization",
+			"name": "National Institute of Standards and Technology"
+		},
+		"title": "NIST Atomic Spectra Database - SRD 78",
+		"bureauCode": [
+			"006:55"
+		],
+		"description": "This database provides access and search capability for NIST critically evaluated data on atomic energy levels, wavelengths, and transition probabilities that are reasonably up-to-date. The Atomic Spectroscopy Data Center has carried out these critical compilations. The Data Center is located in the Physical Measurement Laboratory at the National Institute of Standards and Technology (NIST).",
+		"contactPoint": {
+			"hasEmail": "mailto:alexander.kramida@nist.gov",
+			"@type": "vcard:Contact",
+			"fn": "Alexander Kramida"
+		},
+		"language": [
+			"en"
+		],
+		"license": "http://www.nist.gov/data/license.cfm",
+		"identifier": "EBC9DB05EDEC5B0EE043065706812DF83"
+	},
+	{
+		"@type": "dcat:Dataset",
+		"keyword": [
+			"NIST chemical kinetics database",
+			"arrhenius equation",
+			"chemical kinetics",
+			"chemical reaction",
+			"kinetics",
+			"kinetics database",
+			"rate coefficient",
+			"rate constant",
+			"reaction",
+			"reaction kinetics",
+			"reaction rate constant"
+		],
+		"programCode": [
+			"006:052"
+		],
+		"landingPage": "http://kinetics.nist.gov/kinetics/",
+		"accessLevel": "public",
+		"modified": "2013-03-01",
+		"publisher": {
+			"@type": "org:Organization",
+			"name": "National Institute of Standards and Technology"
+		},
+		"title": "NIST Chemical Kinetics Database - SRD 17",
+		"bureauCode": [
+			"006:55"
+		],
+		"description": "The NIST Chemical Kinetics Database includes essentially all reported kinetics results for thermal gas-phase chemical reactions. The database is designed to be searched for kinetics data based on the specific reactants involved, for reactions resulting in specified products, for all the reactions of a particular species, or for various combinations of these. In addition, the bibliography can be searched by author name or combination of names. The database contains in excess of 38,000 separate reaction records for over 11,700 distinct reactant pairs. These data have been abstracted from over 12,000 papers with literature coverage through early 2000. Rate constant records for a specified reaction are found by searching the Reaction Database. All rate constant records for that reaction are returned, with a link to 'Details' on that record. Each rate constant record contains the following information (as available): Reactants and, if defined, reaction products; Rate parameters: A, n, Ea/R, where k = A* (T/298)**n exp[-(Ea/R)/T], where T is the temperature in Kelvins; Uncertainty in A, n, and Ea/R, if reported; Temperature range of experiment or temperature range of validity of a review or theoretical paper; Pressure range and bulk gas of the experiment; Data type of the record (i.e., experimental, relative rate measurement, theoretical calculation, modeling result, etc.). If the result is a relative rate measurement, then the reaction to which the rate is relative is also given; Experimental procedure, including separate fields for the description of the apparatus, the time resolution of the experiment, and the excitation technique. A majority of contemporary chemical kinetics methods are represented. The Kinetics Database is being expanded to include other resources for the convenience of the users. Presently this includes direct links to the corresponding NIST WebBook page for all substances for which such a link is possible. This is indicated by underling and highlighting the species. The WebBook provides thermodynamic, spectral, and other data on the species. Note that the link to the WebBook is opened as a new frame in your browser.",
+		"contactPoint": {
+			"hasEmail": "mailto:thomas.allison@nist.gov",
+			"@type": "vcard:Contact",
+			"fn": "Thomas Allison"
+		},
+		"language": [
+			"en"
+		],
+		"license": "http://www.nist.gov/data/license.cfm",
+		"identifier": "EBC9DB05EDED5B0EE043065706812DF84"
+	},
+	{
+		"@type": "dcat:Dataset",
+		"theme": [
+			"Spectroscopy",
+			"Chemical thermodynamics & chemical properties",
+			"Analytical chemistry",
+			"Chemical engineering & processing",
+			"Thermochemical properties",
+			"Reference data"
+		],
+		"keyword": [
+			"IR spectrum",
+			"InChI",
+			"InChIKey",
+			"UV Vis spectrum",
+			"boiling point",
+			"chemical data",
+			"chemical structure",
+			"enthalpy",
+			"entropy",
+			"heat capacity",
+			"heat of formation",
+			"ionization potential",
+			"mass spectrum",
+			"retention index",
+			"thermochemical data",
+			"thermochemistry",
+			"thermodynamic data",
+			"vapor pressure"
+		],
+		"programCode": [
+			"006:052"
+		],
+		"landingPage": "http://webbook.nist.gov/chemistry",
+		"accessLevel": "public",
+		"modified": "2013-04-01",
+		"publisher": {
+			"@type": "org:Organization",
+			"name": "National Institute of Standards and Technology"
+		},
+		"references": [
+			"http://dx.doi.org/10.1021/je000236i"
+		],
+		"bureauCode": [
+			"006:55"
+		],
+		"title": "NIST Chemistry WebBook - SRD 69",
+		"description": "The NIST Chemistry WebBook provides users with easy access to chemical and physical property data for chemical species through the internet. The data provided in the site are from collections maintained by the NIST Standard Reference Data Program and outside contributors. Data in the WebBook system are organized by chemical species. The WebBook system allows users to search for chemical species by various means. Once the desired species has been identified, the system will display data for the species.",
+		"contactPoint": {
+			"hasEmail": "mailto:peter.linstrom@nist.gov",
+			"@type": "vcard:Contact",
+			"fn": "Peter Linstrom"
+		},
+		"language": [
+			"en"
+		],
+		"license": "http://www.nist.gov/data/license.cfm",
+		"identifier": "EBC9DB05EDEE5B0EE043065706812DF85"
+	}
+]

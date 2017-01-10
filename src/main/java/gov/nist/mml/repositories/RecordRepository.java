@@ -26,7 +26,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import gov.nist.mml.domain.Record;
 import gov.nist.mml.domain.nestedpod.ContactPoint;
-import gov.nist.mml.domain.nestedpod.Distribution;
 import gov.nist.mml.domain.nestedpod.Publisher;
 
 
@@ -40,28 +39,27 @@ public interface RecordRepository extends MongoRepository<Record, String> {
 	List<Record> findByProgramCode(@Param("type") String[] programCode);
 	List<Record> findByLandingPage(@Param("landingPage") String landingPage);
 	List<Record> findByAccessLevel(@Param("accessLevel") String accessLevel);
-	List<Record> findByDistribution(@Param("distribution") Distribution[] distribution);
 	List<Record> findByModified(@Param("modified") String modified);
 	List<Record> findByPublisher(@Param("publisher") Publisher publisher);
 	List<Record> findByReferences(@Param("references") String[] references);
 	List<Record> findByBureauCode(@Param("bureau") String[] bureau);
 	List<Record> findByDescription(@Param("description") String description);
 	List<Record> findByContactPoint(@Param("contactPoint") ContactPoint contactpoint);
-	List<Record> findByLanguage(@Param("language") String[] language);
+	List<Record> findByResLanguage(@Param("resLanguage") String[] resLanguage);
 	List<Record> findByLicense(@Param("licence") String licence);
 	
 	//Generic Search
 	List<Record> findAllBy(TextCriteria criteria,Pageable pageable);
 	List<Record> findAllBy(Criteria criteria);
 	
-	//Get all entries with paginationa and sorting
+	//Get all entries with pagination and sorting
 	List<Record> findAllBy(Pageable pageable);
 	
 	//Get Pages using criteria
 	Page<Record> findAll(Pageable pageable);
 	
 	//Get by identifier
-	List<Record> findByIdentifier(String id, Pageable p);
+	List<Record> findByResId(String resId, Pageable p);
     
 	List<Record> findByTitleContainingIgnoreCase(String title);
     List<Record> findByTypeContainingIgnoreCase(String type);
@@ -70,14 +68,13 @@ public interface RecordRepository extends MongoRepository<Record, String> {
 	List<Record> findByReferencesContainingIgnoreCase(String references);
 	List<Record> findByLandingPageContainingIgnoreCase(String landingpage);
 	List<Record> findByAccessLevelContainingIgnoreCase(String accessLevel);
-	List<Record> findByDistributionContainingIgnoreCase(String distribution);
 	List<Record> findByModifiedContainingIgnoreCase(String modified);
 	List<Record> findByDescriptionContainingIgnoreCase(String dscription);
 	List<Record> findByContactPointContainingIgnoreCase(String contactPoint);
 
 	
 	List<Record> findByBureauCodeContainingIgnoreCase(String bureau);
-		List<Record> findByLanguageContainingIgnoreCase(String language);
+	List<Record> findByResLanguageContainingIgnoreCase(String language);
 	List<Record> findByLicenseContainingIgnoreCase(String license);
 	List<Record> findByProgramCodeContainingIgnoreCase(String programCode);
 
@@ -89,7 +86,6 @@ public interface RecordRepository extends MongoRepository<Record, String> {
     //These are called from SearchController
     List<Record> findTitleBy(TextCriteria criteria);
 	List<Record> findTitleTypeBy(TextCriteria criteria); // Need to do more research for multiple field search
-
    
    }
 

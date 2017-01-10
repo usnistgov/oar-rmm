@@ -11,7 +11,7 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.mml.controller.taxanomy;
+package gov.nist.mml.controller.Taxanomy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

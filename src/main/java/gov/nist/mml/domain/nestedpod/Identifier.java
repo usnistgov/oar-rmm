@@ -1,4 +1,3 @@
-
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of
  * the Federal Government in the course of their official duties. Pursuant to title 17 Section 105
@@ -9,44 +8,33 @@
  * used. This software can be redistributed and/or modified freely provided that any derivative
  * works bear some notice that they are derived from it, and any modified versions bear some notice
  * that they have been modified.
- * @author: Deoyani Nandrekar-Heinis
+ * @author: Som Kolli
  */
-package gov.nist.mml.domain;
+package gov.nist.mml.domain.nestedpod;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 
-import gov.nist.mml.domain.nestedpod.taxanomy.SubCategory;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Taxanomy {
+public class Identifier{
 
-	@Id private String id;
-	@TextIndexed private String keyIdentifier;
-	@TextIndexed private String researchCategory;
-	@TextIndexed private SubCategory[] subCategories;
-
+    private String schema;
+	private String value;
 	
-	public String getresearchCategory() {
-		return researchCategory;
-	}
-	public void setresearchCategory(String researchCategory) {
-		this.researchCategory = researchCategory;
+	public String getSchema(){
+		return schema;
 	}
 	
-	
-	public SubCategory[] getsubCategories() {
-		return this.subCategories;
-	}
-	public void setSubCategories(SubCategory[] subcategories) {
-		this.subCategories = subcategories;
+	public void setSchema(String schema){
+		this.schema = schema;
 	}
 	
+	public String getValue(){
+		return value;
+	}
 	
-	public String getkeyIdentifier() {
-		return keyIdentifier;
+	public void setValue(String value){
+		this.value = value;
 	}
-	public void setkeyIdentifier(String keyIdentifier) {
-		this.keyIdentifier = keyIdentifier;
-	}
+	
 }
-

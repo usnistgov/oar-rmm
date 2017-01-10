@@ -23,12 +23,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import gov.nist.mml.domain.Taxanomy;
 
-
-
 @RepositoryRestResource
 public interface TaxanomyRepository extends MongoRepository<Taxanomy, String> {
 	
-	///These are HATEOS format serach api
+	///These are HATEOS format search api
 	List<Taxanomy> findByResearchCategory(@Param("researchCategory") String researchCategory);
 	
 	

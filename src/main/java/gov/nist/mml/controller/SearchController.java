@@ -13,8 +13,14 @@
 package gov.nist.mml.controller;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.bson.Document;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.schema.JsonSchema;
 import org.slf4j.Logger;
@@ -32,7 +38,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.lordofthejars.nosqlunit.mongodb.MongoDbCommands;
+import com.mongodb.*;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 import gov.nist.mml.domain.Record;
+import gov.nist.mml.configuration.MongoDBConfiguration;
 import gov.nist.mml.domain.Catalog;
 import gov.nist.mml.repositories.CatalogRepository;
 import gov.nist.mml.repositories.RecordRepository;
@@ -146,8 +159,8 @@ public class SearchController {
 	@ApiOperation(value = "Get the record using identifier.",nickname = "searchbyID",
 				  notes= "We plan to use DOI once it is ready or plan to write code our own unique identfier. "	)
     @RequestMapping(value = {"/catalog/records/search/{id}"}, method = RequestMethod.GET, produces="application/json")
-	public List<Record> searchbyId (@PathVariable String id,Pageable p){
-			return recordRepository.findByIdentifier(id, p);
+	public List<Record> searchbyResId (@PathVariable String resId,Pageable p){
+			return recordRepository.findByResId(resId, p);
 	}
     
 	 @ApiOperation(value = "Search record by title.",nickname = "searchbyTitle",
@@ -197,7 +210,7 @@ public class SearchController {
 			return  recordRepository.findByAccessLevelContainingIgnoreCase(accessLevel);
 	    	
 	    }
-		
+		/* Distribution is part of Component
 		@RequestMapping(value = {"/catalogs/records/searchByDistribution"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> searchByDistribution (@RequestParam String distribution) {
 	    
@@ -205,7 +218,7 @@ public class SearchController {
 			return recordRepository.findByDistributionContainingIgnoreCase(distribution);
 	    	
 	    }
-		
+		*/
 		@RequestMapping(value = {"/catalogs/records/searchByModified"}, method = RequestMethod.GET, produces="application/json")
 		public List<Record> searchByModified (@RequestParam String modified) {
 	    
@@ -258,7 +271,7 @@ public class SearchController {
 		public List<Record> searchByLanguage (@RequestParam String language) {
 	    
 			logger.info("Requested language:"+language);
-			return recordRepository.findByLanguageContainingIgnoreCase(language);
+			return recordRepository.findByResLanguageContainingIgnoreCase(language);
 	    	
 	    }
 		
@@ -266,7 +279,7 @@ public class SearchController {
 		public List<Record> searchByLicense(@RequestParam String license) {
 	    
 			logger.info("Requested license:"+license);
-			return recordRepository.findByLanguageContainingIgnoreCase(license);
+			return recordRepository.findByResLanguageContainingIgnoreCase(license);
 	    	
 	    }
 
@@ -274,8 +287,23 @@ public class SearchController {
 		/// This is the placeholder for returning list of field names and types.
 		@RequestMapping(value = {"/catalogs/records/fieldsnames"}, method = RequestMethod.GET, produces="application/json")
 		public String getFieldNames(){
-			logger.info("Test to get field names");
 			try{
+			  
+			   Field[] fields = Record.class.getDeclaredFields();
+			   String fieldName = null;
+			   ArrayList<String> fieldArray= new ArrayList<String>();
+			    for (java.lang.reflect.Field field : fields) {
+			         fieldName = field.getName();
+			         fieldArray.add(fieldName);
+			    }
+			    
+			 // create a new Gson instance
+			    Gson gson = new Gson();
+			    // convert your list to json
+			   String jsonList = gson.toJson(fieldArray);
+			    			    
+
+			  /*  
 				org.codehaus.jackson.map.ObjectMapper mapper = new ObjectMapper();
 				//There are other configuration options you can set.  This is the one I needed.
 				mapper.configure(org.codehaus.jackson.map.SerializationConfig.Feature.WRITE_ENUMS_USING_TO_STRING, true);
@@ -283,6 +311,8 @@ public class SearchController {
 				JsonSchema schema = mapper.generateJsonSchema(Record.class);
 
 				return mapper.defaultPrettyPrintingWriter().writeValueAsString(schema);
+				*/
+			   return jsonList;
 		    }catch(Exception e){
 				return e.getMessage();
 			}
