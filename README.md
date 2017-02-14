@@ -1,6 +1,6 @@
-# OAR-DIST-SERVICE
+# OAR-RMM-SERVICE
 
-This is the distribution service project responsible of managing the distribution files of the oar project.
+This is the web service project to get resource metadata.
 
 ## Installation
 The project is a maven based java project. To build: 
@@ -8,27 +8,8 @@ The project is a maven based java project. To build:
 
 ## Layout
 ```
-oar-config/                    							--> main folder
-	oar-config-server/		   							--> folder of the configuration server module
-  		src/											--> application sources folder
-  			main/java/             			    		--> java classes
-  				gov/nist/oar/ds/             			--> main java classes folder
-  					config/             				--> config classes 
-  				 	controller/             			--> rest api classes 
-  				 	exception/             				--> config classes 
-  				 	s3/             					--> s3 utlities and services classes
-  				 	service/             				--> interfaces of the services
-  				 		impl/  							--> implementation of the services interface classes
-  				 	util/             					--> utilities classes
-    		main/resources/								--> resources folder
-      			application.yml							--> configuration file of the project
-      			logback.xml								--> logging configuration file of the project 
-  			/test/java/             			    	--> unit and integration test classes
-  				gov/nist/oar/ds/             			--> main test classes folder
-  					unit/             					--> junit classes
-  				 		controller/             		--> junit classes of the controllers
-  				 		service/             			--> junit classes of the services 
-   			/test/resources/							--> unit and integration test resources 
+oar-rmm/                    							--> main folder
+			src/											--> 
     	pom.xml 										--> maven pom file
 ```
 ## Contributing
@@ -41,7 +22,7 @@ oar-config/                    							--> main folder
 
 ## History
 
-TODO: Write history
+The previous RMM design used Spring data framework to create restful web service, it was easy to implement but needed some data binding.
 
 ## Credits
 
