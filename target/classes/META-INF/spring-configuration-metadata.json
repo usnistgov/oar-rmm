@@ -1,0 +1,9 @@
+{
+  "groups": [{
+    "name": "",
+    "type": "gov.nist.oar.rmm.config.MongoConfig",
+    "sourceType": "gov.nist.oar.rmm.config.MongoConfig"
+  }],
+  "properties": [],
+  "hints": []
+}
