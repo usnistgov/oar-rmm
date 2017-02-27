@@ -18,19 +18,16 @@ import java.util.Set;
 
 import org.bson.Document;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
+
 
 public interface CustomRepository {
-	
 
-	
 	public List<Document> find(Map<String,String> param,Pageable p);
 	public Document find(Map<String,String> param);
 	public List<Document> findtaxonomy(Map<String,String> param);
 	public List<Document> findtaxonomy();
 	public List<Document> findResourceApis();
 	public Document findRecord(String id);
-	public Set<String> findFieldnames();
-	
+	public List<Document> findFieldnames();
 
 }

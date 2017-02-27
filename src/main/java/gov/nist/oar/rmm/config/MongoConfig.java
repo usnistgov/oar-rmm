@@ -12,7 +12,6 @@
  */
 package gov.nist.oar.rmm.config;
 
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.mongodb.MongoClient;
@@ -41,8 +39,8 @@ public class MongoConfig {
 	 private MongoDatabase mongoDb;
 	 private MongoCollection<Document> recordsCollection;
 	 private MongoCollection<Document> taxonomyCollection;
-	 
-	 
+	 private MongoCollection<Document> resourceApiCollection;
+	 private MongoCollection<Document> recordFieldsCollection;
 	 
 	 @Value("${spring.data.mongodb.database}")
 	    private String dbname;
@@ -53,13 +51,23 @@ public class MongoConfig {
 	 @Value("${dbcollections.taxonomy}")
 	    private String taxonomy;
 	 
+	 @Value("${dbcollections.resources}")
+	    private String resourceApi;
+	 
+	 @Value("${dbcollections.recordfields}")
+	    private String rfields;
+	 
 	 @PostConstruct
 	 public void initIt() throws Exception {
 		 log.info("##########  ########"+ dbname);
 		 System.out.println("##########  ########"+dbname +"##########  ########");
-		  
+ 
 		 this.setMongodb(this.dbname);
 		 this.setRecordCollection(this.record);
+		 this.setTaxonomyCollection(this.taxonomy);
+		 this.setResourceApiCollection(this.resourceApi);
+		 this.setRecordFieldsCollection(this.rfields);
+		 
 	 }
 	 
 	
@@ -71,7 +79,7 @@ public class MongoConfig {
 	 }
 
 	 public MongoCollection<Document> getRecordCollection(){
-		 return recordsCollection;
+		 return   recordsCollection;
 	 }
 	 private void setRecordCollection(String record){
 		 recordsCollection = mongoDb.getCollection(record);
@@ -81,7 +89,22 @@ public class MongoConfig {
 		 return taxonomyCollection;
 	 }
 	 private void setTaxonomyCollection(String taxonomy){
-		 recordsCollection = mongoDb.getCollection(taxonomy);
+		 taxonomyCollection = mongoDb.getCollection(taxonomy);
 	 }
 	 
+	 public MongoCollection<Document> getResourceApiCollection(){
+		 return resourceApiCollection;
+	 }
+	 
+	 private void setResourceApiCollection(String resourceApi){
+		 resourceApiCollection = mongoDb.getCollection(resourceApi);
+	 }
+	 
+	 public MongoCollection<Document> getRecordFieldsCollection(){
+		 return recordFieldsCollection;
+	 }
+	 
+	 private void setRecordFieldsCollection(String recordFields){
+		 recordFieldsCollection = mongoDb.getCollection(recordFields);
+	 }
 }

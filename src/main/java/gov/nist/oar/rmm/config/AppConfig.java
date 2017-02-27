@@ -14,15 +14,10 @@ package gov.nist.oar.rmm.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
 @SpringBootApplication
 @ComponentScan(basePackages = {"gov.nist.oar.rmm"})
 //@EnableMongoRepositories
@@ -32,7 +27,6 @@ public class AppConfig {
 
 	  /**
 	   * Main runner of the spring-boot class
-	   * 
 	   * @param args
 	   */
 	  

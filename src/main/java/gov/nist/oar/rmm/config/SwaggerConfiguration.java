@@ -35,7 +35,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @ComponentScan({"gov.nist.oar.rmm"})
 /**
- * Swagger configuration class takes care of Inititalizing swagger
+ * Swagger configuration class takes care of Initializing swagger
  *  to be used to generate documentation for the code.
  * @author dsn1
  *
@@ -74,9 +74,9 @@ public class SwaggerConfiguration {
     @SuppressWarnings("deprecation")
 	ApiInfo apiInfo =
         new ApiInfo("Resource api", 
-        		"This REST api exposes data listing from NIST POD schema. There are various search options along with Insert, Delete and Update.",
-        		"Build-1.0",
-        		"This is an internal service used by NIST PDL curators.", 
+        		"This REST api exposes data listing from NIST NERDm schema. ",
+        		"Build-2.0",
+        		"This is a web service to search the data with various search criteria", 
         		"deoyani@nist.gov",
         		"NIST Public licence", 
         		"Licence URL");

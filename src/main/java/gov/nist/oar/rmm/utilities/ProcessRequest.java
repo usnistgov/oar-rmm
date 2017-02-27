@@ -12,7 +12,7 @@
  */
 package gov.nist.oar.rmm.utilities;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,14 +28,14 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
-import com.mongodb.client.model.TextSearchOptions;
+
 
 /**
- * Process the RestApi request to parse paramters and create part of query.
+ * Process the RestApi request to parse parameters and create part of query.
  * @author dsn1
  *
  */
-public class ProcessRequest {
+public class ProcessRequest{
 	
 	private Logger logger = LoggerFactory.getLogger(ProcessRequest.class);
 	private Bson filter = null;
@@ -100,7 +100,7 @@ public class ProcessRequest {
 				advFilter(advMap);
 		}
 		logger.info("Query parsing ends");
-		
+	    //excludeId();
 		createQuerylist();
 		
 	}
@@ -109,6 +109,7 @@ public class ProcessRequest {
 	 * This is to create aggregate of all the queries
 	 */
 	private void createQuerylist(){
+		
 		
 		if(filter != null)
 			queryList.add(Aggregates.match(filter));
@@ -123,7 +124,11 @@ public class ProcessRequest {
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 */
 	private void treatSearch(String key, String value){
 		
 		switch(key){
@@ -153,6 +158,20 @@ public class ProcessRequest {
 		}
 	}
 	
+	/**
+	 * 
+	 */
+	 private void excludeId(){
+		 if(projections != null)
+				projections = Projections.fields(projections,Projections.excludeId());
+		 else
+			 projections = Projections.fields(Projections.excludeId());
+	 }
+	
+	/**
+	 * 
+	 * @param projectionRequest
+	 */
 	private void parseProjection(Bson projectionRequest){
 		if(projections != null)
 			projections = Projections.fields(projections,projectionRequest);
@@ -160,18 +179,25 @@ public class ProcessRequest {
 			projections = projectionRequest;
 	} 
 	
+	/**
+	 * 
+	 * @param sortingRequest
+	 */
 	private void parseSorting(Bson sortingRequest){
 		if(sort !=  null )
 			sort = Sorts.orderBy(sort,sortingRequest);
 		else
 			sort = sortingRequest;
 	}
+	/**
+	 * 
+	 * @param filterRequest
+	 */
 	private void parseFilter(Bson filterRequest){
 		if(filter == null)
 			filter = filterRequest;
 		else
 			filter = Filters.or(filter, filterRequest);
-		
 	}
 	
 	/**
@@ -184,51 +210,54 @@ public class ProcessRequest {
 		if(!map.entrySet().isEmpty()){
 			sortLogic(map);
 		}
-		
 		if(logicalOps.isEmpty()){
 			noLogicalOps();
 		}else{
 			withLogicalOps();
 		}
-		
-		
 	}
 	
 	/**
-	 * check logical operators in advanced query and seperate them from key,value pair
+	 * check logical operators in advanced query and separate them from key,value pair
 	 * @param map
 	 */
 	private void sortLogic(Map<String, String> map){
-			
 			for (Entry<String, String> entry : map.entrySet()) {
 				
 				if("logicalOp".equalsIgnoreCase(entry.getKey()))
 					logicalOps.add(entry.getValue());
 				else
 					bsonObjs.add(Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
-		
+					
 			}
-		
+			
 	}
 	
+	/**
+	 * sort the filters without logical operators
+	 */
 	private void noLogicalOps(){
-		if(bsonObjs.size() == 1){
-			 if(filter == null)
-					filter = bsonObjs.get(0);
-				else
-					filter = Filters.and(filter,bsonObjs.get(0));
-		 }
-		 if(bsonObjs.size() > 1){
-				for(int i=0; i<bsonObjs.size(); i=i+2)
-				{
-					if(filter == null)
+		 //if(bsonObjs.size() > 1){
+			  int i= 0;
+			  while(i < bsonObjs.size()){
+				  if(filter == null && bsonObjs.size() == 1){
+					  filter = bsonObjs.get(0); 
+					  i++;
+				  }
+				  else if(filter == null && bsonObjs.size() > 1){
 						filter = Filters.and(bsonObjs.get(i),bsonObjs.get(i+1));
-					else
+						i = i+2;
+				  }
+				  else{
 						filter = Filters.and(filter,bsonObjs.get(i));
-				}
-		 }	 
+						i++;
+				  }
+			  }
+		// }	 
 	}
-	
+	/**
+	 * Create filters with logical options
+	 */
 	private void withLogicalOps(){
 		int j=0;
 		for(int i = 0;i< logicalOps.size(); i++){
@@ -254,13 +283,46 @@ public class ProcessRequest {
 					break;
 				default:
 					break;
-					
 			
 		   }
 			j++;
 		}
 	}
 	
+	
+	///Functions for taxonomy
+	
+	public Bson parseTaxonomy(Map<String,String> serachparams ) {
+		
+		Bson taxFilter = null;
+		ArrayList<Bson> bsonTax = new ArrayList<Bson>();
+		if(!serachparams.entrySet().isEmpty()){
+			for (Entry<String, String> entry : serachparams.entrySet()) {
+				bsonTax.add(Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
+			}
+		}
+		int i= 0;
+		while(i < bsonTax.size()){
+			if(taxFilter == null){
+				taxFilter = Filters.and(bsonTax.get(i),bsonTax.get(i++));
+				i=i+2;
+			}else{
+				taxFilter = Filters.and(taxFilter,bsonTax.get(i));
+				i++;
+			}
+		}
+			
+//			for(int i = 0;i< bsonTax.size(); i++){
+//				if(taxFilter == null){
+//					taxFilter = Filters.and(bsonTax.get(i),bsonTax.get(i++));
+//					i=i+2;
+//				}else
+//					taxFilter = Filters.and(taxFilter,bsonTax.get(i));
+//				
+//			}
+		
+		return taxFilter;
+	}
 //Not using right now	
 //	private Map<String, String>  createMap(String advanced){
 //		Map<String, String> map = new LinkedHashMap<String, String>();

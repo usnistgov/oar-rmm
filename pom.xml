@@ -70,7 +70,7 @@
     <artifactId>mongo-java-driver</artifactId>
     <version>3.4.2</version>
 </dependency>
-		<dependency>z
+		<dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>bson</artifactId>
     <version>3.4.2</version>
@@ -204,7 +204,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
 

@@ -17,35 +17,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Sorts;
 
 import gov.nist.oar.rmm.config.MongoConfig;
-import gov.nist.oar.rmm.controllers.SearchController;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
 @Service
-public class CustonRepositoryImpl implements CustomRepository {
+public class CustomRepositoryImpl implements CustomRepository {
 
-	private Logger logger = LoggerFactory.getLogger(CustonRepositoryImpl.class);
+	private Logger logger = LoggerFactory.getLogger(CustomRepositoryImpl.class);
 	@Autowired
 	MongoConfig mconfig;
 	
@@ -57,17 +47,13 @@ public class CustonRepositoryImpl implements CustomRepository {
 		ProcessRequest request  = new ProcessRequest();
 		request.parseSearch(params);
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-	
 		long count  = mcollection.count(request.getFilter());
-		
 		logger.info("Count :"+count);
 		Document resultDoc = new Document();
 		resultDoc.put("ResultCount", count);
 		resultDoc.put("PageSize", request.getPageSize());
-		resultDoc.put("ResultData", mcollection.aggregate(request.getQueryList()));
-
+		resultDoc.put("ResultData",mcollection.aggregate(request.getQueryList()));
 		return resultDoc;
-			
 	}
 
 	/* (non-Javadoc)
@@ -76,7 +62,8 @@ public class CustonRepositoryImpl implements CustomRepository {
 	@Override
 	public List<Document> findtaxonomy(Map<String, String> param) {
 		MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
-		return mcollection.find().into(new ArrayList<Document>());
+		ProcessRequest request  = new ProcessRequest();
+		return mcollection.find(request.parseTaxonomy(param)).into(new ArrayList<Document>());
 	}
 
 	/* (non-Javadoc)
@@ -84,17 +71,20 @@ public class CustonRepositoryImpl implements CustomRepository {
 	 */
 	@Override
 	public List<Document> findResourceApis() {
-		return null;
+		
+		MongoCollection<Document> mcollection = mconfig.getResourceApiCollection();
+		return mcollection.find().into(new ArrayList<Document>());
 	}
 
 	/* (non-Javadoc)
 	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findRecord(java.lang.String)
 	 */
 	@Override
-	public Document findRecord(String id) {
+	public Document findRecord(String ediid) {
+		
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
 		
-		return mcollection.find(Filters.eq("identifier",id)).first();
+		return mcollection.find(Filters.eq("ediid",ediid)).first();
 		
 	}
 
@@ -102,15 +92,14 @@ public class CustonRepositoryImpl implements CustomRepository {
 	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findFieldnames()
 	 */
 	@Override
-	public Set<String> findFieldnames() {
+	public List<Document> findFieldnames() {
 		
-		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-		
-		return mcollection.find().first().keySet();
+		MongoCollection<Document> mcollection = mconfig.getRecordFieldsCollection();
+		return mcollection.find().into(new ArrayList<Document>());
 		
 	}
 	
-	///This is extrafield
+	///This is extra function
 
 	public List<Document> findOrig(Map<String,String> params) {		
 		ProcessRequest request  = new ProcessRequest();
@@ -147,9 +136,6 @@ public class CustonRepositoryImpl implements CustomRepository {
 //				.sort(ps.getSorts())
 //				.into(new ArrayList<Document>());
 		
-		
-		
-		
 		return mcollection.aggregate(request.getQueryList())
 				.into(new ArrayList<Document>());
 				
@@ -165,10 +151,12 @@ public class CustonRepositoryImpl implements CustomRepository {
 
 	/* (non-Javadoc)
 	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findtaxonomy()
+	 * To get all the taxonomy data
 	 */
 	@Override
 	public List<Document> findtaxonomy() {
-		return null;
+		MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
+		return mcollection.find().into(new ArrayList<Document>());
 	}
 
 }

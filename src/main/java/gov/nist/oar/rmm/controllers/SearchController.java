@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +41,11 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @Api(value = "Api endpoints to search EDI/PDL data", tags = "Search API")
+/***
+ * Main search controller class.
+ * @author dsn1
+ *
+ */
 public class SearchController {
 	
 	private Logger logger = LoggerFactory.getLogger(SearchController.class);
@@ -57,42 +61,71 @@ public class SearchController {
                 value = "Results page you want to retrieve (0..N)"),
         @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
                 value = "Number of records per page."),
-        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                value = "Sorting criteria in the format: property(,asc|desc). " +
-                        "Default sort order is ascending. " +
-                        "Multiple sort criteria are supported.")
+        @ApiImplicitParam(name = "sort.desc", allowMultiple = true, dataType = "string", paramType = "query",
+                value = "sort on the fields seperated by comma (one or more)."),
+         @ApiImplicitParam(name = "sort.asc", allowMultiple = true, dataType = "string", paramType = "query",
+                        value = "Sort in ascending order seperated by comma (one or more).")
     })
-	@ApiOperation(value = "Get complete data.json.",nickname = "PDL",
-				  notes = "This will all the data if no request parameter mentioned.")
+	@ApiOperation(value = "Get/Search NERDm records.",nickname = "NERDm",
+				  notes = "Resource returns all the data if no request parameter mentioned."
+				  		+ "\n following are some search query examples"
+				  		+ "\n 1. /records?searchphrase=<phrase or words>"
+				  		+ "\n 2. /records?key1=value1&logicalOp=AND&key2=value2..."
+				  		+ "\n 3. /records?searchphrase=<phrase or words>&key=value..."
+				  		+ "\n 4. /records?page=1&size=2"
+				  		+ "\n 5. /recorsd?sort.desc=<field or comma seperated list of fields>")
 	@RequestMapping(value = {"/records"}, method = RequestMethod.GET, produces="application/json")
+	/**
+	 * Search the records repository, if no parameters given returns whole collection
+	 * @param params number of query parameters
+	 * @param p pagination 
+	 * @return Returns document containing result count and results array.
+	 * @throws IOException
+	 */
 	public Document search(@ApiIgnore @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
 		logger.info("This is advanced search request:"+request);
-	   
 		return repo.find(params);
     	
 	}
 	
-	@RequestMapping(value = {"/records/{id}"}, method = RequestMethod.GET, produces="application/json")
-	@ApiOperation(value = "Get record of given id.",nickname = "recordbyId",
-	  notes = "This will return a Record by given ID.")
-	public Document record(@PathVariable String id) throws IOException{
+	@RequestMapping(value = {"/records/{ediid}"}, method = RequestMethod.GET, produces="application/json")
+	@ApiOperation(value = "Get NERDm record of given id.",nickname = "recordbyId",
+	  notes = "Resource returns a NERDm Record by given ediid.")
+	/**
+	 * Get record for given id 
+	 * @param id
+	 * @return Returns Document
+	 * @throws IOException
+	 */
+	public Document record(@PathVariable String ediid) throws IOException{
 		logger.info("Get record by id:"+request);
-		return repo.findRecord(id);
+		return repo.findRecord(ediid);
 	}
 	
 	
 	@RequestMapping(value = {"/records/fields"}, method = RequestMethod.GET, produces="application/json")
-	@ApiOperation(value = "Get all fields in the document.",nickname = "fieldnames",
-	  notes = "This will return other Resource apis available at NIST.")
-	public Set<String> recordFields() throws IOException{
+	@ApiOperation(value = "Get all fields in the NERDm records.",nickname = "fieldnames",
+	  notes = "This resource returns NERDm fields. ** will be changed soon")
+	/**
+	 * Returns NERDm fields
+	 * @return Returns a set of fields
+	 * @throws IOException
+	 */
+	public List<Document> recordFields() throws IOException{
 		logger.info("Record fields names:"+request);
 		return repo.findFieldnames();
 	}
 
 	@RequestMapping(value = {"/taxonomy"}, method = RequestMethod.GET, produces="application/json")
 	@ApiOperation(value = "Get all taxonomy data.",nickname = "taxonomy",
-	  notes = "This will return all the taxonomy used in RMM service.")
-	public List<Document> serachTaxonoy(Map<String,String> params) throws IOException{
+	  notes = "This resource returns all the taxonomy used in RMM service.")
+	/**
+	 * Search taxonomy collection
+	 * @param params
+	 * @return returns List taxonomy
+	 * @throws IOException
+	 */
+	public List<Document> serachTaxonomy(Map<String,String> params) throws IOException{
 		logger.info("This is taxonomy:"+request);
 		return repo.findtaxonomy(params);
 	}
@@ -100,6 +133,12 @@ public class SearchController {
 	@RequestMapping(value = {"/resourceApi"}, method = RequestMethod.GET, produces="application/json")
 	@ApiOperation(value = "Get all Resource apis.",nickname = "resourceApi",
 	  notes = "This will return other Resource apis available at NIST.")
+	/**
+	 * Search apis
+	 * @param params
+	 * @return Returns list of searchApi
+	 * @throws IOException
+	 */
 	public List<Document> searchApis(Map<String,String> params) throws IOException{
 		logger.info("This is resourceApi:"+request);
 		return repo.findResourceApis();
@@ -108,29 +147,21 @@ public class SearchController {
 	
 	
 	/**
-	 * Extra function for testing and other purposes
+	 * Extra function for testing and other purposes.
 	 * 
 	 */
-	
-	@ApiImplicitParams({
-        @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                value = "Results page you want to retrieve (0..N)"),
-        @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                value = "Number of records per page."),
-        @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                value = "Sorting criteria in the format: property(,asc|desc). " +
-                        "Default sort order is ascending. " +
-                        "Multiple sort criteria are supported.")
-    })
-	@ApiOperation(value = "Get complete data.json.",nickname = "PDL",
-				  notes = "This will all the data if no request parameter mentioned.")
+	@ApiIgnore
 	@RequestMapping(value = {"/orig/records"}, method = RequestMethod.GET, produces="application/json")
+	/***
+	 * Extra function for Testing etc
+	 * @param params
+	 * @param p
+	 * @return returns List Document
+	 * @throws IOException
+	 ***/
 	public List<Document> extrasearch(@ApiIgnore @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=1000) Pageable p) throws IOException{
 		logger.info("This is advanced search request:"+request);
-	   
 		return repo.find(params,p);
     	
 	}
-	
-
 }

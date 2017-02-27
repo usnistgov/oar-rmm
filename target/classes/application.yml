@@ -14,11 +14,12 @@ spring:
       dev
       
 dbcollections: 
-         taxonomy: Taxonomy
-         resources: Resource
+         taxonomy: taxonomy
+         resources: resourceApi
          records: record 
+         recordfields: fields
       
 server: 
-    port: 8083
+    port: 8085
     contextPath: /oar-rmm-service
     
