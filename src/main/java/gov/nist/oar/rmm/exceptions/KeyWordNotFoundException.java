@@ -16,7 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * @author dsn1
+ * KeyWordNotFound exception
+ * @author Deoyani Nandrekar-Heinis
  *
  */
 @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Resource Not Found") //404

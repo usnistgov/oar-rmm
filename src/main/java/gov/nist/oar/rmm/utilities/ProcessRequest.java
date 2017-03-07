@@ -31,8 +31,8 @@ import com.mongodb.client.model.Sorts;
 
 
 /**
- * Process the RestApi request to parse parameters and create part of query.
- * @author dsn1
+ * Process the Rest Api request to parse parameters and create mongodb query.
+ * @author Deoyani Nandrekar-Heinis
  *
  */
 public class ProcessRequest{
@@ -100,7 +100,6 @@ public class ProcessRequest{
 				advFilter(advMap);
 		}
 		logger.info("Query parsing ends");
-	    //excludeId();
 		createQuerylist();
 		
 	}
@@ -159,7 +158,7 @@ public class ProcessRequest{
 	}
 	
 	/**
-	 * 
+	 * ExcludeId removes the mongobd generated _id from tresults
 	 */
 	 private void excludeId(){
 		 if(projections != null)
@@ -169,7 +168,7 @@ public class ProcessRequest{
 	 }
 	
 	/**
-	 * 
+	 * Add projections according to the requested parameters
 	 * @param projectionRequest
 	 */
 	private void parseProjection(Bson projectionRequest){
@@ -180,7 +179,7 @@ public class ProcessRequest{
 	} 
 	
 	/**
-	 * 
+	 *  Sort input request
 	 * @param sortingRequest
 	 */
 	private void parseSorting(Bson sortingRequest){
@@ -190,7 +189,7 @@ public class ProcessRequest{
 			sort = sortingRequest;
 	}
 	/**
-	 * 
+	 * Parse Filters based on input parameters
 	 * @param filterRequest
 	 */
 	private void parseFilter(Bson filterRequest){
@@ -237,7 +236,7 @@ public class ProcessRequest{
 	 * sort the filters without logical operators
 	 */
 	private void noLogicalOps(){
-		 //if(bsonObjs.size() > 1){
+		
 			  int i= 0;
 			  while(i < bsonObjs.size()){
 				  if(filter == null && bsonObjs.size() == 1){
@@ -253,7 +252,7 @@ public class ProcessRequest{
 						i++;
 				  }
 			  }
-		// }	 
+		 
 	}
 	/**
 	 * Create filters with logical options
@@ -290,20 +289,37 @@ public class ProcessRequest{
 	}
 	
 	
-	///Functions for taxonomy
-	
+/**
+ * Parse request to taxonomy resource and create mongodb query
+ * @param serachparams
+ * @return
+ */
 	public Bson parseTaxonomy(Map<String,String> serachparams ) {
 		
 		Bson taxFilter = null;
 		ArrayList<Bson> bsonTax = new ArrayList<Bson>();
 		if(!serachparams.entrySet().isEmpty()){
 			for (Entry<String, String> entry : serachparams.entrySet()) {
+				int paramValue =-1;
+				try{
+					paramValue = Integer.parseInt(entry.getValue());
+				}catch(Exception ex){
+					logger.info("parameter Value is not integer"+ex.getMessage());
+					paramValue = -1;
+				}
+				if(paramValue > -1)
+					bsonTax.add(Filters.eq(entry.getKey(),paramValue));
+				else
 				bsonTax.add(Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
 			}
 		}
 		int i= 0;
 		while(i < bsonTax.size()){
-			if(taxFilter == null){
+			if(taxFilter == null && bsonTax.size() == 1){
+				taxFilter = bsonTax.get(i);
+				i++;
+			}
+			else if(taxFilter == null){
 				taxFilter = Filters.and(bsonTax.get(i),bsonTax.get(i++));
 				i=i+2;
 			}else{
@@ -312,29 +328,8 @@ public class ProcessRequest{
 			}
 		}
 			
-//			for(int i = 0;i< bsonTax.size(); i++){
-//				if(taxFilter == null){
-//					taxFilter = Filters.and(bsonTax.get(i),bsonTax.get(i++));
-//					i=i+2;
-//				}else
-//					taxFilter = Filters.and(taxFilter,bsonTax.get(i));
-//				
-//			}
+
 		
 		return taxFilter;
 	}
-//Not using right now	
-//	private Map<String, String>  createMap(String advanced){
-//		Map<String, String> map = new LinkedHashMap<String, String>();
-//		for(String keyValue : advanced.split(" *& *")) {
-//		   String[] pairs = keyValue.split(" *= *", 2);
-//		   map.put(pairs[0], pairs.length == 1 ? "" : pairs[1]);
-//		}
-//		
-//		return map;
-//	}
 }
-
-//testquery
-//Title=mytitle&logicalOp=AND&DOI=test&logicalOp=OR&filter=r&logicalOp=Not&Autor=testauthor  
-//

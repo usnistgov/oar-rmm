@@ -19,7 +19,11 @@ import java.util.Set;
 import org.bson.Document;
 import org.springframework.data.domain.Pageable;
 
-
+/**
+ * CustomRepository interface
+ * @author Deoyani Nandrekar-Heinis
+ *
+ */
 public interface CustomRepository {
 
 	public List<Document> find(Map<String,String> param,Pageable p);

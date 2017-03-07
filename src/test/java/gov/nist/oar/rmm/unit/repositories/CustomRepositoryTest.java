@@ -10,24 +10,24 @@
  * that they have been modified.
  * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.oar.rmm.exceptions;
-/***
- * GeneralException extends Exception
- * @author Deoyani Nandrekar-Heinis
- *
- */
-public class GeneralException extends Exception {
+package gov.nist.oar.rmm.unit.repositories;
 
-	private static final long serialVersionUID = 1L;
-	
-	public GeneralException(int id){
-		super("Exception Thrown for this record="+id);
-	}
-	public GeneralException(String requestUrl){
-		super("Exception Thrown for this request="+requestUrl);
-	}
-	public GeneralException(){
-		super("Resource you are looking for is not available.");
-	}
-	
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.bson.Document;
+import org.springframework.data.domain.Pageable;
+
+
+public interface CustomRepositoryTest {
+
+	public List<Document> find(Map<String,String> param,Pageable p);
+	public Document find(Map<String,String> param);
+	public List<Document> findtaxonomy(Map<String,String> param);
+	public List<Document> findtaxonomy();
+	public List<Document> findResourceApis();
+	public Document findRecord(String id);
+	public List<Document> findFieldnames();
+
 }

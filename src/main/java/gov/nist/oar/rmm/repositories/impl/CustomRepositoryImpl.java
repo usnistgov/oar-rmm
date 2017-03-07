@@ -28,10 +28,15 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
+import ch.qos.logback.core.filter.Filter;
 import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
-
+/**
+ * Custom Repository interface implementation
+ * @author Deoyani Nandrekar-Heinis
+ *
+ */
 @Service
 public class CustomRepositoryImpl implements CustomRepository {
 
@@ -41,6 +46,7 @@ public class CustomRepositoryImpl implements CustomRepository {
 	
 	/* (non-Javadoc)
 	 * @see gov.nist.oar.rmm.repositories.RecordRepository#find()
+	 * Search with given criteria
 	 */
 	@Override
 	public Document find(Map<String,String> params) {		
@@ -58,16 +64,20 @@ public class CustomRepositoryImpl implements CustomRepository {
 
 	/* (non-Javadoc)
 	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findtaxonomy(java.util.Map)
+	 * Find Taxonomy 
 	 */
 	@Override
 	public List<Document> findtaxonomy(Map<String, String> param) {
 		MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
 		ProcessRequest request  = new ProcessRequest();
-		return mcollection.find(request.parseTaxonomy(param)).into(new ArrayList<Document>());
+		if(request.parseTaxonomy(param) == null)
+			return mcollection.find().into(new ArrayList<Document>());
+		else
+			return mcollection.find(request.parseTaxonomy(param)).into(new ArrayList<Document>());
 	}
 
-	/* (non-Javadoc)
-	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findResourceApis()
+	/* 
+	 * Find Resource apis
 	 */
 	@Override
 	public List<Document> findResourceApis() {

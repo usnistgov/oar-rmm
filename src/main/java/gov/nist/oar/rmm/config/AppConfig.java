@@ -16,11 +16,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"gov.nist.oar.rmm"})
-//@EnableMongoRepositories
+/**
+ * Application configuration.
+ * Spring Boot initialization.
+ * @author Deoyani Nandrekar-Heinis
+ * 
+ *
+ */
 public class AppConfig {
 
 	 private static Logger log = LoggerFactory.getLogger(AppConfig.class);
@@ -34,5 +44,18 @@ public class AppConfig {
 	    log.info("########## Starting oar rmm service ########");
 	    SpringApplication.run(AppConfig.class, args);
 	  }
+	  /**
+	   *Add CORS 
+	   * @return
+	   */
+	  @Bean
+	    public WebMvcConfigurer corsConfigurer() {
+	        return new WebMvcConfigurerAdapter() {
+	            @Override
+	            public void addCorsMappings(CorsRegistry registry) {
+	                registry.addMapping("/**");
+	            }
+	        };
+	    }
 }
 

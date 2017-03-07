@@ -8,11 +8,19 @@
  * used. This software can be redistributed and/or modified freely provided that any derivative
  * works bear some notice that they are derived from it, and any modified versions bear some notice
  * that they have been modified.
- * 
- * @author:Harold Affo
+ * @author: Deoyani Nandrekar-Heinis
  */
-package gov.nist.oar.rmm.unit.controller;
+package gov.nist.oar.rmm.unit.configuration;
 
-public class SearchControllerTests {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
+@SpringBootApplication
+@ComponentScan(basePackages = {"gov.nist.oar.rmm.unit"})
+public class TestAppConfig {
+
+	 public static void main(String... args) {
+		    SpringApplication.run(TestAppConfig.class, args);
+		  }
 }

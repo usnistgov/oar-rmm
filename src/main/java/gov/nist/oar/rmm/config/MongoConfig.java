@@ -29,6 +29,12 @@ import com.mongodb.client.MongoDatabase;
 
 @Configuration
 @ConfigurationProperties	
+/**
+ * MongoDB configuration, reading all the conf details from 
+ * application.yml
+ * @author dsn1
+ *
+ */
 public class MongoConfig {
 
 	 private static Logger log = LoggerFactory.getLogger(MongoConfig.class);
@@ -59,9 +65,9 @@ public class MongoConfig {
 	 
 	 @PostConstruct
 	 public void initIt() throws Exception {
-		 log.info("##########  ########"+ dbname);
-		 System.out.println("##########  ########"+dbname +"##########  ########");
- 
+		
+		 log.info("########## "+ dbname+" ########");
+	
 		 this.setMongodb(this.dbname);
 		 this.setRecordCollection(this.record);
 		 this.setTaxonomyCollection(this.taxonomy);
@@ -70,40 +76,74 @@ public class MongoConfig {
 		 
 	 }
 	 
+	 /**
+	  * Get mongodb database name
+	  * @return
+	  */
 	
 	 public MongoDatabase getMongoDb(){
 		 return mongoDb;
 	 }
+	 /**
+	  * Set mongodb database name
+	  * @param dbname
+	  */
 	 private void setMongodb(String dbname){
 		mongoDb =  mongoClient.getDatabase(dbname);
 	 }
 
+	 /***
+	  * Get records collection from Mongodb
+	  * @return
+	  */
 	 public MongoCollection<Document> getRecordCollection(){
 		 return   recordsCollection;
 	 }
+	 /**
+	  * Set records collection 
+	  */
 	 private void setRecordCollection(String record){
 		 recordsCollection = mongoDb.getCollection(record);
 	 }
-	 
+	 /***
+	  * Get taxonomy collection
+	  * @return
+	  */
 	 public MongoCollection<Document> getTaxonomyCollection(){
 		 return taxonomyCollection;
 	 }
+	 /**
+	  * Set taxonomy collection
+	  * @param taxonomy
+	  */
 	 private void setTaxonomyCollection(String taxonomy){
 		 taxonomyCollection = mongoDb.getCollection(taxonomy);
 	 }
-	 
+	 /***
+	  * get ResourceApi collection
+	  * @return
+	  */
 	 public MongoCollection<Document> getResourceApiCollection(){
 		 return resourceApiCollection;
 	 }
-	 
+	 /**
+	  * Set resourceApi collection
+	  * @param resourceApi
+	  */
 	 private void setResourceApiCollection(String resourceApi){
 		 resourceApiCollection = mongoDb.getCollection(resourceApi);
 	 }
-	 
+	 /***
+	  * Get record collections fields collection
+	  * @return
+	  */
 	 public MongoCollection<Document> getRecordFieldsCollection(){
 		 return recordFieldsCollection;
 	 }
-	 
+	 /***
+	  * Set record collections fields collection
+	  * @param recordFields
+	  */
 	 private void setRecordFieldsCollection(String recordFields){
 		 recordFieldsCollection = mongoDb.getCollection(recordFields);
 	 }

@@ -13,7 +13,7 @@
 package gov.nist.oar.rmm.exceptions;
 
 /**
- * @author dsn1
+ * @author Deoyani Nandrekar-Heinis
  * Application specific exception
  */
 public class RMMException extends Exception{

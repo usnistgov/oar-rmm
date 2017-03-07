@@ -42,9 +42,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @Api(value = "Api endpoints to search EDI/PDL data", tags = "Search API")
 /***
- * Main search controller class.
- * @author dsn1
- *
+ * Main search controller.
+ * Searches data in Mongodb database.
+ * @author Deoyani Nandrekar-Heinis
  */
 public class SearchController {
 	
@@ -84,6 +84,7 @@ public class SearchController {
 	 */
 	public Document search(@ApiIgnore @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
 		logger.info("This is advanced search request:"+request);
+		Document d = repo.find(params);
 		return repo.find(params);
     	
 	}
@@ -125,7 +126,7 @@ public class SearchController {
 	 * @return returns List taxonomy
 	 * @throws IOException
 	 */
-	public List<Document> serachTaxonomy(Map<String,String> params) throws IOException{
+	public List<Document> serachTaxonomy(@ApiIgnore @RequestParam  Map<String,String> params) throws IOException{
 		logger.info("This is taxonomy:"+request);
 		return repo.findtaxonomy(params);
 	}

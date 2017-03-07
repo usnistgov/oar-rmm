@@ -34,7 +34,7 @@ import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
 /***
  * GlobalExceptionHandler class takes care of any exceptions thrown in the code and 
  * returns appropriate messages
- * @author dsn1
+ * @author Deoyani Nandrekar-Heinis
  *
  */
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {

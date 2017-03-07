@@ -15,7 +15,7 @@ spring:
       
 dbcollections: 
          taxonomy: taxonomy
-         resources: resourceApi
+         resources: apis
          records: record 
          recordfields: fields
       
