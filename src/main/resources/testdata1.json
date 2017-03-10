@@ -1,0 +1,61 @@
+[
+	{
+		"@type": "dcat:Dataset",
+		"theme": [
+			"Spectroscopy",
+			"Chemical thermodynamics & chemical properties",
+			"Analytical chemistry",
+			"Chemical engineering & processing",
+			"Thermochemical properties",
+			"Reference data"
+		],
+		"keyword": [
+			"IR spectrum",
+			"InChI",
+			"InChIKey",
+			"UV Vis spectrum",
+			"boiling point",
+			"chemical data",
+			"chemical structure",
+			"enthalpy",
+			"entropy",
+			"heat capacity",
+			"heat of formation",
+			"ionization potential",
+			"mass spectrum",
+			"retention index",
+			"thermochemical data",
+			"thermochemistry",
+			"thermodynamic data",
+			"vapor pressure"
+		],
+		"programCode": [
+			"006:052"
+		],
+		"landingPage": "http://webbook.nist.gov/chemistry",
+		"accessLevel": "public",
+		"modified": "2013-04-01",
+		"publisher": {
+			"@type": "org:Organization",
+			"name": "National Institute of Standards and Technology"
+		},
+		"references": [
+			"http://dx.doi.org/10.1021/je000236i"
+		],
+		"bureauCode": [
+			"006:55"
+		],
+		"title": "NIST Chemistry WebBook - SRD 69",
+		"description": "The NIST Chemistry WebBook provides users with easy access to chemical and physical property data for chemical species through the internet. The data provided in the site are from collections maintained by the NIST Standard Reference Data Program and outside contributors. Data in the WebBook system are organized by chemical species. The WebBook system allows users to search for chemical species by various means. Once the desired species has been identified, the system will display data for the species.",
+		"contactPoint": {
+			"hasEmail": "mailto:peter.linstrom@nist.gov",
+			"@type": "vcard:Contact",
+			"fn": "Peter Linstrom"
+		},
+		"language": [
+			"en"
+		],
+		"license": "http://www.nist.gov/data/license.cfm",
+		"identifier": "EBC9DB05EDEE5B0EE043065706812DF85"
+	}
+]

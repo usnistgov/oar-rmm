@@ -1,0 +1,39 @@
+{
+	"record": {
+		"language": [
+			"en"
+		],
+		"type": "dcat:Dataset",
+		"identifier": "EBC9DB05EDEE5B0EE043065706812DF85",
+		"description": "The NIST Chemistry WebBook provides users with easy access to chemical and physical property data for chemical species through the internet. The data provided in the site are from collections maintained by the NIST Standard Reference Data Program and outside contributors. Data in the WebBook system are organized by chemical species. The WebBook system allows users to search for chemical species by various means. Once the desired species has been identified, the system will display data for the species.",
+		"programCode": [
+			"006:052"
+		],
+		"landingPage": "http://webbook.nist.gov/chemistry",
+		"accessLevel": "public",
+		"modified": "2013-04-01",
+		"publisher": {
+			"name": "National Institute of Standards and Technology",
+			"type": "org:Organization"
+		},
+		"references": [
+			"http://dx.doi.org/10.1021/je000236i"
+		],
+		"bureauCode": [
+			"006:55"
+		],
+		"title": "NIST Chemistry WebBook - SRD 69",
+		"contactPoint": {
+			"type": "vcard:Contact",
+			"hasmail": "mailto:peter.linstrom@nist.gov",
+			"fn": "Peter Linstrom"
+		},
+		"license": "http://www.nist.gov/data/license.cfm",
+		"keyword": [
+			"IR spectrum",
+			"InChI"
+		]
+	}
+}  
+  
+ 
