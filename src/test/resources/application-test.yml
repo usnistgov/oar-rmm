@@ -1,0 +1,25 @@
+spring:
+
+  application:
+    name: oar-rmm-service
+  
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: TestDB
+      
+  profiles:
+    active:
+      dev
+      
+dbcollections: 
+         taxonomy: taxonomy
+         resources: apis
+         records: record 
+         recordfields: fields
+      
+server: 
+    port: 8085
+    contextPath: /oar-rmm-service
+    
