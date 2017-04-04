@@ -14,6 +14,7 @@ package gov.nist.oar.rmm.utilities;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +131,9 @@ public class ProcessRequest{
 	 */
 	private void treatSearch(String key, String value){
 		
+		if(value.isEmpty()) 
+			return;
+		
 		switch(key){
 		
 		case "searchphrase": 
@@ -225,9 +229,15 @@ public class ProcessRequest{
 				
 				if("logicalOp".equalsIgnoreCase(entry.getKey()))
 					logicalOps.add(entry.getValue());
-				else
-					bsonObjs.add(Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
+				else{
+					String[] searchString = entry.getValue().split(",");
+					List<Pattern> patternList = new ArrayList<Pattern>();
 					
+					for(int i=0; i<searchString.length; i++){
+						patternList.add(Pattern.compile(searchString[i],Pattern.CASE_INSENSITIVE));
+					}
+					bsonObjs.add(Filters.in(entry.getKey(),patternList));
+				}		
 			}
 			
 	}
