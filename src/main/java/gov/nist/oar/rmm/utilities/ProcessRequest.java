@@ -237,13 +237,7 @@ public class ProcessRequest{
 						patternList.add(Pattern.compile(searchString[i],Pattern.CASE_INSENSITIVE));
 					}
 					bsonObjs.add(Filters.in(entry.getKey(),patternList));
-				}
-					//bsonObjs.add(Filters.regex(entry.getKey(),  Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
-					
-					//bsonObjs.add(Filters.in(entry.getKey(), Arrays.asList()  ));
-				//Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)
-					//bsonObjs.add(Filters.in(entry.getKey(),Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
-				
+				}		
 			}
 			
 	}
