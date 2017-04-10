@@ -8,4 +8,6 @@ if [[ $(sudo docker images -a | grep "rmm") ]]; then
    sudo docker rmi -f $(sudo docker images -a | grep "rmm")
 fi
 
-sudo docker-compose up -d --build
+sudo docker-compose rm -f
+sudo docker-compose build --no-cache
+sudo docker-compose up -d 
