@@ -23,3 +23,6 @@ server:
     port: 8085
     contextPath: /oar-rmm-service
     
+logging:
+  path : /var/log/rmm-api/
+  
