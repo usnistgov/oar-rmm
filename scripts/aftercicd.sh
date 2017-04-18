@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/ubuntu/oar-docker/rmm
+cd /home/ubuntu/oar-docker/apps/
 
 if [[ $(sudo docker ps -aqf "name=rmm") ]]; then
     sudo docker rm -f $(sudo docker ps -aqf "name=rmm")
@@ -10,4 +10,5 @@ fi
 
 sudo docker-compose rm -f
 sudo docker-compose build --no-cache
-sudo docker-compose up -d 
+sudo docker-compose up -d
+
