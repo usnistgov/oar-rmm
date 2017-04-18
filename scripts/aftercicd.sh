@@ -1,11 +1,11 @@
 #!/bin/bash
 cd /home/ubuntu/oar-docker/rmm
 
-if [[ $(sudo docker ps -a | grep "rmm") ]]; then
-    sudo docker rm -f $(sudo docker ps -a | grep "rmm")
+if [[ $(sudo docker ps -aqf "name=rmm") ]]; then
+    sudo docker rm -f $(sudo docker ps -aqf "name=rmm")
 fi
-if [[ $(sudo docker images -a | grep "rmm") ]]; then
-   sudo docker rmi -f $(sudo docker images -a | grep "rmm")
+if [[ $(sudo docker images rmm -aq) ]]; then
+   sudo docker rmi -f $(sudo docker images rmm -aq")
 fi
 
 sudo docker-compose rm -f
