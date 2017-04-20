@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bson.conversions.Bson;
@@ -29,6 +30,7 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
+
 
 
 /**
@@ -94,6 +96,7 @@ public class ProcessRequest{
 		
 		logger.info("Query parsing starts");
 		if(!serachparams.entrySet().isEmpty()){
+			validateInput(serachparams);
 			for (Entry<String, String> entry : serachparams.entrySet()) {
 				treatSearch(entry.getKey(), entry.getValue());
 			}
@@ -105,6 +108,45 @@ public class ProcessRequest{
 		
 	}
 	
+	private void validateInput(Map<String,String> serachparams){
+		
+			for (Entry<String, String> entry : serachparams.entrySet()) {
+				String value = entry.getValue();
+				if(value.isEmpty()) 
+					return;
+				Pattern p = Pattern.compile("[^a-z0-9.,]", Pattern.CASE_INSENSITIVE);
+				Matcher m = p.matcher(value);
+				switch(entry.getKey()){
+				case "exclude":	
+				case "include":
+				case "sort.desc": 
+				case "sort.asc":
+					if(m.find()) 
+						throw new IllegalArgumentException("check parameter value for"+entry.getKey());
+					break;	
+				case "page": 
+			    case "size": 
+			    	if(m.find()) 
+						throw new IllegalArgumentException("'page/size' can be only integers");
+					else
+						checkInteger(value);
+					break;
+				case "searchphrase": 				
+				default:
+					break;
+				}
+			}
+		
+	}
+	
+	private void checkInteger(String value){
+		try{ 
+			Integer.parseInt(value);
+		}catch(Exception e){
+	    	logger.info("exception:"+e);
+	    	throw new IllegalArgumentException("'page/size' value should be integer only.");
+	    }	
+	}
 	/**
 	 * This is to create aggregate of all the queries
 	 */
@@ -310,17 +352,21 @@ public class ProcessRequest{
 		ArrayList<Bson> bsonTax = new ArrayList<Bson>();
 		if(!serachparams.entrySet().isEmpty()){
 			for (Entry<String, String> entry : serachparams.entrySet()) {
+				
+				Pattern p = Pattern.compile("[^a-z0-9.,]", Pattern.CASE_INSENSITIVE);
+				Matcher m = p.matcher(entry.getValue());
+				if(m.find())
+					throw new IllegalArgumentException(); 
 				int paramValue =-1;
 				try{
 					paramValue = Integer.parseInt(entry.getValue());
-				}catch(Exception ex){
-					logger.info("parameter Value is not integer"+ex.getMessage());
-					paramValue = -1;
-				}
-				if(paramValue > -1)
 					bsonTax.add(Filters.eq(entry.getKey(),paramValue));
-				else
-				bsonTax.add(Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
+				}catch(Exception ex){
+					logger.info("parameter Value is not integer"+ex);
+					
+					bsonTax.add(Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
+				}
+				
 			}
 		}
 		int i= 0;

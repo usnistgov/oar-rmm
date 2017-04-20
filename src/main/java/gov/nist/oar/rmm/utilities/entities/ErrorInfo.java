@@ -31,7 +31,7 @@ public class ErrorInfo {
      */
     public ErrorInfo(String url, Exception ex, String message, String httpStatus) {
         this.url = url;
-        this.ex = ex.getLocalizedMessage();
+        this.ex = ex.getMessage();
         this.message = message;
         this.httpStatus = httpStatus;
     }
