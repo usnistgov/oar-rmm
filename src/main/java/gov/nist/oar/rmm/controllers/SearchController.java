@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,7 +48,9 @@ import springfox.documentation.annotations.ApiIgnore;
  * Searches data in Mongodb database.
  * @author Deoyani Nandrekar-Heinis
  */
-public class SearchController {
+@Validated
+@RequestMapping("/")
+public class SearchController{
 	
 	private Logger logger = LoggerFactory.getLogger(SearchController.class);
 	
@@ -82,14 +86,14 @@ public class SearchController {
 	 * @return Returns document containing result count and results array.
 	 * @throws IOException
 	 */
-	public Document search(@ApiIgnore @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
+	public Document search(@ApiIgnore @Valid @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
 		logger.info("This is advanced search request:"+request);
 		Document d = repo.find(params);
 		return repo.find(params);
     	
 	}
 	
-	@RequestMapping(value = {"/records/{ediid}"}, method = RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = {"/records/{ediid}"}, method = RequestMethod.GET,  produces="application/json")
 	@ApiOperation(value = "Get NERDm record of given id.",nickname = "recordbyId",
 	  notes = "Resource returns a NERDm Record by given ediid.")
 	/**
@@ -98,13 +102,13 @@ public class SearchController {
 	 * @return Returns Document
 	 * @throws IOException
 	 */
-	public Document record(@PathVariable String ediid) throws IOException{
+	public Document record(@PathVariable  @Valid String ediid) throws IOException{
 		logger.info("Get record by id:"+request);
 		return repo.findRecord(ediid);
 	}
 	
 	
-	@RequestMapping(value = {"/records/fields"}, method = RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = {"/records/fields"}, method = RequestMethod.GET,produces="application/json")
 	@ApiOperation(value = "Get all fields in the NERDm records.",nickname = "fieldnames",
 	  notes = "This resource returns NERDm fields. ** will be changed soon")
 	/**
@@ -131,7 +135,7 @@ public class SearchController {
 		return repo.findtaxonomy(params);
 	}
 	
-	@RequestMapping(value = {"/resourceApi"}, method = RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = {"/resourceApi"}, method = RequestMethod.GET,produces="application/json")
 	@ApiOperation(value = "Get all Resource apis.",nickname = "resourceApi",
 	  notes = "This will return other Resource apis available at NIST.")
 	/**
@@ -140,7 +144,7 @@ public class SearchController {
 	 * @return Returns list of searchApi
 	 * @throws IOException
 	 */
-	public List<Document> searchApis(Map<String,String> params) throws IOException{
+	public List<Document> searchApis() throws IOException{
 		logger.info("This is resourceApi:"+request);
 		return repo.findResourceApis();
 	}

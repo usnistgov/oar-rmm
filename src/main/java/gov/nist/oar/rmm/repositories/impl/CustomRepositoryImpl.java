@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -92,8 +94,20 @@ public class CustomRepositoryImpl implements CustomRepository {
 	@Override
 	public Document findRecord(String ediid) {
 		
+		Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(ediid);
+		if(m.find()) 
+			throw new IllegalArgumentException("check input parameters.");
+		
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
 		
+		
+		long count  = mcollection.count(Filters.eq("ediid",ediid));
+		if(count == 0) {
+			return new Document("Message", "No record available for given id.");
+			
+		}
+		else
 		return mcollection.find(Filters.eq("ediid",ediid)).first();
 		
 	}

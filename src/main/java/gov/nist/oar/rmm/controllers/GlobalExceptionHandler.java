@@ -52,8 +52,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo  myError(Exception exception) {
-	    logger.info("----Caught IOException----");
-	    return new ErrorInfo(request.getDescription(false), exception,"General Exception",HttpStatus.CONFLICT.toString());
+	    logger.info("----Caught IOException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
+	    return new ErrorInfo(request.getContextPath(), exception,"General Exception",HttpStatus.CONFLICT.toString());
         
 	  }
 	  
@@ -66,8 +66,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo illegal(IllegalArgumentException exception) {
-            logger.info("----This is a ilegal request----");
-            return new ErrorInfo(request.getDescription(false), exception,"IllegalArgumentException",HttpStatus.BAD_REQUEST.toString());
+            logger.info("----This is a ilegal request----\n"+request.getDescription(false)+"\n Detail ArgumentException:"+exception.getStackTrace());
+            return new ErrorInfo(request.getContextPath(), exception,"IllegalArgumentException",HttpStatus.BAD_REQUEST.toString());
             
 	  }
 	  
@@ -80,8 +80,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo notFound(Exception exception) {
-            logger.info("----Caught KeywordNotFoundException----");
-            return new ErrorInfo(request.getDescription(false), exception,"KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
+            logger.info("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail NotFoundException:"+exception.getStackTrace());
+            return new ErrorInfo(request.getContextPath(), exception,"KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
             
 	  }
 	  
@@ -95,8 +95,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo resourceNotFound(ResourceNotFoundException exception) {
-            logger.info("----Caught KeywordNotFoundException----");
-            return new ErrorInfo(request.getDescription(false), exception,"ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
+            logger.info("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail ResourceNotFoundException:"+exception.getStackTrace());
+            return new ErrorInfo(request.getContextPath(), exception,"ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
             
 	  }
 	  
@@ -109,8 +109,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo badRequest(Exception exception) {
-            logger.info("----Caught IOException----");
-            return new ErrorInfo(request.getDescription(false), exception,"IOException",HttpStatus.BAD_REQUEST.toString());
+            logger.info("----Caught IOException----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
+            return new ErrorInfo(request.getContextPath(), exception,"IOException",HttpStatus.BAD_REQUEST.toString());
 	  }
 	  
 } 
