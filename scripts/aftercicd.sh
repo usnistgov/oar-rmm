@@ -5,7 +5,7 @@ if [[ $(sudo docker ps -aqf "name=rmm") ]]; then
     sudo docker rm -f $(sudo docker ps -aqf "name=rmm")
 fi
 if [[ $(sudo docker images rmm -aq) ]]; then
-   sudo docker rmi -f $(sudo docker images rmm -aq")
+   sudo docker rmi -f $(sudo docker images rmm -aq)
 fi
 
 sudo docker-compose rm -f
