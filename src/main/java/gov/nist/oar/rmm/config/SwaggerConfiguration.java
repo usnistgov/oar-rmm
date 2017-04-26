@@ -75,7 +75,7 @@ public class SwaggerConfiguration {
 	ApiInfo apiInfo =
         new ApiInfo("Resource api", 
         		"This REST api exposes data listing from NIST NERDm schema. ",
-        		"Build-2.0",
+        		"Build-1.0.0",
         		"This is a web service to search the data with various search criteria", 
         		"deoyani@nist.gov",
         		"NIST Public licence", 

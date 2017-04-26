@@ -105,7 +105,6 @@ public class CustomRepositoryImpl implements CustomRepository {
 		long count  = mcollection.count(Filters.eq("ediid",ediid));
 		if(count == 0) {
 			return new Document("Message", "No record available for given id.");
-			
 		}
 		else
 		return mcollection.find(Filters.eq("ediid",ediid)).first();

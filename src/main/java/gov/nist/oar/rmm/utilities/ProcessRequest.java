@@ -114,7 +114,7 @@ public class ProcessRequest{
 				String value = entry.getValue();
 				if(value.isEmpty()) 
 					return;
-				Pattern p = Pattern.compile("[^a-z0-9.,]", Pattern.CASE_INSENSITIVE);
+				Pattern p = Pattern.compile("[^a-z0-9.,@_]", Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(value);
 				switch(entry.getKey()){
 				case "exclude":	
