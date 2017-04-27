@@ -21,8 +21,9 @@ The project is a maven based java project. To build:
 ## Layout
 ```
 oar-rmm/                    				--> main folder
-	src/									            --> 
-    	pom.xml 							        --> maven pom file
+	src/						--> code source
+	 main/java/gov/nist/oar/rmm/ 			--> code namespace
+    	pom.xml 			                --> maven pom file
 ```
 ## Contributing
 
