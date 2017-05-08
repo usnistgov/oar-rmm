@@ -34,7 +34,7 @@ server:
 logging:
   file: rmmapp.log
   path : /var/log/rmm-api/
-  exception-conversion-word: %wEx
+  exception-conversion-word: '%wEx'
   
 security:
     headers:
