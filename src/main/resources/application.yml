@@ -22,7 +22,28 @@ dbcollections:
 server: 
     port: 8085
     contextPath: /oar-rmm-service
+    error:
+      include-stacktrace: never
+    connection-timeout: 60000
+    max-http-header-size: 8192
+    session
+      cookie
+        max-age: 86400
+        http-only: true
+        domain: .testdata.nist.gov
+    tomcat
+      accesslog
+        directory: logs
+        enabled: false
     
 logging:
+  file: rmmapp.log
   path : /var/log/rmm-api/
+  exception-conversion-word: %wEx
   
+security:
+    headers:
+      frame: true
+      xss: true
+      hsts: all
+    enable-csrf: false
