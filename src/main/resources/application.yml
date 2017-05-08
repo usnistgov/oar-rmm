@@ -22,7 +22,3 @@ dbcollections:
 server: 
     port: 8085
     contextPath: /rmm
-    
-logging:
-  path : /var/log/rmm-api/
-  
