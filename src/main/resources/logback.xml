@@ -6,12 +6,21 @@
         </encoder>
     </appender>
 
+   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+      <file> /var/log/rmm-api/rmmapp.log </file>
+      <append>true</append>
+      <encoder>
+      	<Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c:%M:%L -%X{currentUser}%X{requestParams} %m%n</Pattern>
+      </encoder>
+   </appender>
+
     <logger name="org.springframework.web" additivity="false">
         <level value="DEBUG"/>
         <appender-ref ref="STDOUT"/>
     </logger>
 
     <root level="INFO">
+        <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT"/>
     </root>
 
