@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.nist.oar.rmm.exceptions.InternalServerException;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -88,9 +90,7 @@ public class SearchController{
 	 */
 	public Document search(@ApiIgnore @Valid @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
 		logger.info("This is advanced search request:"+request);
-		Document d = repo.find(params);
 		return repo.find(params);
-    	
 	}
 	
 	@RequestMapping(value = {"/records/{ediid}"}, method = RequestMethod.GET,  produces="application/json")

@@ -17,22 +17,41 @@ package gov.nist.oar.rmm.utilities.entities;
  *
  */
 public class ErrorInfo {
-    public final String url;
-    public final String ex;
-    public final String message;
-    public final String httpStatus;
+//    public final String url;
+//    public final String ex;
+//    public final String message;
+//    public final String httpStatus;
+//
+//    /***
+//     * Get ErrorInfo
+//     * @param url reuesturl
+//     * @param ex exception thrown
+//     * @param message Error message
+//     * @param httpStatus http error code
+//     */
+//    public ErrorInfo(String url, Exception ex, String message, String httpStatus) {
+//        this.url = url;
+//        this.ex = ex.getMessage();
+//        this.message = message;
+//        this.httpStatus = httpStatus;
+//    }
+	
+	 public final String url;
+	   
+	    public final String message;
+	    public final String httpStatus;
 
-    /***
-     * Get ErrorInfo
-     * @param url reuesturl
-     * @param ex exception thrown
-     * @param message Error message
-     * @param httpStatus http error code
-     */
-    public ErrorInfo(String url, Exception ex, String message, String httpStatus) {
-        this.url = url;
-        this.ex = ex.getMessage();
-        this.message = message;
-        this.httpStatus = httpStatus;
-    }
+	    /***
+	     * Get ErrorInfo
+	     * @param url reuesturl
+	     * @param ex exception thrown
+	     * @param message Error message
+	     * @param httpStatus http error code
+	     */
+	    public ErrorInfo(String url, String message, String httpStatus) {
+	        this.url = url;
+	        
+	        this.message = message;
+	        this.httpStatus = httpStatus;
+	    }
 }
