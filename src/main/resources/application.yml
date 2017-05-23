@@ -22,3 +22,23 @@ dbcollections:
 server: 
     port: 8085
     contextPath: /rmm
+    error:
+      include-stacktrace: never
+    connection-timeout: 60000
+    max-http-header-size: 8192
+    tomcat:
+      accesslog:
+        directory: logs
+        enabled: false
+    
+logging:
+  file: rmmapp.log
+  path : /var/log/rmm-api/
+  exception-conversion-word: '%wEx'
+  
+security:
+    headers:
+      frame: true
+      xss: true
+      hsts: all
+    enable-csrf: false
