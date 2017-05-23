@@ -50,6 +50,7 @@ public class ProcessRequest{
 	private ArrayList<Bson> bsonObjs = new ArrayList<Bson>();
 	private List<Bson> queryList = new ArrayList<Bson>();
 	private Map<String, String> advMap = new LinkedHashMap<String, String>();
+	private String include =  "", exclude = "";
 	
 	/**
 	 * Filter on the search query
@@ -100,9 +101,11 @@ public class ProcessRequest{
 			for (Entry<String, String> entry : serachparams.entrySet()) {
 				treatSearch(entry.getKey(), entry.getValue());
 			}
+			validateProjections();
 			if(!advMap.isEmpty())
 				advFilter(advMap);
 		}
+
 		logger.info("Query parsing ends");
 		createQuerylist();
 		
@@ -117,7 +120,7 @@ public class ProcessRequest{
 				Pattern p = Pattern.compile("[^a-z0-9.,@_]", Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(value);
 				switch(entry.getKey()){
-				case "exclude":	
+				case "exclude":
 				case "include":
 				case "sort.desc": 
 				case "sort.asc":
@@ -136,7 +139,7 @@ public class ProcessRequest{
 					break;
 				}
 			}
-		
+				
 	}
 	
 	private void checkInteger(String value){
@@ -181,11 +184,13 @@ public class ProcessRequest{
 		case "searchphrase": 
 			parseFilter(Filters.text(value));
 			break;
-		case "exclude":
-			parseProjection(Projections.exclude(value.split(","))) ;
+		case "exclude": 
+			exclude = value;
+			//parseProjection(Projections.exclude(value.split(","))) ;
 			break;
 		case "include":
-			parseProjection(Projections.include(value.split(","))) ;
+			include= value; 
+			//parseProjection(Projections.include(value.split(","))) ;
 			break;
 		case "page": pagenumber = Integer.parseInt(value);
 				break;
@@ -200,6 +205,24 @@ public class ProcessRequest{
 		default:
 			advMap.put(key,value);
 			break;
+		}
+	}
+	
+	
+	private void validateProjections(){
+		if(!include.isEmpty() && !exclude.isEmpty()){
+			if("_id".equalsIgnoreCase(exclude)){
+				projections = Projections.fields(Projections.include(include.split(",")),Projections.excludeId());
+			}
+			else if(!"_id".equalsIgnoreCase(exclude) && !exclude.isEmpty()){
+				throw new IllegalArgumentException("if you exclude fields, you cannot also specify the inclusion of fields");
+			}
+		}
+		else if(!include.isEmpty() && exclude.isEmpty()){
+			projections = Projections.include(include.split(","));
+		}
+		else if(include.isEmpty() && !exclude.isEmpty()){
+			projections = Projections.exclude(exclude.split(","));
 		}
 	}
 	

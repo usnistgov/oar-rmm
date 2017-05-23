@@ -8,6 +8,8 @@ spring:
       host: localhost
       port: 27017
       database: TestDB
+      user:
+      password:
       
   profiles:
     active:
