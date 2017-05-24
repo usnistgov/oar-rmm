@@ -32,7 +32,7 @@ public class KeyWordNotFoundException extends Exception {
 	 * @param id requested identifier
 	 */
 	public KeyWordNotFoundException(int id){
-		super("EmployeeNotFoundException with id="+id);
+		super("RecordNotFoundException with id="+id);
 	}
 	/**
 	 * KeyWordNotFoundException

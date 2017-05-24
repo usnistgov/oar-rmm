@@ -15,7 +15,6 @@ package gov.nist.oar.rmm.repositories.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,14 +25,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
-import ch.qos.logback.core.filter.Filter;
 import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
+
 /**
  * Custom Repository interface implementation
  * @author Deoyani Nandrekar-Heinis
@@ -51,17 +51,26 @@ public class CustomRepositoryImpl implements CustomRepository {
 	 * Search with given criteria
 	 */
 	@Override
-	public Document find(Map<String,String> params) {		
+	public Document find(Map<String,String> params){	
+		
 		ProcessRequest request  = new ProcessRequest();
 		request.parseSearch(params);
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
 		long count  = mcollection.count(request.getFilter());
 		logger.info("Count :"+count);
+		AggregateIterable<Document> aggre = null;
+		try{
+		 aggre = mcollection.aggregate(request.getQueryList());
+		}
+		catch(Exception e){
+			logger.info(e.getMessage());
+		}
 		Document resultDoc = new Document();
 		resultDoc.put("ResultCount", count);
 		resultDoc.put("PageSize", request.getPageSize());
-		resultDoc.put("ResultData",mcollection.aggregate(request.getQueryList()));
+		resultDoc.put("ResultData",aggre);
 		return resultDoc;
+		
 	}
 
 	/* (non-Javadoc)
