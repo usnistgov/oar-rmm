@@ -94,27 +94,8 @@ public class SearchController{
 	 * @throws IOException
 	 */
 	public Document search(@ApiIgnore @Valid @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
-		String test = "";
-		try{
-			test="test";
-			//InputStream input = new URL("https://nist.gov/srd/srd_data//srd13_B-103.json").openStream();
-			
-			URL oracle = new URL("https://nist.gov/srd/srd_data//srd13_B-102.json");
-			URLConnection con = oracle.openConnection();
-			con.setConnectTimeout(10000);
-			con.setReadTimeout(10000);
-	        BufferedReader in = new BufferedReader(
-	        		new InputStreamReader(con.getInputStream()));
-	        //new InputStreamReader(oracle.openStream()));
-
-	        String inputLine;
-	        while ((inputLine = in.readLine()) != null)
-	            System.out.println("TEST****** :"+inputLine);
-	        in.close();
-		}catch(Exception exp){
-			logger.info("Exception:"+exp.getMessage());
-		}
-		logger.info("This is advanced search request:"+request+test);
+		
+		logger.info("This is advanced search request:"+request);
 		return repo.find(params);
 	}
 	
