@@ -13,6 +13,9 @@
 package gov.nist.oar.rmm.config;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.bson.Document;
@@ -23,7 +26,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -39,7 +45,7 @@ public class MongoConfig {
 
 	 private static Logger log = LoggerFactory.getLogger(MongoConfig.class);
 	 
-	 @Autowired
+	 //@Autowired
 	 MongoClient mongoClient;
 	 
 	 private MongoDatabase mongoDb;
@@ -47,9 +53,11 @@ public class MongoConfig {
 	 private MongoCollection<Document> taxonomyCollection;
 	 private MongoCollection<Document> resourceApiCollection;
 	 private MongoCollection<Document> recordFieldsCollection;
+	 List servers=new ArrayList();
+	 List credentials=new ArrayList();
 	 
-	 @Value("${spring.data.mongodb.database}")
-	    private String dbname;
+//	 @Value("${spring.data.mongodb.database}")
+//	    private String dbname;
 	 
 	 @Value("${dbcollections.records}")
 	    private String record;
@@ -63,9 +71,23 @@ public class MongoConfig {
 	 @Value("${dbcollections.recordfields}")
 	    private String rfields;
 	 
+	
+	 @Value("${oar.mongodb.port}")
+	    private int port;
+	 @Value("${oar.mongodb.host}")
+	    private String host;
+	 @Value("${oar.mongodb.database.name}")
+	    private String dbname;
+	 @Value("${oar.mongodb.read.user}")
+	    private String user;
+	 @Value("${oar.mongodb.read.password}")
+	    private String password;
+	 
+	 
 	 @PostConstruct
 	 public void initIt() throws Exception {
 		
+		 mongoClient= (MongoClient) this.mongo();
 		 log.info("########## "+ dbname+" ########");
 	
 		 this.setMongodb(this.dbname);
@@ -146,5 +168,13 @@ public class MongoConfig {
 	  */
 	 private void setRecordFieldsCollection(String recordFields){
 		 recordFieldsCollection = mongoDb.getCollection(recordFields);
+	 }
+	 
+	
+	 
+	 public Mongo mongo() throws Exception {
+		 servers.add(new ServerAddress(host, port));
+		 credentials.add(MongoCredential.createCredential(user,dbname, password.toCharArray()));
+	     return new MongoClient(servers, credentials);
 	 }
 }

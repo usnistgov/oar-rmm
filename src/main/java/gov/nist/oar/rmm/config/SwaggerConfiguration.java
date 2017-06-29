@@ -78,7 +78,7 @@ public class SwaggerConfiguration {
         		"Build-1.0.0-rc",
         		"This is a web service to search the data with various search criteria", 
         		"",
-        		"NIST Public licence", 
+        		"NIST Public license", 
         		"https://www.nist.gov/director/licensing");
     return apiInfo;
   }
