@@ -19,7 +19,7 @@ spring:
       
 server: 
     port: 8085
-    contextPath: /oar-rmm
+    contextPath: /rmm
     error:
       include-stacktrace: never
     connection-timeout: 60000
