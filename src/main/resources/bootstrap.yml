@@ -1,25 +1,21 @@
 spring:
-
   application:
-    name: oar-rmm-service
-  
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: TestDB
-      user:
-      password:
-      
+    name: oar-rmm
   profiles:
-    active:
-      dev
-      
-dbcollections: 
-         taxonomy: taxonomy
-         resources: apis
-         records: record 
-         recordfields: fields
+    active: default
+  cloud:
+    config:
+      uri: http://localhost:8084
+       
+
+#spring:
+#  application:
+#    name: oar-rmm-service
+##  data:
+##    mongodb:
+##      host: localhost
+##      port: 27017
+##      database: TestDB
       
 server: 
     port: 8085
@@ -44,3 +40,10 @@ security:
       xss: true
       hsts: all
     enable-csrf: false
+
+dbcollections: 
+         taxonomy: taxonomy
+         resources: apis
+         records: record 
+         recordfields: fields
+    
