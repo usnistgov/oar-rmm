@@ -1,0 +1,15 @@
+version: 0.0
+
+os: linux
+# 1) Copy all the build files to the sdp html folder
+files:
+  - source:  target/oar-rmm-service.jar
+    destination: /home/ubuntu/oar-docker/apps/rmm/restapi/app/
+    
+hooks:
+ BeforeInstall:
+   - location:  scripts/test/beforecicd.sh
+     runas: root
+ AfterInstall:
+   - location:  scripts/test/aftercicd.sh
+     runas: root
