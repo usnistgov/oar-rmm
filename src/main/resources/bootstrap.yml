@@ -41,6 +41,8 @@ security:
       hsts: all
     enable-csrf: false
 
+management.add-application-context-header: false
+
 dbcollections: 
          taxonomy: taxonomy
          resources: apis
