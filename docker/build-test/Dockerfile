@@ -15,7 +15,7 @@ RUN set -ex; [ -n "$GOSU_ARCH" ] || arch=$(uname -r | awk -F- '{print $NF}'); \
     gpg --keyserver ha.pool.sks-keyservers.net \
          --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
     gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-    sleep 1; rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
+    sleep 1; rm -r /usr/local/bin/gosu.asc "$GNUPGHOME" || true; \
     chmod +x /usr/local/bin/gosu; \
     gosu nobody true
 
