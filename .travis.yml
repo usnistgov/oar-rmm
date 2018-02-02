@@ -1,0 +1,12 @@
+language: python
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - cd docker && bash ./dockbuild.sh
+
+script:
+  - bash ./testall
