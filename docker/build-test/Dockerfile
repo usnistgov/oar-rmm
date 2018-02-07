@@ -1,7 +1,7 @@
 FROM maven:3.5-jdk-8-alpine
 
 RUN  apk update && apk upgrade && apk add netcat-openbsd zip git less \
-                                          gnupg shadow
+                                          gnupg shadow python
 
 ARG gosu_arch=
 ENV GOSU_ARCH $gosu_arch

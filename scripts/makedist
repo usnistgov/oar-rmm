@@ -63,7 +63,7 @@ mkdir -p $distdir
 # needed.
 #
 $PACKAGE_DIR/scripts/setversion.sh
-[ -n "$PACKAGE_NAME" ] || PACKAGE_NAME=`cat VERSION | awk '{print $1}'`
+[ -n "$PACKAGE_NAME" ] || export PACKAGE_NAME=`cat VERSION | awk '{print $1}'`
 version=`cat VERSION | awk '{print $2}'`
 vers4fn=`echo $version | sed -re 's#[/\s]+#_#g'`
 
@@ -82,6 +82,9 @@ mvn clean package
 #
 # A dependency file should be called DISTNAME-${version}_dep.json
 mkdir -p $distdir
+mvn dependency:tree -DoutputType=dot -DoutputFile=target/deptree.dot
+$PACKAGE_DIR/scripts/record_deps.py ${DISTNAMES[0]} $version \
+                                 > $distdir/${DISTNAMES[0]}-${vers4fn}_dep.json
 
 # ENTER COMMANDS for bundling (or renaming) the distribution, if needed
 #
