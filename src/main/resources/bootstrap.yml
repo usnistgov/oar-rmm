@@ -30,7 +30,8 @@ server:
         enabled: false
     
 logging:
-  file: /var/log/rmm-api/rmmapp.log
+  file: rmmapp.log
+  path : /var/log/rmm/
   exception-conversion-word: '%wEx'
   
 security:
