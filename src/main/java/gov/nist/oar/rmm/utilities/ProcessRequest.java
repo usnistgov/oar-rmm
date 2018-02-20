@@ -25,12 +25,10 @@ import java.util.regex.Pattern;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
-
 
 
 /**
@@ -94,20 +92,25 @@ public class ProcessRequest{
 	 * @param serachparams 
 	 */
 	public void parseSearch(Map<String,String> serachparams ) {
-		
+		boolean searchInput = false;
 		logger.info("Query parsing starts");
 		if(!serachparams.entrySet().isEmpty()){
 			validateInput(serachparams);
 			for (Entry<String, String> entry : serachparams.entrySet()) {
 				treatSearch(entry.getKey(), entry.getValue());
+				if (entry.getKey().equalsIgnoreCase("searchphrase")) {
+				  if (entry.getValue().length() > 0) {
+	                  searchInput = true;
+				  }
+				}
 			}
 			validateProjections();
 			if(!advMap.isEmpty())
 				advFilter(advMap);
 		}
-
+		
 		logger.info("Query parsing ends");
-		createQuerylist();
+		createQuerylist(searchInput);
 		
 	}
 	
@@ -153,15 +156,24 @@ public class ProcessRequest{
 	/**
 	 * This is to create aggregate of all the queries
 	 */
-	private void createQuerylist(){
+	private void createQuerylist(Boolean searchInput){
 		
 		
 		if(filter != null)
 			queryList.add(Aggregates.match(filter));
-		if(projections !=  null)
+		if(projections !=  null) {
 			queryList.add(Aggregates.project(projections));
-		if(sort !=  null)
+		} else {
+          //queryList.add(Aggregates.project(Projections.metaTextScore("score")));
+		}
+		
+		if(sort !=  null) { 
 			queryList.add(Aggregates.sort(sort));
+		} else {
+		    if (searchInput) {
+		      queryList.add(Aggregates.sort(Sorts.metaTextScore("score")));
+		    }
+		}
 		if(pagenumber >= 0)
 			queryList.add(Aggregates.skip(pagenumber> 0 ? ((pagenumber-1)*pagesize) : 0));
 		if(pagesize > 0)
