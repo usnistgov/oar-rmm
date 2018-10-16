@@ -31,6 +31,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
 import gov.nist.oar.rmm.config.MongoConfig;
+import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
@@ -113,7 +114,8 @@ public class CustomRepositoryImpl implements CustomRepository {
 		
 		long count  = mcollection.count(Filters.eq("ediid",ediid));
 		if(count == 0) {
-			return new Document("Message", "No record available for given id.");
+			//return new Document("Message", "No record available for given id.");
+			throw new ResourceNotFoundException("No record available for given id.");
 		}
 		else
 		return mcollection.find(Filters.eq("ediid",ediid)).first();
