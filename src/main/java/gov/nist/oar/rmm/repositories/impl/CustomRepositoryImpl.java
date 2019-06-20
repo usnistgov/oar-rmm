@@ -104,7 +104,7 @@ public class CustomRepositoryImpl implements CustomRepository {
 	@Override
 	public Document findRecord(String ediid) {
 		
-		Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+		Pattern p = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
 		Matcher m = p.matcher(ediid);
 		if(m.find()) 
 			throw new IllegalArgumentException("check input parameters.");
