@@ -122,6 +122,7 @@ public class CustomRepositoryImpl implements CustomRepository {
                         // allow an ediid be an abbreviation of the ARK ID as specified
                         // by its local portion
                         useid = "ark:/"+appconfig.defnaan+"/"+ediid;
+                        logger.debug("Searching for "+ediid+" as "+useid);
                         count  = mcollection.count(Filters.eq("ediid", useid));
 		}
                 if (count == 0) {
