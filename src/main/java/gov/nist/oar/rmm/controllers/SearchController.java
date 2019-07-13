@@ -99,7 +99,7 @@ public class SearchController{
 		return repo.find(params);
 	}
 	
-	@RequestMapping(value = {"/records/{ediid}"}, method = RequestMethod.GET,  produces="application/json")
+	@RequestMapping(value = {"/records/{id}"}, method = RequestMethod.GET,  produces="application/json")
 	@ApiOperation(value = "Get NERDm record of given id.",nickname = "recordbyId",
 	  notes = "Resource returns a NERDm Record by given ediid.")
 	/**
@@ -113,7 +113,7 @@ public class SearchController{
 		return repo.findRecord(id);
 	}
 	
-	@RequestMapping(value = {"/records/ark:/{naan:\\d+}/{ediid}"}, method = RequestMethod.GET,  produces="application/json")
+	@RequestMapping(value = {"/records/ark:/{naan:\\d+}/{id}"}, method = RequestMethod.GET,  produces="application/json")
 	@ApiOperation(value = "Get NERDm record of given id.",nickname = "recordbyId",
 	  notes = "Resource returns a NERDm Record by given ediid.")
 	/**
