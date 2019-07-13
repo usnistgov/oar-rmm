@@ -113,6 +113,22 @@ public class SearchController{
 		return repo.findRecord(ediid);
 	}
 	
+	@RequestMapping(value = {"/records/ark:/{naan:\\d+}/{ediid}"}, method = RequestMethod.GET,  produces="application/json")
+	@ApiOperation(value = "Get NERDm record of given id.",nickname = "recordbyId",
+	  notes = "Resource returns a NERDm Record by given ediid.")
+	/**
+	 * Get record for given id 
+	 * @param id
+	 * @return Returns Document
+	 * @throws IOException
+	 */
+        public Document record(@PathVariable @Valid String ediid, @PathVariable String naan)
+            throws IOException
+        {
+		logger.info("Get record by full ARK id:"+request);
+		return repo.findRecord(ediid);
+	}
+	
 	
 	@RequestMapping(value = {"/records/fields"}, method = RequestMethod.GET,produces="application/json")
 	@ApiOperation(value = "Get all fields in the NERDm records.",nickname = "fieldnames",
