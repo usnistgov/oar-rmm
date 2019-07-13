@@ -108,9 +108,9 @@ public class SearchController{
 	 * @return Returns Document
 	 * @throws IOException
 	 */
-	public Document record(@PathVariable  @Valid String ediid) throws IOException{
-		logger.info("Get record by id:"+request);
-		return repo.findRecord(ediid);
+	public Document record(@PathVariable  @Valid String id) throws IOException{
+		logger.info("Get record by id: "+id);
+		return repo.findRecord(id);
 	}
 	
 	@RequestMapping(value = {"/records/ark:/{naan:\\d+}/{ediid}"}, method = RequestMethod.GET,  produces="application/json")
@@ -118,14 +118,16 @@ public class SearchController{
 	  notes = "Resource returns a NERDm Record by given ediid.")
 	/**
 	 * Get record for given id 
-	 * @param id
+	 * @param id     the local portion of an ARK identifier to match
+	 * @param naan   the ARK identifier's naming authority number (NAAN)
 	 * @return Returns Document
 	 * @throws IOException
 	 */
-        public Document record(@PathVariable @Valid String ediid, @PathVariable String naan)
+        public Document record(@PathVariable @Valid String id, @PathVariable String naan)
             throws IOException
         {
-		logger.info("Get record by full ARK id:"+request);
+                String ediid = "ark:/"+naan+"/"+id;
+		logger.info("Get record by full ARK id: "+ediid);
 		return repo.findRecord(ediid);
 	}
 	
