@@ -38,8 +38,11 @@ public class AppConfig {
 
 	 private static Logger log = LoggerFactory.getLogger(AppConfig.class);
 
-          @Value("${oar.id.ark_naan.default:88434}")
-          public String defnaan;
+          @Value("${oar.id.ark_naan.default}")
+          private String defnaan;
+
+          /** return the default NAAN associated with ARK identifiers in the repository */
+          public String getDefaultNAAN() { return defnaan; }
 
 	  /**
 	   * Main runner of the spring-boot class
