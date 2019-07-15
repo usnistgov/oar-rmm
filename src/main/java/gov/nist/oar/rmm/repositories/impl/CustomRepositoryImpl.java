@@ -31,6 +31,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
 import gov.nist.oar.rmm.config.MongoConfig;
+import gov.nist.oar.rmm.config.AppConfig;
 import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
@@ -46,6 +47,9 @@ public class CustomRepositoryImpl implements CustomRepository {
 	private Logger logger = LoggerFactory.getLogger(CustomRepositoryImpl.class);
 	@Autowired
 	MongoConfig mconfig;
+
+        @Autowired
+        AppConfig appconfig;
 	
 	/* (non-Javadoc)
 	 * @see gov.nist.oar.rmm.repositories.RecordRepository#find()
@@ -104,21 +108,30 @@ public class CustomRepositoryImpl implements CustomRepository {
 	@Override
 	public Document findRecord(String ediid) {
 		
-		Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
-		Matcher m = p.matcher(ediid);
+		Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
+		Matcher m = legal.matcher(ediid);
 		if(m.find()) 
-			throw new IllegalArgumentException("check input parameters.");
+			throw new IllegalArgumentException("Illegal identifier");
 		
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
+
+                String useid = ediid;
 		
-		
-		long count  = mcollection.count(Filters.eq("ediid",ediid));
-		if(count == 0) {
-			//return new Document("Message", "No record available for given id.");
-			throw new ResourceNotFoundException("No record available for given id.");
+                logger.debug("Searching for "+ediid+" as "+useid);
+		long count  = mcollection.count(Filters.eq("ediid",useid));
+		if(count == 0 && useid.length() < 30 && ! useid.startsWith("ark:")) {
+                        // allow an ediid be an abbreviation of the ARK ID as specified
+                        // by its local portion
+                        useid = "ark:/"+appconfig.getDefaultNAAN()+"/"+ediid;
+                        logger.debug("Searching for "+ediid+" as "+useid);
+                        count  = mcollection.count(Filters.eq("ediid", useid));
 		}
-		else
-		return mcollection.find(Filters.eq("ediid",ediid)).first();
+                if (count == 0) {
+                        //return new Document("Message", "No record available for given id.");
+                        throw new ResourceNotFoundException("No record available for given id.");
+                }
+
+		return mcollection.find(Filters.eq("ediid",useid)).first();
 		
 	}
 
