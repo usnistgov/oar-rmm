@@ -117,13 +117,13 @@ public class CustomRepositoryImpl implements CustomRepository {
 
                 String useid = ediid;
 		
-                logger.info("Searching for "+ediid+" as "+useid);
+                logger.debug("Searching for "+ediid+" as "+useid);
 		long count  = mcollection.count(Filters.eq("ediid",useid));
 		if(count == 0 && useid.length() < 30 && ! useid.startsWith("ark:")) {
                         // allow an ediid be an abbreviation of the ARK ID as specified
                         // by its local portion
                         useid = "ark:/"+appconfig.getDefaultNAAN()+"/"+ediid;
-                        logger.info("Searching for "+ediid+" as "+useid);
+                        logger.debug("Searching for "+ediid+" as "+useid);
                         count  = mcollection.count(Filters.eq("ediid", useid));
 		}
                 if (count == 0) {
