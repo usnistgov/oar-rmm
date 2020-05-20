@@ -14,7 +14,6 @@ package gov.nist.oar.rmm.utilities;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import java.util.regex.Pattern;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
@@ -32,7 +32,7 @@ import com.mongodb.client.model.Sorts;
 
 
 /**
- * Process the Rest Api request to parse parameters and create mongodb query.
+ * This is parse any request to Rest API endpoints. 
  * @author Deoyani Nandrekar-Heinis
  *
  */
@@ -114,6 +114,10 @@ public class ProcessRequest{
 		
 	}
 	
+	/**
+	 * Validate requested input parameters to check whether any forbidden syntax is used.
+	 * @param serachparams
+	 */
 	private void validateInput(Map<String,String> serachparams){
 		
 			for (Entry<String, String> entry : serachparams.entrySet()) {
@@ -145,6 +149,10 @@ public class ProcessRequest{
 				
 	}
 	
+	/***
+	 * Check whether given value is integer.
+	 * @param value
+	 */
 	private void checkInteger(String value){
 		try{ 
 			Integer.parseInt(value);
@@ -182,7 +190,7 @@ public class ProcessRequest{
 	}
 	
 	/**
-	 * 
+	 * Depending on the search keyword and value pairs create filters to add to MongoDB query.
 	 * @param key
 	 * @param value
 	 */
@@ -220,7 +228,9 @@ public class ProcessRequest{
 		}
 	}
 	
-	
+	/**
+	 * Projections are MongoDB specific tools to help create complex queries .
+	 */
 	private void validateProjections(){
 		if(!include.isEmpty() && !exclude.isEmpty()){
 			if("_id".equalsIgnoreCase(exclude)){
@@ -238,27 +248,27 @@ public class ProcessRequest{
 		}
 	}
 	
-	/**
-	 * ExcludeId removes the mongobd generated _id from tresults
-	 */
-	 private void excludeId(){
-		 if(projections != null)
-				projections = Projections.fields(projections,Projections.excludeId());
-		 else
-			 projections = Projections.fields(Projections.excludeId());
-	 }
+//	/**
+//	 * ExcludeId removes the MongoDB generated _id  field from result JSON document
+//	 */
+//	 private void excludeId(){
+//		 if(projections != null)
+//				projections = Projections.fields(projections,Projections.excludeId());
+//		 else
+//			 projections = Projections.fields(Projections.excludeId());
+//	 }
 	
-	/**
-	 * Add projections according to the requested parameters
-	 * @param projectionRequest
-	 */
-	private void parseProjection(Bson projectionRequest){
-		if(projections != null)
-			projections = Projections.fields(projections,projectionRequest);
-		else
-			projections = projectionRequest;
-	} 
-	
+//	/**
+//	 * Add projections according to the requested parameters
+//	 * @param projectionRequest
+//	 */
+//	private void parseProjection(Bson projectionRequest){
+//		if(projections != null)
+//			projections = Projections.fields(projections,projectionRequest);
+//		else
+//			projections = projectionRequest;
+//	} 
+//	
 	/**
 	 *  Sort input request
 	 * @param sortingRequest

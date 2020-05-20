@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,12 +27,12 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.mongodb.MongoCommandException;
 
-import gov.nist.oar.rmm.utilities.entities.ErrorInfo;
+import gov.nist.oar.rmm.exceptions.InternalServerException;
 import gov.nist.oar.rmm.exceptions.KeyWordNotFoundException;
 import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
-import gov.nist.oar.rmm.exceptions.InternalServerException;
-import com.mongodb.MongoCommandException;
+import gov.nist.oar.rmm.utilities.entities.ErrorInfo;
 @ControllerAdvice
 /***
  * GlobalExceptionHandler class takes care of any exceptions thrown in the code and 
