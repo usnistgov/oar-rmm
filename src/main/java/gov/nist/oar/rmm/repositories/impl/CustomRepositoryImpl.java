@@ -58,12 +58,13 @@ public class CustomRepositoryImpl implements CustomRepository {
 	@Override
 	public Document find(Map<String, String> params) {
 
-		logger.info("Find record with given parameters:" + params);
+//		logger.info("Find record with given parameters:" + params);
+		
 		ProcessRequest request = new ProcessRequest();
 		request.parseSearch(params);
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
 		long count = mcollection.count(request.getFilter());
-		logger.info("Count :" + count);
+		logger.info("Result Count :" + count);
 		AggregateIterable<Document> aggre = null;
 		try {
 			aggre = mcollection.aggregate(request.getQueryList());

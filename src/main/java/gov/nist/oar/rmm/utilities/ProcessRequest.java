@@ -93,7 +93,7 @@ public class ProcessRequest{
 	 */
 	public void parseSearch(Map<String,String> serachparams ) {
 		boolean searchInput = false;
-		logger.info("Query parsing starts");
+		//logger.info("Query parsing starts");
 		if(!serachparams.entrySet().isEmpty()){
 			validateInput(serachparams);
 			for (Entry<String, String> entry : serachparams.entrySet()) {
@@ -109,7 +109,7 @@ public class ProcessRequest{
 				advFilter(advMap);
 		}
 		
-		logger.info("Query parsing ends");
+		//logger.info("Query parsing ends");
 		createQuerylist(searchInput);
 		
 	}

@@ -41,7 +41,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 
 @RestController
-@Api(value = "Api endpoints to search EDI/PDL data", tags = "Search API")
+@Api(value = "API endpoints to search EDI/PDL data", tags = "Search API")
 /***
  * Main search controller.
  * Searches data in Mongodb database.
@@ -107,7 +107,7 @@ public class SearchController{
 	
 	@RequestMapping(value = {"/records/ark:/{naan:\\d+}/{id}"}, method = RequestMethod.GET,  produces="application/json")
 	@ApiOperation(value = "Get NERDm record of given id.",nickname = "recordbyId",
-	  notes = "Resource returns a NERDm Record by given ediid.")
+	  notes = "Resource returns a NERDm Record by given ark identifier.")
 	/**
 	 * Get record for given id 
 	 * @param id     the local portion of an ARK identifier to match
@@ -164,8 +164,6 @@ public class SearchController{
 		logger.info("This is resourceApi:"+request);
 		return repo.findResourceApis();
 	}
-	
-	
 	
 	/**
 	 * Extra function for testing and other purposes.

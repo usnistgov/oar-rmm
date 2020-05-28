@@ -48,7 +48,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfiguration {
 	 private static Logger log = LoggerFactory.getLogger(SwaggerConfiguration.class);
 	 
-	@Value("${release.version}")
+	@Value("${release.version: 1.1.0}")
 	private String version;
 	
 	private static List<ResponseMessage> responseMessageList = new ArrayList<>();
