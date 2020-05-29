@@ -57,8 +57,6 @@ public class CustomRepositoryImpl implements CustomRepository {
 	 */
 	@Override
 	public Document find(Map<String, String> params) {
-
-//		logger.info("Find record with given parameters:" + params);
 		
 		ProcessRequest request = new ProcessRequest();
 		request.parseSearch(params);
@@ -69,7 +67,7 @@ public class CustomRepositoryImpl implements CustomRepository {
 		try {
 			aggre = mcollection.aggregate(request.getQueryList());
 		} catch (Exception e) {
-			logger.info(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		Document resultDoc = new Document();
 		resultDoc.put("ResultCount", count);
@@ -84,7 +82,6 @@ public class CustomRepositoryImpl implements CustomRepository {
 	 */
 	@Override
 	public List<Document> findtaxonomy(Map<String, String> param) {
-		logger.info("Get Taxonomy list.");
 		MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
 		ProcessRequest request = new ProcessRequest();
 		if (request.parseTaxonomy(param) == null)
@@ -99,7 +96,6 @@ public class CustomRepositoryImpl implements CustomRepository {
 	@Override
 	public List<Document> findResourceApis() {
 
-		logger.info("Find resource APIs.");
 		MongoCollection<Document> mcollection = mconfig.getResourceApiCollection();
 		return mcollection.find().into(new ArrayList<Document>());
 	}

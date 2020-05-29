@@ -54,7 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo  myErrors(JsonMappingException exception) {
-	    logger.info("----Caught IOException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
+	    logger.error("----Caught IOException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
 	    return new ErrorInfo(request.getContextPath(), "General Exception",HttpStatus.CONFLICT.toString());
       
 	  }
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo  myErrorTest(com.mongodb.MongoCommandException exception) {
-	    logger.info("----Caught IOException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
+	    logger.error("----Caught IOException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
 	    return new ErrorInfo(request.getContextPath(), "General Exception",HttpStatus.CONFLICT.toString());
      
 	  }
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo  myError(Exception exception) {
-	    logger.info("----Caught Exception----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
+	    logger.error("----Caught Exception----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
 	    return new ErrorInfo(request.getContextPath(), "General Exception",HttpStatus.CONFLICT.toString());
         
 	  }
@@ -96,7 +96,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo illegal(IllegalArgumentException exception) {
-            logger.info("----This is a ilegal argument exception ----\n"+request.getDescription(false)+"\n Detail ArgumentException:"+exception.getStackTrace());
+            logger.error("----This is a ilegal argument exception ----\n"+request.getDescription(false)+"\n Detail ArgumentException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "IllegalArgumentException",HttpStatus.BAD_REQUEST.toString());
             
 	  }
@@ -110,7 +110,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo notFound(Exception exception) {
-            logger.info("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail NotFoundException:"+exception.getStackTrace());
+            logger.error("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail NotFoundException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
             
 	  }
@@ -125,7 +125,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo resourceNotFound(ResourceNotFoundException exception) {
-            logger.info("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail ResourceNotFoundException:"+exception.getStackTrace());
+            logger.error("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail ResourceNotFoundException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
             
 	  }
@@ -139,7 +139,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo badRequest(Exception exception) {
-            logger.info("----Caught IOException----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
+            logger.error("----Caught IOException----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "IOException",HttpStatus.BAD_REQUEST.toString());
 	  }
 	  
@@ -152,7 +152,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo internalError(Exception exception) {
-            logger.info("----Caught Internal Error Exception----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
+            logger.error("----Caught Internal Error Exception----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "InternalServer Error",HttpStatus.INTERNAL_SERVER_ERROR.toString());
 	  }
 	  
@@ -165,7 +165,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo runtimeError(RuntimeException exception) {
-            logger.info("----Caught Runtime Exception----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
+            logger.error("----Caught Runtime Exception----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "InternalServer Error",HttpStatus.INTERNAL_SERVER_ERROR.toString());
 	  }
 	  

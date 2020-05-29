@@ -87,7 +87,8 @@ public class SearchController{
 	 */
 	public Document search(@ApiIgnore @Valid @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
 		
-		logger.info("This is advanced search request:"+request);
+		logger.info("Search request sent to"+ request.getRequestURI()
+				+ " with query string:"+request.getQueryString());
 		return repo.find(params);
 	}
 	
@@ -133,7 +134,8 @@ public class SearchController{
 	 * @throws IOException
 	 */
 	public List<Document> recordFields() throws IOException{
-		logger.info("Record fields names:"+request);
+		logger.info(" Fields request sent to"+ request.getRequestURI()
+		+ " with query string:"+request.getQueryString());
 		return repo.findFieldnames();
 	}
 
@@ -147,7 +149,8 @@ public class SearchController{
 	 * @throws IOException
 	 */
 	public List<Document> serachTaxonomy(@ApiIgnore @RequestParam  Map<String,String> params) throws IOException{
-		logger.info("This is taxonomy:"+request);
+		logger.info("Taxonomy request sent to"+ request.getRequestURI()
+		+ " with query string:"+request.getQueryString());
 		return repo.findtaxonomy(params);
 	}
 	
@@ -161,7 +164,8 @@ public class SearchController{
 	 * @throws IOException
 	 */
 	public List<Document> searchApis() throws IOException{
-		logger.info("This is resourceApi:"+request);
+		logger.info("Resource APIs request sent to"+ request.getRequestURI()
+		+ " with query string:"+request.getQueryString());
 		return repo.findResourceApis();
 	}
 	
@@ -179,7 +183,7 @@ public class SearchController{
 	 * @throws IOException
 	 ***/
 	public List<Document> extrasearch(@ApiIgnore @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=1000) Pageable p) throws IOException{
-		logger.info("This is advanced search request:"+request);
+		logger.debug("This is advanced search request:"+request);
 		return repo.find(params,p);
     	
 	}
