@@ -54,7 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo  myErrors(JsonMappingException exception) {
-	    logger.error("----Caught IOException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
+	    logger.error("----Caught JsonMappingException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
 	    return new ErrorInfo(request.getContextPath(), "General Exception",HttpStatus.CONFLICT.toString());
       
 	  }
@@ -109,7 +109,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @param exception
 	   * @return ErrorInfo object with error details
 	   */
-	  public ErrorInfo notFound(Exception exception) {
+	  public ErrorInfo notFound(KeyWordNotFoundException exception) {
             logger.error("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail NotFoundException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
             
@@ -125,7 +125,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 	   * @return ErrorInfo object with error details
 	   */
 	  public ErrorInfo resourceNotFound(ResourceNotFoundException exception) {
-            logger.error("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail ResourceNotFoundException:"+exception.getStackTrace());
+            logger.error("----Caught ResourceNotFoundException----\n"+request.getDescription(false)+"\n Detail ResourceNotFoundException:"+exception.getStackTrace());
             return new ErrorInfo(request.getContextPath(), "ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
             
 	  }
