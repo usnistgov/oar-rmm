@@ -17,6 +17,9 @@ package gov.nist.oar.rmm.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +37,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @ComponentScan({"gov.nist.oar.rmm"})
+
+
 /**
  * Swagger configuration class takes care of Initializing swagger
  *  to be used to generate documentation for the code.
@@ -41,6 +46,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  *
  */
 public class SwaggerConfiguration {
+	 private static Logger log = LoggerFactory.getLogger(SwaggerConfiguration.class);
+	 
+	@Value("${release.version: 1.1.0}")
+	private String version;
 	
 	private static List<ResponseMessage> responseMessageList = new ArrayList<>();
 
@@ -57,6 +66,7 @@ public class SwaggerConfiguration {
    * @return Docket
    */
   public Docket api() {
+	  log.info("Swagger API creation.");
 	
 	 return new Docket(DocumentationType.SWAGGER_2).select()
 			 .apis(RequestHandlerSelectors.basePackage("gov.nist.oar.rmm"))
@@ -75,7 +85,7 @@ public class SwaggerConfiguration {
 	ApiInfo apiInfo =
         new ApiInfo("Resource api", 
         		"This REST api exposes data listing from NIST NERDm schema. ",
-        		"Build-1.0.0-rc",
+        		version,
         		"This is a web service to search the data with various search criteria", 
         		"",
         		"NIST Public license", 

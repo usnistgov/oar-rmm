@@ -26,18 +26,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
-import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.config.AppConfig;
+import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
 /**
  * Custom Repository interface implementation
+ * 
  * @author Deoyani Nandrekar-Heinis
  *
  */
@@ -48,157 +48,127 @@ public class CustomRepositoryImpl implements CustomRepository {
 	@Autowired
 	MongoConfig mconfig;
 
-        @Autowired
-        AppConfig appconfig;
-	
-	/* (non-Javadoc)
-	 * @see gov.nist.oar.rmm.repositories.RecordRepository#find()
-	 * Search with given criteria
+	@Autowired
+	AppConfig appconfig;
+
+	/**
+	 * Find the record with given search parameters. Returns JSON document of
+	 * results.
 	 */
 	@Override
-	public Document find(Map<String,String> params){	
+	public Document find(Map<String, String> params) {
 		
-		ProcessRequest request  = new ProcessRequest();
+		ProcessRequest request = new ProcessRequest();
 		request.parseSearch(params);
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-		long count  = mcollection.count(request.getFilter());
-		logger.info("Count :"+count);
+		long count = mcollection.count(request.getFilter());
+		logger.info("Result Count :" + count);
 		AggregateIterable<Document> aggre = null;
-		try{
-		 aggre = mcollection.aggregate(request.getQueryList());
-		}
-		catch(Exception e){
-			logger.info(e.getMessage());
+		try {
+			aggre = mcollection.aggregate(request.getQueryList());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		Document resultDoc = new Document();
 		resultDoc.put("ResultCount", count);
 		resultDoc.put("PageSize", request.getPageSize());
-		resultDoc.put("ResultData",aggre);
+		resultDoc.put("ResultData", aggre);
 		return resultDoc;
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findtaxonomy(java.util.Map)
-	 * Find Taxonomy 
+	/**
+	 * Get Taxonomy List in the form of JSON document
 	 */
 	@Override
 	public List<Document> findtaxonomy(Map<String, String> param) {
 		MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
-		ProcessRequest request  = new ProcessRequest();
-		if(request.parseTaxonomy(param) == null)
+		ProcessRequest request = new ProcessRequest();
+		if (request.parseTaxonomy(param) == null)
 			return mcollection.find().into(new ArrayList<Document>());
 		else
 			return mcollection.find(request.parseTaxonomy(param)).into(new ArrayList<Document>());
 	}
 
-	/* 
-	 * Find Resource apis
+	/**
+	 * Find resources APIs in the form of list of documents.
 	 */
 	@Override
 	public List<Document> findResourceApis() {
-		
+
 		MongoCollection<Document> mcollection = mconfig.getResourceApiCollection();
 		return mcollection.find().into(new ArrayList<Document>());
 	}
 
-	/* (non-Javadoc)
-	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findRecord(java.lang.String)
+	/**
+	 * Search and return document for given identifier.
 	 */
 	@Override
 	public Document findRecord(String ediid) {
-		
+
 		Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
 		Matcher m = legal.matcher(ediid);
-		if(m.find()) 
+		if (m.find())
 			throw new IllegalArgumentException("Illegal identifier");
-		
+
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
 
-                String useid = ediid;
-		
-                logger.debug("Searching for "+ediid+" as "+useid);
-		long count  = mcollection.count(Filters.eq("ediid",useid));
-		if(count == 0 && useid.length() < 30 && ! useid.startsWith("ark:")) {
-                        // allow an ediid be an abbreviation of the ARK ID as specified
-                        // by its local portion
-                        useid = "ark:/"+appconfig.getDefaultNAAN()+"/"+ediid;
-                        logger.debug("Searching for "+ediid+" as "+useid);
-                        count  = mcollection.count(Filters.eq("ediid", useid));
-		}
-                if (count == 0) {
-                        //return new Document("Message", "No record available for given id.");
-                        throw new ResourceNotFoundException("No record available for given id.");
-                }
+		String useid = ediid;
 
-		return mcollection.find(Filters.eq("ediid",useid)).first();
-		
+		logger.debug("Searching for " + ediid + " as " + useid);
+		long count = mcollection.count(Filters.eq("ediid", useid));
+		if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
+			// allow an ediid be an abbreviation of the ARK ID as specified
+			// by its local portion
+			useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + ediid;
+			logger.debug("Searching for " + ediid + " as " + useid);
+			count = mcollection.count(Filters.eq("ediid", useid));
+		}
+		if (count == 0) {
+			// return new Document("Message", "No record available for given id.");
+			throw new ResourceNotFoundException("No record available for given id.");
+		}
+
+		return mcollection.find(Filters.eq("ediid", useid)).first();
+
 	}
 
-	/* (non-Javadoc)
-	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findFieldnames()
+	/**
+	 * Return list of Fields in the any document or record
 	 */
 	@Override
 	public List<Document> findFieldnames() {
-		
+
 		MongoCollection<Document> mcollection = mconfig.getRecordFieldsCollection();
 		return mcollection.find().into(new ArrayList<Document>());
-		
-	}
-	
-	///This is extra function
 
-	public List<Document> findOrig(Map<String,String> params) {		
-		ProcessRequest request  = new ProcessRequest();
+	}
+
+	/**
+	 * Get the record with search parameters
+	 * 
+	 * @param params
+	 * @return List of documents in the form of JSON
+	 */
+	public List<Document> findOrig(Map<String, String> params) {
+		ProcessRequest request = new ProcessRequest();
 		request.parseSearch(params);
-		
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-		FindIterable<Document> findResults;
-		
+//		FindIterable<Document> findResults;
+		return mcollection.aggregate(request.getQueryList()).into(new ArrayList<Document>());
 
-//		 Bson filter= Filters.and(Filters.regex("identifier", "EBC9DB05EDEA5B0EE043065706812DF81"), Filters.regex("title", "Enterprise Data Inventory"));
-//		 Bson filter2 = ps.getFilter();
-//		 if(filter.equals(ps.getFilter())) logger.info("Test if equal");
-		 		//findResults= mcollection.find(Filters.text("SRD"));
-		
-//		if(ps.getFilter() != null )
-//			//findResults = mcollection.find(ps.getFilter()).projection(ps.getProjections());
-//			findResults = mcollection.find(ps.getFilter());
-//		else
-//			//findResults = mcollection.find().projection(ps.getProjections());
-//			findResults = mcollection.find();
-//		
-//		long count  = mcollection.count(ps.getFilter());
-//		logger.info("Count"+count);
-//		Document resultDoc = new Document();
-//		resultDoc.put("ResultCount", count);
-//		resultDoc.put("ResultData", findResults);
-//		logger.info("Results :::: "+resultDoc.toJson());
-//		int test =(p.getPageNumber() > 0 ? ((p.getPageNumber()-1)*p.getPageSize()) : 0);
-//		logger.info("Pagination::: pagenumber"+test+"::pagesize::"+p.getPageSize());
-//		
-//	
-//		
-//		return  findResults.skip(p.getPageNumber() > 0 ? ((p.getPageNumber()-1)*p.getPageSize()) : 0).limit(p.getPageSize())
-//				.sort(ps.getSorts())
-//				.into(new ArrayList<Document>());
-		
-		return mcollection.aggregate(request.getQueryList())
-				.into(new ArrayList<Document>());
-				
 	}
 
-	/* (non-Javadoc)
-	 * @see gov.nist.oar.rmm.repositories.CustomRepository#find(java.util.Map, org.springframework.data.domain.Pageable)
+	/**
+	 * 
 	 */
 	@Override
 	public List<Document> find(Map<String, String> param, Pageable p) {
-			return null;
+		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see gov.nist.oar.rmm.repositories.CustomRepository#findtaxonomy()
-	 * To get all the taxonomy data
+	/***
+	 * Get List of Taxonomy terms in the form of flat JSON document
 	 */
 	@Override
 	public List<Document> findtaxonomy() {
