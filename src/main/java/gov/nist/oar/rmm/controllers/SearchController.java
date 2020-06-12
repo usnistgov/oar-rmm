@@ -12,15 +12,9 @@
  */
 package gov.nist.oar.rmm.controllers;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -31,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.nist.oar.rmm.exceptions.InternalServerException;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -49,7 +41,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 
 @RestController
-@Api(value = "Api endpoints to search EDI/PDL data", tags = "Search API")
+@Api(value = "API endpoints to search EDI/PDL data", tags = "Search API")
 /***
  * Main search controller.
  * Searches data in Mongodb database.
@@ -95,7 +87,8 @@ public class SearchController{
 	 */
 	public Document search(@ApiIgnore @Valid @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
 		
-		logger.info("This is advanced search request:"+request);
+		logger.info("Search request sent to"+ request.getRequestURI()
+				+ " with query string:"+request.getQueryString());
 		return repo.find(params);
 	}
 	
@@ -115,7 +108,7 @@ public class SearchController{
 	
 	@RequestMapping(value = {"/records/ark:/{naan:\\d+}/{id}"}, method = RequestMethod.GET,  produces="application/json")
 	@ApiOperation(value = "Get NERDm record of given id.",nickname = "recordbyId",
-	  notes = "Resource returns a NERDm Record by given ediid.")
+	  notes = "Resource returns a NERDm Record by given ark identifier.")
 	/**
 	 * Get record for given id 
 	 * @param id     the local portion of an ARK identifier to match
@@ -141,7 +134,8 @@ public class SearchController{
 	 * @throws IOException
 	 */
 	public List<Document> recordFields() throws IOException{
-		logger.info("Record fields names:"+request);
+		logger.info(" Fields request sent to"+ request.getRequestURI()
+		+ " with query string:"+request.getQueryString());
 		return repo.findFieldnames();
 	}
 
@@ -155,7 +149,8 @@ public class SearchController{
 	 * @throws IOException
 	 */
 	public List<Document> serachTaxonomy(@ApiIgnore @RequestParam  Map<String,String> params) throws IOException{
-		logger.info("This is taxonomy:"+request);
+		logger.info("Taxonomy request sent to"+ request.getRequestURI()
+		+ " with query string:"+request.getQueryString());
 		return repo.findtaxonomy(params);
 	}
 	
@@ -169,11 +164,10 @@ public class SearchController{
 	 * @throws IOException
 	 */
 	public List<Document> searchApis() throws IOException{
-		logger.info("This is resourceApi:"+request);
+		logger.info("Resource APIs request sent to"+ request.getRequestURI()
+		+ " with query string:"+request.getQueryString());
 		return repo.findResourceApis();
 	}
-	
-	
 	
 	/**
 	 * Extra function for testing and other purposes.
@@ -189,7 +183,7 @@ public class SearchController{
 	 * @throws IOException
 	 ***/
 	public List<Document> extrasearch(@ApiIgnore @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=1000) Pageable p) throws IOException{
-		logger.info("This is advanced search request:"+request);
+		logger.debug("This is advanced search request:"+request);
 		return repo.find(params,p);
     	
 	}
