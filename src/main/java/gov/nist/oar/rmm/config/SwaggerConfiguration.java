@@ -12,8 +12,6 @@
  */
 package gov.nist.oar.rmm.config;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,66 +30,73 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.DocExpansion;
+import springfox.documentation.swagger.web.UiConfiguration;
+import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-@ComponentScan({"gov.nist.oar.rmm"})
-
+@ComponentScan({ "gov.nist.oar.rmm" })
 
 /**
- * Swagger configuration class takes care of Initializing swagger
- *  to be used to generate documentation for the code.
+ * Swagger configuration class takes care of Initializing swagger to be used to
+ * generate documentation for the code.
+ * 
  * @author dsn1 Deoyani Nandrekar-Heinis
  *
  */
 public class SwaggerConfiguration {
-	 private static Logger log = LoggerFactory.getLogger(SwaggerConfiguration.class);
-	 
+	private static Logger log = LoggerFactory.getLogger(SwaggerConfiguration.class);
+
 	@Value("${release.version: 1.1.0}")
 	private String version;
-	
+
 	private static List<ResponseMessage> responseMessageList = new ArrayList<>();
 
 	static {
-		responseMessageList.add(new ResponseMessageBuilder().code(500)
-				.message("500 - Internal Server Error")
+		responseMessageList.add(new ResponseMessageBuilder().code(500).message("500 - Internal Server Error")
 				.responseModel(new ModelRef("Error")).build());
-		responseMessageList.add(new ResponseMessageBuilder().code(403)
-				.message("403 - Forbidden").build());
+		responseMessageList.add(new ResponseMessageBuilder().code(403).message("403 - Forbidden").build());
 	}
-  @Bean
-  /**
-   * Swagger api setting
-   * @return Docket
-   */
-  public Docket api() {
-	  log.info("Swagger API creation.");
-	
-	 return new Docket(DocumentationType.SWAGGER_2).select()
-			 .apis(RequestHandlerSelectors.basePackage("gov.nist.oar.rmm"))
-			 .paths(PathSelectors.any())
-			 .build().apiInfo(apiInfo());
-  }
 
-  /**
-   * Swagger Api Info
-   * @return return ApiInfo
-   * 
-   */
-  private ApiInfo apiInfo() {
+	@Bean
+	/**
+	 * Swagger api setting
+	 * 
+	 * @return Docket
+	 */
+	public Docket api() {
+		log.info("Swagger API creation.");
 
-    @SuppressWarnings("deprecation")
-	ApiInfo apiInfo =
-        new ApiInfo("Resource api", 
-        		"This REST api exposes data listing from NIST NERDm schema. ",
-        		version,
-        		"This is a web service to search the data with various search criteria", 
-        		"",
-        		"NIST Public license", 
-        		"https://www.nist.gov/director/licensing");
-    return apiInfo;
-  }
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("gov.nist.oar.rmm")).paths(PathSelectors.any()).build()
+				.apiInfo(apiInfo());
+	}
 
+	/**
+	 * Swagger user interface configuration
+	 * 
+	 * @return
+	 */
+	@Bean
+	UiConfiguration uiConfig() {
+		return UiConfigurationBuilder.builder().docExpansion(DocExpansion.LIST).build();
+	}
+
+	/**
+	 * Swagger Api Info
+	 * 
+	 * @return return ApiInfo
+	 * 
+	 */
+	private ApiInfo apiInfo() {
+
+		@SuppressWarnings("deprecation")
+		ApiInfo apiInfo = new ApiInfo("Resource api", "This REST api exposes data listing from NIST NERDm schema. ",
+				version, "This is a web service to search the data with various search criteria", "",
+				"NIST Public license", "https://www.nist.gov/director/licensing");
+		return apiInfo;
+	}
 
 }
