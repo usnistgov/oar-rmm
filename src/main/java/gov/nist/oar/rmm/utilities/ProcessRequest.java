@@ -200,32 +200,32 @@ public class ProcessRequest {
 	 */
 	private void createQuerylist(Boolean searchInput) {
 
-//		filtersList.add(Filters.text("Chemistry"));
-//		queryList.add(Aggregates.match(Filters.text("Chemistry")));
-//		queryList.add(Aggregates.match(bsonObjs.get(0)));
-		if(filter != null && searchphraseFilter != null && logicalOps.size() == 0) {
-			queryList.add(Aggregates.match(filter));
-			queryList.add(Aggregates.match(searchphraseFilter));
-		}
-//		if (filter != null)
+////		filtersList.add(Filters.text("Chemistry"));
+////		queryList.add(Aggregates.match(Filters.text("Chemistry")));
+////		queryList.add(Aggregates.match(bsonObjs.get(0)));
+//		if(filter != null && searchphraseFilter != null && logicalOps.size() == 0) {
 //			queryList.add(Aggregates.match(filter));
-//		if (projections != null) {
-//			queryList.add(Aggregates.project(projections));
-//		} else {
-//			// queryList.add(Aggregates.project(Projections.metaTextScore("score")));
+//			queryList.add(Aggregates.match(searchphraseFilter));
 //		}
-//
-//		if (sort != null) {
-//			queryList.add(Aggregates.sort(sort));
-//		} else {
-//			if (searchInput) {
-//				queryList.add(Aggregates.sort(Sorts.metaTextScore("score")));
-//			}
-//		}
-//		if (pagenumber >= 0)
-//			queryList.add(Aggregates.skip(pagenumber > 0 ? ((pagenumber - 1) * pagesize) : 0));
-//		if (pagesize > 0)
-//			queryList.add(Aggregates.limit(pagesize));
+		if (filter != null)
+			queryList.add(Aggregates.match(filter));
+		if (projections != null) {
+			queryList.add(Aggregates.project(projections));
+		} else {
+			// queryList.add(Aggregates.project(Projections.metaTextScore("score")));
+		}
+
+		if (sort != null) {
+			queryList.add(Aggregates.sort(sort));
+		} else {
+			if (searchInput) {
+				queryList.add(Aggregates.sort(Sorts.metaTextScore("score")));
+			}
+		}
+		if (pagenumber >= 0)
+			queryList.add(Aggregates.skip(pagenumber > 0 ? ((pagenumber - 1) * pagesize) : 0));
+		if (pagesize > 0)
+			queryList.add(Aggregates.limit(pagesize));
 
 	}
 
@@ -244,8 +244,8 @@ public class ProcessRequest {
 			switch (key) {
 
 			case "searchphrase":
-				//parseFilter(Filters.text(value.get(i)));
-				parseFilter(value.get(i));
+				parseFilter(Filters.text(value.get(i)));
+//				parseFilter(value.get(i));
 				break;
 			case "exclude":
 				exclude = value.get(i);
@@ -361,6 +361,7 @@ public class ProcessRequest {
 	 * @param filterRequest
 	 */
 	private void parseFilter(String searchphrase) {
+		
 		searchphraseFilter = Filters.text(searchphrase);
 	}
 
@@ -434,9 +435,9 @@ public class ProcessRequest {
 				i++;
 			}
 		}
-		if(this.searchphraseFilter != null)
-			filtersList.add(searchphraseFilter);
-		filtersList.add(filter);
+//		if(this.searchphraseFilter != null)
+//			filtersList.add(searchphraseFilter);
+//		filtersList.add(filter);
 
 	}
 
