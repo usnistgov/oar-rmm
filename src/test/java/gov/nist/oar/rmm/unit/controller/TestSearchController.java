@@ -97,7 +97,7 @@ public class TestSearchController {
 		}
 		resultDoc.put("ResultData", aList);
 		Map<String,String> params = new HashMap<String,String>();
-		when(customRepo.find(params)).thenReturn(resultDoc);
+//		when(customRepo.find(params)).thenReturn(resultDoc);
 		
 		//mockMvc.perform(get("/records"))
 		//.andExpect(status().isOk());

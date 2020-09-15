@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -56,12 +57,17 @@ public class CustomRepositoryImpl implements CustomRepository {
 	 * results.
 	 */
 	@Override
-	public Document find(Map<String, String> params) {
-		
-		ProcessRequest request = new ProcessRequest();
+	public Document find(MultiValueMap<String, String> params) {
+    	ProcessRequest request = new ProcessRequest();
 		request.parseSearch(params);
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-		long count = mcollection.count(request.getFilter());
+		long count =0;
+//		count = mcollection.count(request.getFilter());
+		
+		for(int i=0; i<request.getFilters().size(); i++) {
+			//count = mcollection.count(request.getFilter());
+			count += mcollection.count(request.getFilters().get(i));
+		}
 		logger.info("Result Count :" + count);
 		AggregateIterable<Document> aggre = null;
 		try {
@@ -144,20 +150,20 @@ public class CustomRepositoryImpl implements CustomRepository {
 
 	}
 
-	/**
-	 * Get the record with search parameters
-	 * 
-	 * @param params
-	 * @return List of documents in the form of JSON
-	 */
-	public List<Document> findOrig(Map<String, String> params) {
-		ProcessRequest request = new ProcessRequest();
-		request.parseSearch(params);
-		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-//		FindIterable<Document> findResults;
-		return mcollection.aggregate(request.getQueryList()).into(new ArrayList<Document>());
-
-	}
+//	/**
+//	 * Get the record with search parameters
+//	 * 
+//	 * @param params
+//	 * @return List of documents in the form of JSON
+//	 */
+//	public List<Document> findOrig(Map<String, String> params) {
+//		ProcessRequest request = new ProcessRequest();
+//		request.parseSearch(params);
+//		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
+////		FindIterable<Document> findResults;
+//		return mcollection.aggregate(request.getQueryList()).into(new ArrayList<Document>());
+//
+//	}
 
 	/**
 	 * 
