@@ -63,6 +63,7 @@ public class ProcessRequest {
 	public List<Bson> getFilters() {
 		return this.filtersList;
 	}
+
 	/**
 	 * Filter on the search query
 	 * 
@@ -121,7 +122,12 @@ public class ProcessRequest {
 			for (Entry<String, List<String>> entry : serachparams.entrySet()) {
 				treatSearch(entry.getKey(), entry.getValue());
 				if (entry.getKey().equalsIgnoreCase("searchphrase")) {
-					if (entry.getValue().size() > 0) {
+
+					List<String> listValues = entry.getValue();
+					System.out.println(entry.getValue().size() + " :: " + listValues.size());
+					if (!entry.getValue().get(0).isEmpty())
+					// if (entry.getValue().size() > 0)
+					{
 						searchInput = true;
 					}
 				}
@@ -143,14 +149,14 @@ public class ProcessRequest {
 	 * @param serachparams
 	 */
 	private void validateInput(MultiValueMap<String, String> serachparams) {
-		
+
 //		List<Integer> result = new ArrayList(serachparams.keySet());
 //		System.out.println(result.get(result.size()-1));
 //		if(result.get(result.size()-1).equals("logicalOp")) {
 //			throw new IllegalArgumentException("check parameters, last parameter can not be a logical operator.");
 //		}
 		for (Entry<String, List<String>> entry : serachparams.entrySet()) {
-			
+
 			for (int i = 0; i < entry.getValue().size(); i++) {
 				String value = entry.getValue().get(i);
 				if (value.isEmpty())
@@ -200,15 +206,14 @@ public class ProcessRequest {
 	 */
 	private void createQuerylist(Boolean searchInput) {
 
-////		filtersList.add(Filters.text("Chemistry"));
-////		queryList.add(Aggregates.match(Filters.text("Chemistry")));
-////		queryList.add(Aggregates.match(bsonObjs.get(0)));
-//		if(filter != null && searchphraseFilter != null && logicalOps.size() == 0) {
+		for (int i = 0; i < filtersList.size(); i++) {
+			queryList.add(Aggregates.match(filtersList.get(i)));
+		}
+//		if(filtersList.size() == 0) {
 //			queryList.add(Aggregates.match(filter));
-//			queryList.add(Aggregates.match(searchphraseFilter));
 //		}
-		if (filter != null)
-			queryList.add(Aggregates.match(filter));
+//		if (filter != null)
+//			queryList.add(Aggregates.match(filter));
 		if (projections != null) {
 			queryList.add(Aggregates.project(projections));
 		} else {
@@ -244,8 +249,9 @@ public class ProcessRequest {
 			switch (key) {
 
 			case "searchphrase":
-				parseFilter(Filters.text(value.get(i)));
+//				parseFilter(Filters.text(value.get(i)));
 //				parseFilter(value.get(i));
+				updateMap(key, value.get(i));
 				break;
 			case "exclude":
 				exclude = value.get(i);
@@ -343,27 +349,27 @@ public class ProcessRequest {
 			sort = sortingRequest;
 	}
 
-	/**
-	 * Parse Filters based on input parameters
-	 * 
-	 * @param filterRequest
-	 */
-	private void parseFilter(Bson filterRequest) {
-		if (filter == null)
-			filter = filterRequest;
-		else
-			filter = Filters.or(filter, filterRequest);
-	}
-	
-	/**
-	 * Parse Filters based on input parameters
-	 * 
-	 * @param filterRequest
-	 */
-	private void parseFilter(String searchphrase) {
-		
-		searchphraseFilter = Filters.text(searchphrase);
-	}
+//	/**
+//	 * Parse Filters based on input parameters
+//	 * 
+//	 * @param filterRequest
+//	 */
+//	private void parseFilter(Bson filterRequest) {
+//		if (filter == null)
+//			filter = filterRequest;
+//		else
+//			filter = Filters.or(filter, filterRequest);
+//	}
+//
+//	/**
+//	 * Parse Filters based on input parameters
+//	 * 
+//	 * @param filterRequest
+//	 */
+//	private void parseFilter(String searchphrase) {
+//
+//		searchphraseFilter = Filters.text(searchphrase);
+//	}
 
 	/**
 	 * Parse advancedquery key value paramters
@@ -393,21 +399,23 @@ public class ProcessRequest {
 			List<String> values = entry.getValue();
 			if ("logicalOp".equalsIgnoreCase(entry.getKey())) {
 				for (int j = 0; j < values.size(); j++) {
-				logicalOps.add(entry.getValue().get(j));
+					logicalOps.add(entry.getValue().get(j));
 				}
-			}
-			else {
-				
-				for (int j = 0; j < values.size(); j++) {
+			} else {
+				if ("searchphrase".equalsIgnoreCase(entry.getKey())) {
+					bsonObjs.add(Filters.text(entry.getValue().get(0)));
+				} else {
+					for (int j = 0; j < values.size(); j++) {
 //					String[] searchString = entry.getValue().split(",");
-					String[] searchString = entry.getValue().get(j).split(",");
+						String[] searchString = entry.getValue().get(j).split(",");
 
-					List<Pattern> patternList = new ArrayList<Pattern>();
+						List<Pattern> patternList = new ArrayList<Pattern>();
 
-					for (int i = 0; i < searchString.length; i++) {
-						patternList.add(Pattern.compile(searchString[i], Pattern.CASE_INSENSITIVE));
+						for (int i = 0; i < searchString.length; i++) {
+							patternList.add(Pattern.compile(searchString[i], Pattern.CASE_INSENSITIVE));
+						}
+						bsonObjs.add(Filters.in(entry.getKey(), patternList));
 					}
-					bsonObjs.add(Filters.in(entry.getKey(), patternList));
 				}
 			}
 		}
@@ -419,25 +427,39 @@ public class ProcessRequest {
 	 */
 	private void noLogicalOps() {
 
+		int j = 0;
+		while (j < bsonObjs.size()) {
+			System.out.println("TEST ::" + bsonObjs.get(j).toString());
+			j++;
+		}
 		int i = 0;
 		while (i < bsonObjs.size()) {
-//			filtersList.add(filter);
-//			filtersList.add(bsonObjs.get(i));
-			if (filter == null && bsonObjs.size() == 1) {
+			if (bsonObjs.size() == 1) {
 				filter = bsonObjs.get(0);
-				
 				i++;
-			} else if (filter == null && bsonObjs.size() > 1) {
-				filter = Filters.or(bsonObjs.get(i), bsonObjs.get(i + 1));
-				i = i + 2;
-			} else {
-				filter = Filters.or(filter, bsonObjs.get(i));
-				i++;
+			} else if (bsonObjs.size() > 1) {
+
+				if (bsonObjs.get(i).toString().contains("Text")) {
+					searchphraseFilter = bsonObjs.get(i);
+					filtersList.add(searchphraseFilter);
+					i++;
+				} else if (!bsonObjs.get(i + 1).toString().contains("Text")) {
+					filter = Filters.or(bsonObjs.get(i), bsonObjs.get(i + 1));
+					i = i + 2;
+
+				} else {
+					filter = bsonObjs.get(0);
+					i++;
+				}
 			}
+//			else {
+//				filter = Filters.or(filter, bsonObjs.get(i));
+//				i++;
+//			}
 		}
 //		if(this.searchphraseFilter != null)
 //			filtersList.add(searchphraseFilter);
-//		filtersList.add(filter);
+		filtersList.add(filter);
 
 	}
 
@@ -445,35 +467,55 @@ public class ProcessRequest {
 	 * Create filters with logical options
 	 */
 	private void withLogicalOps() {
-		
+
 		int j = 0;
 		for (int i = 0; i < logicalOps.size(); i++) {
 			switch (logicalOps.get(i).toLowerCase()) {
 
 			case "and":
-				if (filter == null)
+				if (filter == null) {
 					filter = Filters.and(bsonObjs.get(j), bsonObjs.get(j + 1));
-				else
+					j=j+2;
+				}
+				else {
 					filter = Filters.and(filter, bsonObjs.get(j));
+					j++;
+				}
 				break;
 			case "or":
-				if (filter == null)
-					filter = Filters.or(bsonObjs.get(j), bsonObjs.get(j + 1));
-				else
+				if (filter == null && !bsonObjs.get(j).toString().contains("Text")) {
+					filter = bsonObjs.get(j);
+					//, bsonObjs.get(j + 1));
+					j=j+1;
+				}
+				else if (bsonObjs.get(j).toString().contains("Text")) {
+					searchphraseFilter = bsonObjs.get(j);
+					filtersList.add(searchphraseFilter);
+					j++;
+				} else {
+					if(filter != null) {
 					filter = Filters.or(filter, bsonObjs.get(j));
+					j++;
+					}
+				}
 				break;
 			case "not":
-				if (filter == null)
+				if (filter == null) {
 					filter = Filters.not(bsonObjs.get(j));
-				else
+					j++;
+				}
+				else {
 					filter = Filters.and(filter, Filters.not(bsonObjs.get(j)));
+					j++;
+				}
 				break;
 			default:
 				break;
 
 			}
-			j++;
+//			j++;
 		}
+		filtersList.add(filter);
 	}
 
 	/**

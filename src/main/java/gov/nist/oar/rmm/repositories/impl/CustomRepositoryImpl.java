@@ -62,13 +62,13 @@ public class CustomRepositoryImpl implements CustomRepository {
 		request.parseSearch(params);
 		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
 		long count =0;
-		count = mcollection.count(request.getFilter());
-		
-//		for(int i=0; i<request.getFilters().size(); i++) {
-//			//count = mcollection.count(request.getFilter());
-//			count += mcollection.count(request.getFilters().get(i));
-//		}
-		logger.info("Result Count :" + count);
+//		count = mcollection.count(request.getFilter());
+		if(request.getFilters().size() == 0)
+			count = mcollection.count(null);
+		for(int i=0; i<request.getFilters().size(); i++) {
+			count += mcollection.count(request.getFilters().get(i));
+		}
+		//logger.info("Result Count :" + count);
 		AggregateIterable<Document> aggre = null;
 		try {
 			aggre = mcollection.aggregate(request.getQueryList());
