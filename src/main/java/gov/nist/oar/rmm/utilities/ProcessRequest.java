@@ -150,11 +150,12 @@ public class ProcessRequest {
 	 */
 	private void validateInput(MultiValueMap<String, String> serachparams) {
 
-//		List<Integer> result = new ArrayList(serachparams.keySet());
-//		System.out.println(result.get(result.size()-1));
-//		if(result.get(result.size()-1).equals("logicalOp")) {
-//			throw new IllegalArgumentException("check parameters, last parameter can not be a logical operator.");
-//		}
+		List<String> result = new ArrayList<String>(serachparams.keySet());
+		if(result.get(result.size()-1).toString().equalsIgnoreCase("logicalOp")) {
+			throw new IllegalArgumentException("check parameters, last parameter can not be a logical operator.");
+		}
+		
+		
 		for (Entry<String, List<String>> entry : serachparams.entrySet()) {
 
 			for (int i = 0; i < entry.getValue().size(); i++) {
@@ -420,6 +421,8 @@ public class ProcessRequest {
 			}
 		}
 
+		if(logicalOps.size() >= bsonObjs.size())
+			throw new IllegalArgumentException("Logical operations work on more than one parameters. Some values are missing.");
 	}
 
 	/**
@@ -464,7 +467,7 @@ public class ProcessRequest {
 	}
 
 	/**
-	 * Create filters with logical options
+	 * Create filters with logical options  or, or,or    k=b k=a s=a or k=c
 	 */
 	private void withLogicalOps() {
 
@@ -483,19 +486,29 @@ public class ProcessRequest {
 				}
 				break;
 			case "or":
-				if (filter == null && !bsonObjs.get(j).toString().contains("Text")) {
-					filter = bsonObjs.get(j);
-					//, bsonObjs.get(j + 1));
-					j=j+1;
-				}
-				else if (bsonObjs.get(j).toString().contains("Text")) {
-					searchphraseFilter = bsonObjs.get(j);
-					filtersList.add(searchphraseFilter);
-					j++;
-				} else {
-					if(filter != null) {
-					filter = Filters.or(filter, bsonObjs.get(j));
-					j++;
+				if (filter == null) {
+					if (bsonObjs.get(j).toString().contains("Text")) {
+						searchphraseFilter = bsonObjs.get(j);
+						filtersList.add(searchphraseFilter);
+						j++;
+					}else if(!bsonObjs.get(j).toString().contains("Text") && !bsonObjs.get(j+1).toString().contains("Text")) {
+						filter = Filters.or(bsonObjs.get(j), bsonObjs.get(j + 1));
+						j=j+2;
+					}else {
+						filter = bsonObjs.get(j);
+						searchphraseFilter = bsonObjs.get(j+1);
+						filtersList.add(searchphraseFilter);
+						j=j+2;
+					}
+				} else if(filter != null) {
+					if (bsonObjs.get(j).toString().contains("Text")) {
+						searchphraseFilter = bsonObjs.get(j);
+						filtersList.add(searchphraseFilter);
+						j++;
+					} else {
+						filter = Filters.and(filter, bsonObjs.get(j));
+						j++;
+						
 					}
 				}
 				break;
