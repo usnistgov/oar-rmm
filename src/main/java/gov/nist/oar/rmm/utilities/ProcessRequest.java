@@ -150,10 +150,10 @@ public class ProcessRequest {
 	 */
 	private void validateInput(MultiValueMap<String, String> serachparams) {
 
-		List<String> result = new ArrayList<String>(serachparams.keySet());
-		if(result.get(result.size()-1).toString().equalsIgnoreCase("logicalOp")) {
-			throw new IllegalArgumentException("check parameters, last parameter can not be a logical operator.");
-		}
+//		List<String> result = new ArrayList<String>(serachparams.keySet());
+//		if(result.get(result.size()-1).toString().equalsIgnoreCase("logicalOp")) {
+//			throw new IllegalArgumentException("check parameters, last parameter can not be a logical operator.");
+//		}
 		
 		
 		for (Entry<String, List<String>> entry : serachparams.entrySet()) {
