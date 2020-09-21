@@ -32,7 +32,7 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
 
 /**
- * This is parse any request to Rest API endpoints.
+ * This is to parse any query request user makes.
  * 
  * @author Deoyani Nandrekar-Heinis
  *
@@ -48,11 +48,9 @@ public class ProcessRequest {
 	private ArrayList<String> logicalOps = new ArrayList<String>();
 	private ArrayList<Bson> bsonObjs = new ArrayList<Bson>();
 	private List<Bson> queryList = new ArrayList<Bson>();
-//	private Map<String, String> advMap = new LinkedHashMap<String, String>();
 	private Map<String, List<String>> advMap = new HashMap<String, List<String>>();
 	private String include = "", exclude = "";
 	private ArrayList<Bson> filtersList = new ArrayList<Bson>();
-//	private  ArrayList<Bson> searchphraseFilter = new ArrayList<Bson>();
 	private Bson searchphraseFilter = null;
 
 	/**
@@ -210,9 +208,7 @@ public class ProcessRequest {
 		for (int i = 0; i < filtersList.size(); i++) {
 			queryList.add(Aggregates.match(filtersList.get(i)));
 		}
-//		if(filtersList.size() == 0) {
-//			queryList.add(Aggregates.match(filter));
-//		}
+
 //		if (filter != null)
 //			queryList.add(Aggregates.match(filter));
 		if (projections != null) {
@@ -404,7 +400,10 @@ public class ProcessRequest {
 				}
 			} else {
 				if ("searchphrase".equalsIgnoreCase(entry.getKey())) {
-					bsonObjs.add(Filters.text(entry.getValue().get(0)));
+					for(int i=0;i<entry.getValue().size();i++) {
+						this.filtersList.add(Filters.text(entry.getValue().get(i)));
+					}
+					
 				} else {
 					for (int j = 0; j < values.size(); j++) {
 //					String[] searchString = entry.getValue().split(",");
@@ -488,8 +487,8 @@ public class ProcessRequest {
 			case "or":
 				if (filter == null) {
 					if (bsonObjs.get(j).toString().contains("Text")) {
-						searchphraseFilter = bsonObjs.get(j);
-						filtersList.add(searchphraseFilter);
+//						searchphraseFilter = bsonObjs.get(j);
+						filtersList.add(bsonObjs.get(j));
 						j++;
 					}else if(!bsonObjs.get(j).toString().contains("Text") && !bsonObjs.get(j+1).toString().contains("Text")) {
 						filter = Filters.or(bsonObjs.get(j), bsonObjs.get(j + 1));
@@ -526,7 +525,6 @@ public class ProcessRequest {
 				break;
 
 			}
-//			j++;
 		}
 		filtersList.add(filter);
 	}
