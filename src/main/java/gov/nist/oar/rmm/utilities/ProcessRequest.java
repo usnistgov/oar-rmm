@@ -13,6 +13,7 @@
 package gov.nist.oar.rmm.utilities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,6 +33,7 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
+import gov.nist.oar.rmm.exceptions.IllegalArgumentException;
 
 /**
  * This is to parse any query request user makes.
@@ -151,30 +153,36 @@ public class ProcessRequest {
 	@VisibleForTesting
 	private void validateInput(MultiValueMap<String, String> serachparams) {
 		
-		List<String> indexes = new ArrayList<String>(serachparams.keySet());
 		
+		Collection<String> inputSearchphrase = serachparams.get("searchphrase");
+		
+		if(inputSearchphrase!=null && inputSearchphrase.size() >1) 
+			throw new IllegalArgumentException(
+					"Only one 'searchphrase' parameter allowed per request.");
+
+		List<String> indexes = new ArrayList<String>(serachparams.keySet());
+
 		int countSearchphrases = Collections.frequency(indexes, "searchphrase");
-		if(countSearchphrases > 1)
-			throw new IllegalArgumentException("There are more than one 'searchphrase' parameters , it is not allowed syntax.");
+		if (countSearchphrases > 1)
+			throw new IllegalArgumentException(
+					"There are more than one 'searchphrase' parameters , it is not allowed syntax.");
 		
 		int searchphrasePos = indexes.indexOf("searchphrase");
-		if(searchphrasePos != 0 && searchphrasePos > -1)
+		if (searchphrasePos != 0 && searchphrasePos > -1)
 			throw new IllegalArgumentException("Make sure that searchphrase is first input parameter in the sequence.");
-		
-		if(serachparams.keySet().size() > 1) {
-		String firstItem = serachparams.keySet().stream().findFirst().get();
-		String secondItem = serachparams.keySet().stream().skip(1).findFirst().get();
-		if(firstItem.equalsIgnoreCase("searchphrase") && secondItem.equalsIgnoreCase("logicalOp")) 
-			throw new IllegalArgumentException("'searchphrase' is followed by 'logicalOp', it is not allowed syntax."); 
+
+		if (serachparams.keySet().size() > 1) {
+			String firstItem = serachparams.keySet().stream().findFirst().get();
+			String secondItem = serachparams.keySet().stream().skip(1).findFirst().get();
+			if (firstItem.equalsIgnoreCase("searchphrase") && secondItem.equalsIgnoreCase("logicalOp"))
+				throw new IllegalArgumentException(
+						"'searchphrase' is followed by 'logicalOp', it is not allowed syntax.");
 		}
 		
-
-//		int searchphrasePos = 0, count = 0;
+		
 		for (Entry<String, List<String>> entry : serachparams.entrySet()) {
-			
-//			if(entry.getKey().equalsIgnoreCase("searchphrase")) {
-//				searchphrasePos = count;
-//			}
+
+
 			for (int i = 0; i < entry.getValue().size(); i++) {
 				String value = entry.getValue().get(i);
 				if (value.isEmpty())
@@ -203,7 +211,7 @@ public class ProcessRequest {
 			}
 //			count++;
 		}
-		
+
 	}
 
 	/***
@@ -225,9 +233,13 @@ public class ProcessRequest {
 	 */
 	private void createQuerylist(Boolean searchInput) {
 
-		if(this.searchphraseFilter != null) {
+		if (this.searchphraseFilter != null && filter == null) {
 			this.filtersList.add(searchphraseFilter);
 			queryList.add(Aggregates.match(searchphraseFilter));
+		}
+		if (this.searchphraseFilter != null && filter != null) {
+
+			filter = Filters.and(searchphraseFilter, filter);
 		}
 		if (filter != null) {
 			this.filtersList.add(filter);
@@ -386,10 +398,10 @@ public class ProcessRequest {
 //	 * 
 //	 * @param filterRequest
 //	 */
-//	private void parseFilter(String searchphrase) {
-//
-//		searchphraseFilter = Filters.text(searchphrase);
-//	}
+	private void parseFilter(String searchphrase) {
+
+		searchphraseFilter = Filters.text(searchphrase);
+	}
 
 	/**
 	 * Parse advancedquery key value paramters
@@ -453,7 +465,7 @@ public class ProcessRequest {
 			if (filter == null) {
 				filter = bsonObjs.get(i);
 				i++;
-			} else if(filter != null) {
+			} else if (filter != null) {
 				filter = Filters.and(filter, bsonObjs.get(i));
 				i++;
 			}

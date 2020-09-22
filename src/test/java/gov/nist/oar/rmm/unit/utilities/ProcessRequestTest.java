@@ -31,6 +31,8 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.util.FongoJSON;
 
+import gov.nist.oar.rmm.exceptions.IllegalArgumentException;
+
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -67,15 +69,13 @@ public class ProcessRequestTest {
 		  List<Pattern> patternList = new ArrayList<Pattern>();
 		  patternList.add(Pattern.compile(params.get("topic.tag").get(0), Pattern.CASE_INSENSITIVE));
 		  Bson f1 = Filters.in("topic.tag", patternList);
-		 	
-		 Bson b2 = Aggregates.match(f1);
-		 Bson b1 = Aggregates.match(Filters.text("statistics"));
+
+		 Bson b1 = Aggregates.match(Filters.and(Filters.text("statistics"), f1));
 		 Bson b3 =  Aggregates.sort(Sorts.metaTextScore("score"));
 		 List<Bson> queryList= pr.getQueryList();
-		 System.out.println(" :"+b2);
-		 System.out.println(" :"+queryList.get(1));
+
 		 assertEquals(b1.toString(), queryList.get(0).toString());
-		 assertEquals(b3.toString(), queryList.get(2).toString());
+		 assertEquals(b3.toString(), queryList.get(1).toString());
 	}
 	
 	@Test
@@ -100,6 +100,50 @@ public class ProcessRequestTest {
 		List<Bson> queryList = pr.getQueryList();
 		
 		assertEquals(f3.toString(), pr.getFilter().toString());
+
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void IllegalArgumentTest() {
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("searchphrase", "Chemistry");
+		map.add("searchphrase", "Chemistry");
+		
+		ProcessRequest pr = new ProcessRequest();
+		pr.parseSearch(map);
+		
+		List<Bson> queryList = pr.getQueryList();
+		
+
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void IllegalArgumentTest2() {
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("keyword", "Chemistry");
+		map.add("searchphrase", "Chemistry");
+		
+		ProcessRequest pr = new ProcessRequest();
+		pr.parseSearch(map);
+		
+		List<Bson> queryList = pr.getQueryList();
+		
+
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void IllegalArgumentTest3() {
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		
+		map.add("searchphrase", "Chemistry");
+		map.add("logicalOp", "Or");
+		map.add("keyword", "Chemistry");
+		
+		ProcessRequest pr = new ProcessRequest();
+		pr.parseSearch(map);
+		
+		List<Bson> queryList = pr.getQueryList();
+		
 
 	}
 
