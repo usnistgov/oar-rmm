@@ -13,6 +13,7 @@
 package gov.nist.oar.rmm.utilities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
@@ -146,16 +148,33 @@ public class ProcessRequest {
 	 * 
 	 * @param serachparams
 	 */
+	@VisibleForTesting
 	private void validateInput(MultiValueMap<String, String> serachparams) {
+		
+		List<String> indexes = new ArrayList<String>(serachparams.keySet());
+		
+		int countSearchphrases = Collections.frequency(indexes, "searchphrase");
+		if(countSearchphrases > 1)
+			throw new IllegalArgumentException("There are more than one 'searchphrase' parameters , it is not allowed syntax.");
+		
+		int searchphrasePos = indexes.indexOf("searchphrase");
+		if(searchphrasePos != 0 && searchphrasePos > -1)
+			throw new IllegalArgumentException("Make sure that searchphrase is first input parameter in the sequence.");
+		
+		if(serachparams.keySet().size() > 1) {
+		String firstItem = serachparams.keySet().stream().findFirst().get();
+		String secondItem = serachparams.keySet().stream().skip(1).findFirst().get();
+		if(firstItem.equalsIgnoreCase("searchphrase") && secondItem.equalsIgnoreCase("logicalOp")) 
+			throw new IllegalArgumentException("'searchphrase' is followed by 'logicalOp', it is not allowed syntax."); 
+		}
+		
 
-//		List<String> result = new ArrayList<String>(serachparams.keySet());
-//		if(result.get(result.size()-1).toString().equalsIgnoreCase("logicalOp")) {
-//			throw new IllegalArgumentException("check parameters, last parameter can not be a logical operator.");
-//		}
-		
-		
+//		int searchphrasePos = 0, count = 0;
 		for (Entry<String, List<String>> entry : serachparams.entrySet()) {
-
+			
+//			if(entry.getKey().equalsIgnoreCase("searchphrase")) {
+//				searchphrasePos = count;
+//			}
 			for (int i = 0; i < entry.getValue().size(); i++) {
 				String value = entry.getValue().get(i);
 				if (value.isEmpty())
@@ -182,8 +201,9 @@ public class ProcessRequest {
 					break;
 				}
 			}
+//			count++;
 		}
-
+		
 	}
 
 	/***
@@ -205,12 +225,14 @@ public class ProcessRequest {
 	 */
 	private void createQuerylist(Boolean searchInput) {
 
-		for (int i = 0; i < filtersList.size(); i++) {
-			queryList.add(Aggregates.match(filtersList.get(i)));
+		if(this.searchphraseFilter != null) {
+			this.filtersList.add(searchphraseFilter);
+			queryList.add(Aggregates.match(searchphraseFilter));
 		}
-
-//		if (filter != null)
-//			queryList.add(Aggregates.match(filter));
+		if (filter != null) {
+			this.filtersList.add(filter);
+			queryList.add(Aggregates.match(filter));
+		}
 		if (projections != null) {
 			queryList.add(Aggregates.project(projections));
 		} else {
@@ -246,9 +268,10 @@ public class ProcessRequest {
 			switch (key) {
 
 			case "searchphrase":
+				searchphraseFilter = Filters.text(value.get(i));
 //				parseFilter(Filters.text(value.get(i)));
 //				parseFilter(value.get(i));
-				updateMap(key, value.get(i));
+//				updateMap(key, value.get(i));
 				break;
 			case "exclude":
 				exclude = value.get(i);
@@ -352,12 +375,12 @@ public class ProcessRequest {
 //	 * @param filterRequest
 //	 */
 //	private void parseFilter(Bson filterRequest) {
-//		if (filter == null)
-//			filter = filterRequest;
-//		else
-//			filter = Filters.or(filter, filterRequest);
+////		if (filter == null)
+////			filter = filterRequest;
+////		else
+////			filter = Filters.or(filter, filterRequest);
 //	}
-//
+
 //	/**
 //	 * Parse Filters based on input parameters
 //	 * 
@@ -399,29 +422,25 @@ public class ProcessRequest {
 					logicalOps.add(entry.getValue().get(j));
 				}
 			} else {
-				if ("searchphrase".equalsIgnoreCase(entry.getKey())) {
-					for(int i=0;i<entry.getValue().size();i++) {
-						this.filtersList.add(Filters.text(entry.getValue().get(i)));
-					}
-					
-				} else {
-					for (int j = 0; j < values.size(); j++) {
+
+				for (int j = 0; j < values.size(); j++) {
 //					String[] searchString = entry.getValue().split(",");
-						String[] searchString = entry.getValue().get(j).split(",");
+					String[] searchString = entry.getValue().get(j).split(",");
 
-						List<Pattern> patternList = new ArrayList<Pattern>();
+					List<Pattern> patternList = new ArrayList<Pattern>();
 
-						for (int i = 0; i < searchString.length; i++) {
-							patternList.add(Pattern.compile(searchString[i], Pattern.CASE_INSENSITIVE));
-						}
-						bsonObjs.add(Filters.in(entry.getKey(), patternList));
+					for (int i = 0; i < searchString.length; i++) {
+						patternList.add(Pattern.compile(searchString[i], Pattern.CASE_INSENSITIVE));
 					}
+					bsonObjs.add(Filters.in(entry.getKey(), patternList));
 				}
+
 			}
 		}
 
-		if(logicalOps.size() >= bsonObjs.size())
-			throw new IllegalArgumentException("Logical operations work on more than one parameters. Some values are missing.");
+		if (logicalOps.size() >= bsonObjs.size())
+			throw new IllegalArgumentException(
+					"Logical operations work on more than one parameters. Some values are missing.");
 	}
 
 	/**
@@ -429,44 +448,21 @@ public class ProcessRequest {
 	 */
 	private void noLogicalOps() {
 
-		int j = 0;
-		while (j < bsonObjs.size()) {
-			System.out.println("TEST ::" + bsonObjs.get(j).toString());
-			j++;
-		}
 		int i = 0;
 		while (i < bsonObjs.size()) {
-			if (bsonObjs.size() == 1) {
-				filter = bsonObjs.get(0);
+			if (filter == null) {
+				filter = bsonObjs.get(i);
 				i++;
-			} else if (bsonObjs.size() > 1) {
-
-				if (bsonObjs.get(i).toString().contains("Text")) {
-					searchphraseFilter = bsonObjs.get(i);
-					filtersList.add(searchphraseFilter);
-					i++;
-				} else if (!bsonObjs.get(i + 1).toString().contains("Text")) {
-					filter = Filters.or(bsonObjs.get(i), bsonObjs.get(i + 1));
-					i = i + 2;
-
-				} else {
-					filter = bsonObjs.get(0);
-					i++;
-				}
+			} else if(filter != null) {
+				filter = Filters.and(filter, bsonObjs.get(i));
+				i++;
 			}
-//			else {
-//				filter = Filters.or(filter, bsonObjs.get(i));
-//				i++;
-//			}
 		}
-//		if(this.searchphraseFilter != null)
-//			filtersList.add(searchphraseFilter);
-		filtersList.add(filter);
-
+//		filtersList.add(filter);
 	}
 
 	/**
-	 * Create filters with logical options  or, or,or    k=b k=a s=a or k=c
+	 * Create filters with logical options or, or,or k=b k=a s=a or k=c
 	 */
 	private void withLogicalOps() {
 
@@ -477,46 +473,29 @@ public class ProcessRequest {
 			case "and":
 				if (filter == null) {
 					filter = Filters.and(bsonObjs.get(j), bsonObjs.get(j + 1));
-					j=j+2;
-				}
-				else {
+					j = j + 2;
+				} else {
 					filter = Filters.and(filter, bsonObjs.get(j));
 					j++;
 				}
 				break;
 			case "or":
 				if (filter == null) {
-					if (bsonObjs.get(j).toString().contains("Text")) {
-//						searchphraseFilter = bsonObjs.get(j);
-						filtersList.add(bsonObjs.get(j));
-						j++;
-					}else if(!bsonObjs.get(j).toString().contains("Text") && !bsonObjs.get(j+1).toString().contains("Text")) {
-						filter = Filters.or(bsonObjs.get(j), bsonObjs.get(j + 1));
-						j=j+2;
-					}else {
-						filter = bsonObjs.get(j);
-						searchphraseFilter = bsonObjs.get(j+1);
-						filtersList.add(searchphraseFilter);
-						j=j+2;
-					}
-				} else if(filter != null) {
-					if (bsonObjs.get(j).toString().contains("Text")) {
-						searchphraseFilter = bsonObjs.get(j);
-						filtersList.add(searchphraseFilter);
-						j++;
-					} else {
-						filter = Filters.and(filter, bsonObjs.get(j));
-						j++;
-						
-					}
+					filter = Filters.or(bsonObjs.get(j), bsonObjs.get(j + 1));
+					j = j + 2;
+
+				} else if (filter != null) {
+
+					filter = Filters.and(filter, bsonObjs.get(j));
+					j++;
+
 				}
 				break;
 			case "not":
 				if (filter == null) {
 					filter = Filters.not(bsonObjs.get(j));
 					j++;
-				}
-				else {
+				} else {
 					filter = Filters.and(filter, Filters.not(bsonObjs.get(j)));
 					j++;
 				}
