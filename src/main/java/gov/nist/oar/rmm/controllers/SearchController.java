@@ -41,6 +41,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
+//import gov.nist.oar.rmm.exceptions.IllegalArgumentException;
 
 @RestController
 @Api(value = "API endpoints to search EDI/PDL data", tags = "Search API")
@@ -82,7 +83,7 @@ public class SearchController {
 	 * @throws IOException
 	 */
 	public Document search(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
-			@ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+			@ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException, IllegalArgumentException {
 		
 		/**
 		 * This particular snippet has been added because if there are same name keys are used the input parameters will be grouped in array 
@@ -91,6 +92,7 @@ public class SearchController {
 		 * Hence the original query string is used for initial validation of the request.
 		 */
 		System.out.println("Request :"+request.getQueryString());
+		if(request.getQueryString() != null) {
 		String[] rParams = request.getQueryString().split("&");
 		String prevParam = "";
 		for(int i=0; i< rParams.length; i++) {
@@ -100,7 +102,7 @@ public class SearchController {
 			 }
 			 prevParam = paramName;			
 		}
-
+		}
 
 		logger.info(
 				"Search request sent to" + request.getRequestURI() + " with query string:" + request.getQueryString());
