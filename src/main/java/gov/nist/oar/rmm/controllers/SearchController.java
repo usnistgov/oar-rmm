@@ -91,7 +91,6 @@ public class SearchController {
 		 * of logical operator was difficult to determine. 
 		 * Hence the original query string is used for initial validation of the request.
 		 */
-		System.out.println("Request :"+request.getQueryString());
 		if(request.getQueryString() != null) {
 		String[] rParams = request.getQueryString().split("&");
 		String prevParam = "";
@@ -205,24 +204,24 @@ public class SearchController {
 
 	}
 
-	/**
-	 * TEST
-	 * 
-	 * @param ediid
-	 * @param params
-	 * @return
-	 * @throws CustomizationException
-	 * @throws InvalidInputException
-	 */
-
-	@RequestMapping(value = {
-			"/test/{ediid}" }, method = RequestMethod.POST, headers = "accept=application/json", produces = "application/json")
-	@ApiOperation(value = ".", nickname = "Cache Record Changes", notes = "Resource returns a record if it is editable and user is authenticated.")
-	public Document updateRecord(@PathVariable @Valid String ediid, @Valid @RequestBody String params)
-			throws Exception {
-
-		logger.info("Update the given record: " + ediid);
-		return repo.findRecord("4765EE7CC5D3A396E0531A57068160031688");
-
-	}
+//	/**
+//	 * TEST
+//	 * 
+//	 * @param ediid
+//	 * @param params
+//	 * @return
+//	 * @throws CustomizationException
+//	 * @throws InvalidInputException
+//	 */
+//
+//	@RequestMapping(value = {
+//			"/test/{ediid}" }, method = RequestMethod.POST, headers = "accept=application/json", produces = "application/json")
+//	@ApiOperation(value = ".", nickname = "Cache Record Changes", notes = "Resource returns a record if it is editable and user is authenticated.")
+//	public Document updateRecord(@PathVariable @Valid String ediid, @Valid @RequestBody String params)
+//			throws Exception {
+//
+//		logger.info("Update the given record: " + ediid);
+//		return repo.findRecord("4765EE7CC5D3A396E0531A57068160031688");
+//
+//	}
 }
