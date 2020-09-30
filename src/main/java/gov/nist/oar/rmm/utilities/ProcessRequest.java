@@ -215,13 +215,12 @@ public class ProcessRequest{
 		
 		if (this.searchphraseFilter != null && filter != null) {
 			filter = Filters.and(searchphraseFilter, filter);
-//			this.filtersList.add(filter);
-			queryList.add(Aggregates.match(filter));
 		}
 		if(searchphraseFilter != null && filter == null) {
-//			this.filtersList.add(searchphraseFilter);
 			filter = searchphraseFilter;
-			queryList.add(Aggregates.match(searchphraseFilter));
+		}
+		if(filter != null) {
+			queryList.add(Aggregates.match(filter));
 		}
 		
 		if(projections !=  null) {

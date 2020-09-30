@@ -2,35 +2,20 @@ package gov.nist.oar.rmm.unit.utilities;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
-import com.mongodb.util.FongoJSON;
-
 
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
@@ -147,56 +132,3 @@ public class ProcessRequestTest {
 	}
 
 }
-
-
-//@Rule 
-//public FongoRule fongoRule = new FongoRule(); 
-//DBCollection recordsCollection, taxonomyCollection;
-//@Before
-//public void initIt() throws Exception {
-//
-//	 recordsCollection = fongoRule.getDB("TestDBtemp").getCollection("recordstest");
-//    	JSONParser parser = new JSONParser();
-//    	JSONArray a;
-//    	File file = new File(this.getClass().getClassLoader().getResource("record.json").getFile());
-//		try {
-//			a = (JSONArray) parser.parse(new FileReader(file));
-//			for (Object o : a)
-//    	  {
-//    		  //System.out.println(o.toString());
-//    	   DBObject dbObject = (DBObject)  com.mongodb.util.JSON.parse(o.toString());
-//    	   recordsCollection.save(dbObject); 
-//    	  }
-//		} catch (IOException | ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		/// Taxonomy collection;
-//		 taxonomyCollection = fongoRule.getDB("TestDBtemp").getCollection("taxonomytest");
-//	    	parser = new JSONParser();
-//	    
-//	        file = new File(this.getClass().getClassLoader().getResource("taxonomy.json").getFile());
-//			try {
-//				a = (JSONArray) parser.parse(new FileReader(file));
-//				for (Object o : a)
-//	    	  {
-//	    		  //System.out.println(o.toString());
-//	    	   DBObject dbObject = (DBObject)  com.mongodb.util.JSON.parse(o.toString());
-//	    	   taxonomyCollection.save(dbObject); 
-//	    	  }
-//			} catch (IOException | ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-// }
-// 
-//////Functions to help test
-//private DBObject dbObject(Bson bson) {
-//    if (bson == null) {
-//      return null;
-//    }
-//   
-//    // TODO Performance killer
-//    return (DBObject) FongoJSON.parse(bson.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()).toString());
-//  }
