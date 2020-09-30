@@ -75,12 +75,12 @@ public class CustomRepositoryImpl implements CustomRepository {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
+		
 		Document resultDoc = new Document();
 		resultDoc.put("ResultCount", count);
 		resultDoc.put("PageSize", request.getPageSize());
 		resultDoc.put("ResultData", aggre);
 		return resultDoc;
-
 	}
 
 	/**
