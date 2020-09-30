@@ -12,11 +12,11 @@
  */
 package gov.nist.oar.rmm.utilities;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,24 +28,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
-//import gov.nist.oar.rmm.exceptions.IllegalArgumentException;
+
 
 /**
- * This is to parse any query request user makes.
- * 
+ * This is parse any request to Rest API endpoints. 
  * @author Deoyani Nandrekar-Heinis
  *
  */
-public class ProcessRequest {
-
+public class ProcessRequest{
+	
 	private Logger logger = LoggerFactory.getLogger(ProcessRequest.class);
 	private Bson filter = null;
-	private Bson projections = null;
+	private Bson projections= null;
 	private Bson sort = null;
 	private int pagenumber = 0;
 	private int pagesize = 0;
@@ -53,10 +51,46 @@ public class ProcessRequest {
 	private ArrayList<Bson> bsonObjs = new ArrayList<Bson>();
 	private List<Bson> queryList = new ArrayList<Bson>();
 	private Map<String, List<String>> advMap = new HashMap<String, List<String>>();
-	private String include = "", exclude = "";
+	private String include =  "", exclude = "";
 	private ArrayList<Bson> filtersList = new ArrayList<Bson>();
 	private Bson searchphraseFilter = null;
-
+	
+	/**
+	 * Filter on the search query
+	 * @return Bson object
+	 */
+	public Bson getFilter(){
+		return this.filter;
+	}
+	/**
+	 * Projection  for result
+	 * @return Bson object
+	 */
+	public Bson getProjections(){
+		return this.projections;
+	}
+	/**
+	 * Sort information for query
+	 * @return
+	 */
+	public Bson getSorts(){
+		return this.sort;
+	}
+	/**
+	 * Get list of queries for Aggregate function
+	 * @return
+	 */
+	public List<Bson> getQueryList(){
+		return queryList;
+	}
+	
+	/**
+	 * return pagination page size
+	 * @return
+	 */
+	public int getPageSize(){
+		return pagesize;
+	}
 	/**
 	 * Filter on the search query
 	 * 
@@ -65,60 +99,13 @@ public class ProcessRequest {
 	public List<Bson> getFilters() {
 		return this.filtersList;
 	}
-
-	/**
-	 * Filter on the search query
-	 * 
-	 * @return Bson object
-	 */
-	public Bson getFilter() {
-		return this.filter;
-	}
-
-	/**
-	 * Projection for result
-	 * 
-	 * @return Bson object
-	 */
-	public Bson getProjections() {
-		return this.projections;
-	}
-
-	/**
-	 * Sort information for query
-	 * 
-	 * @return
-	 */
-	public Bson getSorts() {
-		return this.sort;
-	}
-
-	/**
-	 * Get list of queries for Aggregate function
-	 * 
-	 * @return
-	 */
-	public List<Bson> getQueryList() {
-		return queryList;
-	}
-
-	/**
-	 * return pagination page size
-	 * 
-	 * @return
-	 */
-	public int getPageSize() {
-		return pagesize;
-	}
-
+	
 	/**
 	 * Parse the request query parameters
-	 * 
-	 * @param serachparams
+	 * @param serachparams 
 	 */
 	public void parseSearch(MultiValueMap<String, String> serachparams) {
 		boolean searchInput = false;
-		// logger.info("Query parsing starts");
 		if (!serachparams.entrySet().isEmpty()) {
 			validateInput(serachparams);
 			for (Entry<String, List<String>> entry : serachparams.entrySet()) {
@@ -128,7 +115,6 @@ public class ProcessRequest {
 					List<String> listValues = entry.getValue();
 					System.out.println(entry.getValue().size() + " :: " + listValues.size());
 					if (!entry.getValue().get(0).isEmpty())
-					// if (entry.getValue().size() > 0)
 					{
 						searchInput = true;
 					}
@@ -139,18 +125,14 @@ public class ProcessRequest {
 				advFilter(advMap);
 		}
 
-		// logger.info("Query parsing ends");
 		createQuerylist(searchInput);
-
+		
 	}
-
+	
 	/**
-	 * Validate requested input parameters to check whether any forbidden syntax is
-	 * used.
-	 * 
+	 * Validate requested input parameters to check whether any forbidden syntax is used.
 	 * @param serachparams
 	 */
-	@VisibleForTesting
 	private void validateInput(MultiValueMap<String, String> serachparams) {
 		
 		
@@ -209,109 +191,96 @@ public class ProcessRequest {
 					break;
 				}
 			}
-//			count++;
+
 		}
-
+				
 	}
-
+	
 	/***
 	 * Check whether given value is integer.
-	 * 
 	 * @param value
 	 */
-	private void checkInteger(String value) {
-		try {
+	private void checkInteger(String value){
+		try{ 
 			Integer.parseInt(value);
-		} catch (Exception e) {
-			logger.info("exception:" + e);
-			throw new IllegalArgumentException("'page/size' value should be integer only.");
-		}
+		}catch(Exception e){
+	    	logger.info("exception:"+e);
+	    	throw new IllegalArgumentException("'page/size' value should be integer only.");
+	    }	
 	}
-
 	/**
 	 * This is to create aggregate of all the queries
 	 */
-	private void createQuerylist(Boolean searchInput) {
-
-		if (this.searchphraseFilter != null && filter == null) {
-			this.filtersList.add(searchphraseFilter);
-			queryList.add(Aggregates.match(searchphraseFilter));
-		}
+	private void createQuerylist(Boolean searchInput){
+		
 		if (this.searchphraseFilter != null && filter != null) {
-
 			filter = Filters.and(searchphraseFilter, filter);
-		}
-		if (filter != null) {
-			this.filtersList.add(filter);
+//			this.filtersList.add(filter);
 			queryList.add(Aggregates.match(filter));
 		}
-		if (projections != null) {
-			queryList.add(Aggregates.project(projections));
-		} else {
-			// queryList.add(Aggregates.project(Projections.metaTextScore("score")));
+		if(searchphraseFilter != null && filter == null) {
+//			this.filtersList.add(searchphraseFilter);
+			filter = searchphraseFilter;
+			queryList.add(Aggregates.match(searchphraseFilter));
 		}
-
-		if (sort != null) {
+		
+		if(projections !=  null) {
+			queryList.add(Aggregates.project(projections));
+		}
+		
+		if(sort !=  null) { 
 			queryList.add(Aggregates.sort(sort));
 		} else {
-			if (searchInput) {
-				queryList.add(Aggregates.sort(Sorts.metaTextScore("score")));
-			}
+		    if (searchInput) {
+		      queryList.add(Aggregates.sort(Sorts.metaTextScore("score")));
+		    }
 		}
-		if (pagenumber >= 0)
-			queryList.add(Aggregates.skip(pagenumber > 0 ? ((pagenumber - 1) * pagesize) : 0));
-		if (pagesize > 0)
+		if(pagenumber >= 0)
+			queryList.add(Aggregates.skip(pagenumber> 0 ? ((pagenumber-1)*pagesize) : 0));
+		if(pagesize > 0)
 			queryList.add(Aggregates.limit(pagesize));
-
+		
 	}
-
+	
 	/**
-	 * Depending on the search keyword and value pairs create filters to add to
-	 * MongoDB query.
-	 * 
+	 * Depending on the search keyword and value pairs create filters to add to MongoDB query.
 	 * @param key
 	 * @param value
 	 */
 	private void treatSearch(String key, List<String> value) {
 		for (int i = 0; i < value.size(); i++) {
-			if (value.get(i).isEmpty())
-				return;
+			
+		if (value.get(i).isEmpty())
+			return;
+			
+		switch (key) {
 
-			switch (key) {
-
-			case "searchphrase":
+		case "searchphrase":
 				searchphraseFilter = Filters.text(value.get(i));
-//				parseFilter(Filters.text(value.get(i)));
-//				parseFilter(value.get(i));
-//				updateMap(key, value.get(i));
 				break;
-			case "exclude":
-				exclude = value.get(i);
-				// parseProjection(Projections.exclude(value.split(","))) ;
+		case "exclude": 
+			exclude = value.get(i);
+			break;
+		case "include":
+			include= value.get(i); 
+			break;
+		case "page": pagenumber = Integer.parseInt(value.get(i));
 				break;
-			case "include":
-				include = value.get(i);
-				// parseProjection(Projections.include(value.split(","))) ;
+		case "size": pagesize = Integer.parseInt(value.get(i));
 				break;
-			case "page":
-				pagenumber = Integer.parseInt(value.get(i));
-				break;
-			case "size":
-				pagesize = Integer.parseInt(value.get(i));
-				break;
-			case "sort.desc":
-				parseSorting(Sorts.descending(value.get(i).split(",")));
-				break;
-			case "sort.asc":
-				parseSorting(Sorts.ascending(value.get(i).split(",")));
-				break;
-			default:
-				updateMap(key, value.get(i));
-				break;
-			}
+		case "sort.desc": 
+			parseSorting(Sorts.descending(value.get(i).split(",")))	;
+			break;
+		case "sort.asc":
+			parseSorting( Sorts.ascending(value.get(i).split(",")))	;
+			break;	
+		default:
+			updateMap(key, value.get(i));
+			break;
 		}
 	}
-
+	}
+	
 	private void updateMap(String key, String value) {
 		List<String> valSet = new ArrayList<String>();
 		boolean existingkey = false;
@@ -323,31 +292,32 @@ public class ProcessRequest {
 				valSet.addAll(val);
 				existingkey = true;
 			}
-
 		}
 		if (!existingkey)
 			valSet.add(value);
 		advMap.put(key, valSet);
-	}
-
+	 }
+		
 	/**
 	 * Projections are MongoDB specific tools to help create complex queries .
 	 */
-	private void validateProjections() {
-		if (!include.isEmpty() && !exclude.isEmpty()) {
-			if ("_id".equalsIgnoreCase(exclude)) {
-				projections = Projections.fields(Projections.include(include.split(",")), Projections.excludeId());
-			} else if (!"_id".equalsIgnoreCase(exclude) && !exclude.isEmpty()) {
-				throw new IllegalArgumentException(
-						"if you exclude fields, you cannot also specify the inclusion of fields");
+	private void validateProjections(){
+		if(!include.isEmpty() && !exclude.isEmpty()){
+			if("_id".equalsIgnoreCase(exclude)){
+				projections = Projections.fields(Projections.include(include.split(",")),Projections.excludeId());
 			}
-		} else if (!include.isEmpty() && exclude.isEmpty()) {
+			else if(!"_id".equalsIgnoreCase(exclude) && !exclude.isEmpty()){
+				throw new IllegalArgumentException("if you exclude fields, you cannot also specify the inclusion of fields");
+			}
+		}
+		else if(!include.isEmpty() && exclude.isEmpty()){
 			projections = Projections.include(include.split(","));
-		} else if (include.isEmpty() && !exclude.isEmpty()) {
+		}
+		else if(include.isEmpty() && !exclude.isEmpty()){
 			projections = Projections.exclude(exclude.split(","));
 		}
 	}
-
+	
 //	/**
 //	 * ExcludeId removes the MongoDB generated _id  field from result JSON document
 //	 */
@@ -357,7 +327,7 @@ public class ProcessRequest {
 //		 else
 //			 projections = Projections.fields(Projections.excludeId());
 //	 }
-
+	
 //	/**
 //	 * Add projections according to the requested parameters
 //	 * @param projectionRequest
@@ -370,39 +340,16 @@ public class ProcessRequest {
 //	} 
 //	
 	/**
-	 * Sort input request
-	 * 
+	 *  Sort input request
 	 * @param sortingRequest
 	 */
-	private void parseSorting(Bson sortingRequest) {
-		if (sort != null)
-			sort = Sorts.orderBy(sort, sortingRequest);
+	private void parseSorting(Bson sortingRequest){
+		if(sort !=  null )
+			sort = Sorts.orderBy(sort,sortingRequest);
 		else
 			sort = sortingRequest;
 	}
-
-//	/**
-//	 * Parse Filters based on input parameters
-//	 * 
-//	 * @param filterRequest
-//	 */
-//	private void parseFilter(Bson filterRequest) {
-////		if (filter == null)
-////			filter = filterRequest;
-////		else
-////			filter = Filters.or(filter, filterRequest);
-//	}
-
-//	/**
-//	 * Parse Filters based on input parameters
-//	 * 
-//	 * @param filterRequest
-//	 */
-	private void parseFilter(String searchphrase) {
-
-		searchphraseFilter = Filters.text(searchphrase);
-	}
-
+	
 	/**
 	 * Parse advancedquery key value paramters
 	 * 
@@ -419,11 +366,9 @@ public class ProcessRequest {
 			withLogicalOps();
 		}
 	}
-
+	
 	/**
-	 * check logical operators in advanced query and separate them from key,value
-	 * pair
-	 * 
+	 * check logical operators in advanced query and separate them from key,value pair
 	 * @param map
 	 */
 	private void sortLogic(Map<String, List<String>> map) {
@@ -436,7 +381,6 @@ public class ProcessRequest {
 			} else {
 
 				for (int j = 0; j < values.size(); j++) {
-//					String[] searchString = entry.getValue().split(",");
 					String[] searchString = entry.getValue().get(j).split(",");
 
 					List<Pattern> patternList = new ArrayList<Pattern>();
@@ -454,12 +398,11 @@ public class ProcessRequest {
 			throw new IllegalArgumentException(
 					"Logical operations work on more than one parameters. Some values are missing.");
 	}
-
+	
 	/**
 	 * sort the filters without logical operators
 	 */
-	private void noLogicalOps() {
-
+	private void noLogicalOps(){
 		int i = 0;
 		while (i < bsonObjs.size()) {
 			if (filter == null) {
@@ -470,14 +413,12 @@ public class ProcessRequest {
 				i++;
 			}
 		}
-//		filtersList.add(filter);
+		 
 	}
-
 	/**
-	 * Create filters with logical options or, or,or k=b k=a s=a or k=c
+	 * Create filters with logical options
 	 */
-	private void withLogicalOps() {
-
+	private void withLogicalOps(){
 		int j = 0;
 		for (int i = 0; i < logicalOps.size(); i++) {
 			switch (logicalOps.get(i).toLowerCase()) {
@@ -517,53 +458,57 @@ public class ProcessRequest {
 
 			}
 		}
-		filtersList.add(filter);
+		
 	}
-
-	/**
-	 * Parse request to taxonomy resource and create mongodb query
-	 * 
-	 * @param serachparams
-	 * @return
-	 */
-	public Bson parseTaxonomy(Map<String, String> serachparams) {
-
+	
+	
+/**
+ * Parse request to taxonomy resource and create mongodb query
+ * @param serachparams
+ * @return
+ */
+	public Bson parseTaxonomy(Map<String,String> serachparams ) {
+		
 		Bson taxFilter = null;
 		ArrayList<Bson> bsonTax = new ArrayList<Bson>();
-		if (!serachparams.entrySet().isEmpty()) {
+		if(!serachparams.entrySet().isEmpty()){
 			for (Entry<String, String> entry : serachparams.entrySet()) {
-
+				
 				Pattern p = Pattern.compile("[^a-z0-9.,]", Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(entry.getValue());
-				if (m.find())
-					throw new IllegalArgumentException();
-				int paramValue = -1;
-				try {
+				if(m.find())
+					throw new IllegalArgumentException(); 
+				int paramValue =-1;
+				try{
 					paramValue = Integer.parseInt(entry.getValue());
-					bsonTax.add(Filters.eq(entry.getKey(), paramValue));
-				} catch (Exception ex) {
-					logger.info("parameter Value is not integer" + ex);
-
-					bsonTax.add(
-							Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(), Pattern.CASE_INSENSITIVE)));
+					bsonTax.add(Filters.eq(entry.getKey(),paramValue));
+				}catch(Exception ex){
+					logger.info("parameter Value is not integer"+ex);
+					
+					bsonTax.add(Filters.regex(entry.getKey(), Pattern.compile(entry.getValue(),Pattern.CASE_INSENSITIVE)));
 				}
-
+				
 			}
 		}
-		int i = 0;
-		while (i < bsonTax.size()) {
-			if (taxFilter == null && bsonTax.size() == 1) {
+		int i= 0;
+		while(i < bsonTax.size()){
+			if(taxFilter == null && bsonTax.size() == 1){
 				taxFilter = bsonTax.get(i);
 				i++;
-			} else if (taxFilter == null) {
-				taxFilter = Filters.and(bsonTax.get(i), bsonTax.get(i++));
-				i = i + 2;
-			} else {
-				taxFilter = Filters.and(taxFilter, bsonTax.get(i));
+			}
+			else if(taxFilter == null){
+				taxFilter = Filters.and(bsonTax.get(i),bsonTax.get(i++));
+				i=i+2;
+			}else{
+				taxFilter = Filters.and(taxFilter,bsonTax.get(i));
 				i++;
 			}
 		}
+			
 
+		
 		return taxFilter;
 	}
 }
+
+

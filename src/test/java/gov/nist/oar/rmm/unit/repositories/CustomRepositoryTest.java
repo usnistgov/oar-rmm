@@ -14,13 +14,16 @@ package gov.nist.oar.rmm.unit.repositories;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bson.Document;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.MultiValueMap;
 
-
+/**
+ * This interface helps explore the data by providing results to different query requests.
+ * @author Deoyani Nandrekar-Heinis
+ *
+ */
 public interface CustomRepositoryTest {
 
 	public List<Document> find(Map<String,String> param,Pageable p);
