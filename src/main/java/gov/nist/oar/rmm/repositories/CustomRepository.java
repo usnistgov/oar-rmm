@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.bson.Document;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.MultiValueMap;
 
 /**
  * CustomRepository is developed to identify functionality provided by search
@@ -44,7 +45,7 @@ public interface CustomRepository {
 	 * @param param search criteria
 	 * @return Document a JSON format with identified record/s
 	 */
-	public Document find(Map<String, String> param);
+	public Document find(MultiValueMap<String, String> param);
 
 	/**
 	 * Returns a list of Taxonomy terms used in the records in the form of flat JSON

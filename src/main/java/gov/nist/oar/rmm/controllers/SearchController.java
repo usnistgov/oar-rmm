@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,10 +86,28 @@ public class SearchController{
 	 * @return Returns document containing result count and results array.
 	 * @throws IOException
 	 */
-	public Document search(@ApiIgnore @Valid @RequestParam Map<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
+	public Document search(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params, @ApiIgnore @PageableDefault(size=150) Pageable p) throws IOException{
 		
-		logger.info("Search request sent to"+ request.getRequestURI()
-				+ " with query string:"+request.getQueryString());
+		/**
+		 * This particular snippet has been added because if there are same name keys are used the input parameters will be grouped in array 
+		 * In that case the sequence from left to right was not kept as it is. In that case logicalOp was always after all the key,value pairs and position
+		 * of logical operator was difficult to determine. 
+		 * Hence the original query string is used for initial validation of the request.
+		 */
+		if(request.getQueryString() != null) {
+		String[] rParams = request.getQueryString().split("&");
+		String prevParam = "";
+		for(int i=0; i< rParams.length; i++) {
+			String paramName = rParams[i].split("=")[0];
+			if(prevParam.equalsIgnoreCase("logicalOp") && (paramName.equals("include") || paramName.equalsIgnoreCase("exclude"))) {
+				 throw new IllegalArgumentException("check parameters, There should be key=value parameter after logicalOp.");
+			 }
+			 prevParam = paramName;			
+		}
+		}
+
+		logger.info(
+				"Search request sent to" + request.getRequestURI() + " with query string:" + request.getQueryString());
 		return repo.find(params);
 	}
 	
@@ -188,3 +207,4 @@ public class SearchController{
     	
 	}
 }
+
