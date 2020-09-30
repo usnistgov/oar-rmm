@@ -35,6 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.AggregationOutput;
@@ -105,7 +107,7 @@ public class CustomRepositoryImplTest implements CustomRepositoryTest {
 	  }
    @Override
 
-	public Document find(Map<String,String> params) {		
+	public Document find(MultiValueMap<String,String> params) {		
 	  
 		ProcessRequest request  = new ProcessRequest();
 		request.parseSearch(params);
@@ -145,7 +147,7 @@ public class CustomRepositoryImplTest implements CustomRepositoryTest {
    @Test
 	public void testFindRecords(){
 		
-		Map<String,String> params = new HashMap<String,String>();
+	   MultiValueMap<String, String>params = new LinkedMultiValueMap<String, String>();
 		
 		Document r = find(params);
 		long resCnt = 134;
@@ -159,8 +161,8 @@ public class CustomRepositoryImplTest implements CustomRepositoryTest {
    @Test
    public void testFindRecordKeyValue(){
 		//// Test with parameters
-	    Map<String,String> params = new HashMap<String,String>();
-		params.put("title", "Enterprise Data Inventory");
+	   MultiValueMap<String, String>params = new LinkedMultiValueMap<String, String>();
+		params.add("title", "Enterprise Data Inventory");
 		Document r1 = find(params);
 		List<DBObject> rdata1 = (List<DBObject>) r1.get("ResultData");
 		String title = "";
