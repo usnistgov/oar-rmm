@@ -13,25 +13,26 @@
 package gov.nist.oar.rmm.exceptions;
 
 /**
- * @author Deoyani Nandrekar-Heinis
- * Application specific exception
+ * @author Deoyani Nandrekar-Heinis Application specific exception
  */
-public class RMMException extends Exception{
-	
-	private static final long serialVersionUID = 1L;
-	
-	public RMMException(int id){
-		super("Exception Thrown for this record="+id);
-	}
-	public RMMException(String requestUrl){
-		super("Exception Thrown for this request="+requestUrl);
-	}
-	
-	public RMMException(String requestUrl, String message){
-		super("Exception Thrown for this request="+requestUrl+ " Exception Message:"+message);
-	}
-	public RMMException(){
-		super("Resource you are looking for is not available.");
-	}
+public class RMMException extends Exception {
+
+    private static final long serialVersionUID = 1L;
+
+    public RMMException(int id) {
+	super("Exception Thrown for this record=" + id);
+    }
+
+    public RMMException(String requestUrl) {
+	super("Exception Thrown for this request=" + requestUrl);
+    }
+
+    public RMMException(String requestUrl, String message) {
+	super("Exception Thrown for this request=" + requestUrl + " Exception Message:" + message);
+    }
+
+    public RMMException() {
+	super("Resource you are looking for is not available.");
+    }
 
 }

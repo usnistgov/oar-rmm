@@ -43,157 +43,157 @@ import com.mongodb.client.MongoDatabase;
  */
 public class MongoConfig {
 
-	private static Logger log = LoggerFactory.getLogger(MongoConfig.class);
+    private static Logger log = LoggerFactory.getLogger(MongoConfig.class);
 
-	// @Autowired
-	MongoClient mongoClient;
+    // @Autowired
+    MongoClient mongoClient;
 
-	private MongoDatabase mongoDb;
-	private MongoCollection<Document> recordsCollection;
-	private MongoCollection<Document> taxonomyCollection;
-	private MongoCollection<Document> resourceApiCollection;
-	private MongoCollection<Document> recordFieldsCollection;
-	List<ServerAddress> servers = new ArrayList<ServerAddress>();
-	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
+    private MongoDatabase mongoDb;
+    private MongoCollection<Document> recordsCollection;
+    private MongoCollection<Document> taxonomyCollection;
+    private MongoCollection<Document> resourceApiCollection;
+    private MongoCollection<Document> recordFieldsCollection;
+    List<ServerAddress> servers = new ArrayList<ServerAddress>();
+    List<MongoCredential> credentials = new ArrayList<MongoCredential>();
 
 //	 @Value("${spring.data.mongodb.database}")
 //	    private String dbname;
 
-	@Value("${dbcollections.records}")
-	private String record;
+    @Value("${dbcollections.records}")
+    private String record;
 
-	@Value("${dbcollections.taxonomy}")
-	private String taxonomy;
+    @Value("${dbcollections.taxonomy}")
+    private String taxonomy;
 
-	@Value("${dbcollections.resources}")
-	private String resourceApi;
+    @Value("${dbcollections.resources}")
+    private String resourceApi;
 
-	@Value("${dbcollections.recordfields}")
-	private String rfields;
+    @Value("${dbcollections.recordfields}")
+    private String rfields;
 
-	@Value("${oar.mongodb.port}")
-	private int port;
-	@Value("${oar.mongodb.host}")
-	private String host;
-	@Value("${oar.mongodb.database.name}")
-	private String dbname;
-	@Value("${oar.mongodb.read.user}")
-	private String user;
-	@Value("${oar.mongodb.read.password}")
-	private String password;
+    @Value("${oar.mongodb.port}")
+    private int port;
+    @Value("${oar.mongodb.host}")
+    private String host;
+    @Value("${oar.mongodb.database.name}")
+    private String dbname;
+    @Value("${oar.mongodb.read.user}")
+    private String user;
+    @Value("${oar.mongodb.read.password}")
+    private String password;
 
-	@PostConstruct
-	public void initIt() throws Exception {
+    @PostConstruct
+    public void initIt() throws Exception {
 
-		mongoClient = (MongoClient) this.mongo();
-		log.info("########## " + dbname + " ########");
+	mongoClient = (MongoClient) this.mongo();
+	log.info("########## " + dbname + " ########");
 
-		this.setMongodb(this.dbname);
-		this.setRecordCollection(this.record);
-		this.setTaxonomyCollection(this.taxonomy);
-		this.setResourceApiCollection(this.resourceApi);
-		this.setRecordFieldsCollection(this.rfields);
+	this.setMongodb(this.dbname);
+	this.setRecordCollection(this.record);
+	this.setTaxonomyCollection(this.taxonomy);
+	this.setResourceApiCollection(this.resourceApi);
+	this.setRecordFieldsCollection(this.rfields);
 
-	}
+    }
 
-	/**
-	 * Get mongodb database name
-	 * 
-	 * @return
-	 */
+    /**
+     * Get mongodb database name
+     * 
+     * @return
+     */
 
-	public MongoDatabase getMongoDb() {
-		return mongoDb;
-	}
+    public MongoDatabase getMongoDb() {
+	return mongoDb;
+    }
 
-	/**
-	 * Set mongodb database name
-	 * 
-	 * @param dbname
-	 */
-	private void setMongodb(String dbname) {
-		mongoDb = mongoClient.getDatabase(dbname);
-	}
+    /**
+     * Set mongodb database name
+     * 
+     * @param dbname
+     */
+    private void setMongodb(String dbname) {
+	mongoDb = mongoClient.getDatabase(dbname);
+    }
 
-	/***
-	 * Get records collection from Mongodb
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getRecordCollection() {
-		return recordsCollection;
-	}
+    /***
+     * Get records collection from Mongodb
+     * 
+     * @return
+     */
+    public MongoCollection<Document> getRecordCollection() {
+	return recordsCollection;
+    }
 
-	/**
-	 * Set records collection
-	 */
-	private void setRecordCollection(String record) {
-		recordsCollection = mongoDb.getCollection(record);
-	}
+    /**
+     * Set records collection
+     */
+    private void setRecordCollection(String record) {
+	recordsCollection = mongoDb.getCollection(record);
+    }
 
-	/***
-	 * Get taxonomy collection
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getTaxonomyCollection() {
-		return taxonomyCollection;
-	}
+    /***
+     * Get taxonomy collection
+     * 
+     * @return
+     */
+    public MongoCollection<Document> getTaxonomyCollection() {
+	return taxonomyCollection;
+    }
 
-	/**
-	 * Set taxonomy collection
-	 * 
-	 * @param taxonomy
-	 */
-	private void setTaxonomyCollection(String taxonomy) {
-		taxonomyCollection = mongoDb.getCollection(taxonomy);
-	}
+    /**
+     * Set taxonomy collection
+     * 
+     * @param taxonomy
+     */
+    private void setTaxonomyCollection(String taxonomy) {
+	taxonomyCollection = mongoDb.getCollection(taxonomy);
+    }
 
-	/***
-	 * get ResourceApi collection
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getResourceApiCollection() {
-		return resourceApiCollection;
-	}
+    /***
+     * get ResourceApi collection
+     * 
+     * @return
+     */
+    public MongoCollection<Document> getResourceApiCollection() {
+	return resourceApiCollection;
+    }
 
-	/**
-	 * Set resourceApi collection
-	 * 
-	 * @param resourceApi
-	 */
-	private void setResourceApiCollection(String resourceApi) {
-		resourceApiCollection = mongoDb.getCollection(resourceApi);
-	}
+    /**
+     * Set resourceApi collection
+     * 
+     * @param resourceApi
+     */
+    private void setResourceApiCollection(String resourceApi) {
+	resourceApiCollection = mongoDb.getCollection(resourceApi);
+    }
 
-	/***
-	 * Get record collections fields collection
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getRecordFieldsCollection() {
-		return recordFieldsCollection;
-	}
+    /***
+     * Get record collections fields collection
+     * 
+     * @return
+     */
+    public MongoCollection<Document> getRecordFieldsCollection() {
+	return recordFieldsCollection;
+    }
 
-	/***
-	 * Set record collections fields collection
-	 * 
-	 * @param recordFields
-	 */
-	private void setRecordFieldsCollection(String recordFields) {
-		recordFieldsCollection = mongoDb.getCollection(recordFields);
-	}
+    /***
+     * Set record collections fields collection
+     * 
+     * @param recordFields
+     */
+    private void setRecordFieldsCollection(String recordFields) {
+	recordFieldsCollection = mongoDb.getCollection(recordFields);
+    }
 
-	/**
-	 * Get Mongo instance to run queries.
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public Mongo mongo() throws Exception {
-		servers.add(new ServerAddress(host, port));
-		credentials.add(MongoCredential.createCredential(user, dbname, password.toCharArray()));
-		return new MongoClient(servers, credentials);
-	}
+    /**
+     * Get Mongo instance to run queries.
+     * 
+     * @return
+     * @throws Exception
+     */
+    public Mongo mongo() throws Exception {
+	servers.add(new ServerAddress(host, port));
+	credentials.add(MongoCredential.createCredential(user, dbname, password.toCharArray()));
+	return new MongoClient(servers, credentials);
+    }
 }

@@ -45,110 +45,110 @@ import gov.nist.oar.rmm.utilities.ProcessRequest;
 @Service
 public class CustomRepositoryImpl implements CustomRepository {
 
-	private Logger logger = LoggerFactory.getLogger(CustomRepositoryImpl.class);
-	@Autowired
-	MongoConfig mconfig;
+    private Logger logger = LoggerFactory.getLogger(CustomRepositoryImpl.class);
+    @Autowired
+    MongoConfig mconfig;
 
-	@Autowired
-	AppConfig appconfig;
+    @Autowired
+    AppConfig appconfig;
 
-	/**
-	 * Find the record with given search parameters. Returns JSON document of
-	 * results.
-	 */
-	@Override
-	public Document find(MultiValueMap<String, String> params) {
-    	ProcessRequest request = new ProcessRequest();
-		request.parseSearch(params);
-		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-		long count =0;
-		count = mcollection.count(request.getFilter());
+    /**
+     * Find the record with given search parameters. Returns JSON document of
+     * results.
+     */
+    @Override
+    public Document find(MultiValueMap<String, String> params) {
+	ProcessRequest request = new ProcessRequest();
+	request.parseSearch(params);
+	MongoCollection<Document> mcollection = mconfig.getRecordCollection();
+	long count = 0;
+	count = mcollection.count(request.getFilter());
 //		if(request.getFilters().size() == 0)
 //			count = mcollection.count(null);
 //		for(int i=0; i<request.getFilters().size(); i++) {
 //			count += mcollection.count(request.getFilters().get(i));
 //		}
-		//logger.info("Result Count :" + count);
-		AggregateIterable<Document> aggre = null;
-		try {
-			aggre = mcollection.aggregate(request.getQueryList());
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		
-		Document resultDoc = new Document();
-		resultDoc.put("ResultCount", count);
-		resultDoc.put("PageSize", request.getPageSize());
-		resultDoc.put("ResultData", aggre);
-		return resultDoc;
+	// logger.info("Result Count :" + count);
+	AggregateIterable<Document> aggre = null;
+	try {
+	    aggre = mcollection.aggregate(request.getQueryList());
+	} catch (Exception e) {
+	    logger.error(e.getMessage());
 	}
 
-	/**
-	 * Get Taxonomy List in the form of JSON document
-	 */
-	@Override
-	public List<Document> findtaxonomy(Map<String, String> param) {
-		MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
-		ProcessRequest request = new ProcessRequest();
-		if (request.parseTaxonomy(param) == null)
-			return mcollection.find().into(new ArrayList<Document>());
-		else
-			return mcollection.find(request.parseTaxonomy(param)).into(new ArrayList<Document>());
+	Document resultDoc = new Document();
+	resultDoc.put("ResultCount", count);
+	resultDoc.put("PageSize", request.getPageSize());
+	resultDoc.put("ResultData", aggre);
+	return resultDoc;
+    }
+
+    /**
+     * Get Taxonomy List in the form of JSON document
+     */
+    @Override
+    public List<Document> findtaxonomy(Map<String, String> param) {
+	MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
+	ProcessRequest request = new ProcessRequest();
+	if (request.parseTaxonomy(param) == null)
+	    return mcollection.find().into(new ArrayList<Document>());
+	else
+	    return mcollection.find(request.parseTaxonomy(param)).into(new ArrayList<Document>());
+    }
+
+    /**
+     * Find resources APIs in the form of list of documents.
+     */
+    @Override
+    public List<Document> findResourceApis() {
+
+	MongoCollection<Document> mcollection = mconfig.getResourceApiCollection();
+	return mcollection.find().into(new ArrayList<Document>());
+    }
+
+    /**
+     * Search and return document for given identifier.
+     */
+    @Override
+    public Document findRecord(String ediid) {
+
+	Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
+	Matcher m = legal.matcher(ediid);
+	if (m.find())
+	    throw new IllegalArgumentException("Illegal identifier");
+
+	MongoCollection<Document> mcollection = mconfig.getRecordCollection();
+
+	String useid = ediid;
+
+	logger.debug("Searching for " + ediid + " as " + useid);
+	long count = mcollection.count(Filters.eq("ediid", useid));
+	if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
+	    // allow an ediid be an abbreviation of the ARK ID as specified
+	    // by its local portion
+	    useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + ediid;
+	    logger.debug("Searching for " + ediid + " as " + useid);
+	    count = mcollection.count(Filters.eq("ediid", useid));
+	}
+	if (count == 0) {
+	    // return new Document("Message", "No record available for given id.");
+	    throw new ResourceNotFoundException("No record available for given id.");
 	}
 
-	/**
-	 * Find resources APIs in the form of list of documents.
-	 */
-	@Override
-	public List<Document> findResourceApis() {
+	return mcollection.find(Filters.eq("ediid", useid)).first();
 
-		MongoCollection<Document> mcollection = mconfig.getResourceApiCollection();
-		return mcollection.find().into(new ArrayList<Document>());
-	}
+    }
 
-	/**
-	 * Search and return document for given identifier.
-	 */
-	@Override
-	public Document findRecord(String ediid) {
+    /**
+     * Return list of Fields in the any document or record
+     */
+    @Override
+    public List<Document> findFieldnames() {
 
-		Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
-		Matcher m = legal.matcher(ediid);
-		if (m.find())
-			throw new IllegalArgumentException("Illegal identifier");
+	MongoCollection<Document> mcollection = mconfig.getRecordFieldsCollection();
+	return mcollection.find().into(new ArrayList<Document>());
 
-		MongoCollection<Document> mcollection = mconfig.getRecordCollection();
-
-		String useid = ediid;
-
-		logger.debug("Searching for " + ediid + " as " + useid);
-		long count = mcollection.count(Filters.eq("ediid", useid));
-		if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
-			// allow an ediid be an abbreviation of the ARK ID as specified
-			// by its local portion
-			useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + ediid;
-			logger.debug("Searching for " + ediid + " as " + useid);
-			count = mcollection.count(Filters.eq("ediid", useid));
-		}
-		if (count == 0) {
-			// return new Document("Message", "No record available for given id.");
-			throw new ResourceNotFoundException("No record available for given id.");
-		}
-
-		return mcollection.find(Filters.eq("ediid", useid)).first();
-
-	}
-
-	/**
-	 * Return list of Fields in the any document or record
-	 */
-	@Override
-	public List<Document> findFieldnames() {
-
-		MongoCollection<Document> mcollection = mconfig.getRecordFieldsCollection();
-		return mcollection.find().into(new ArrayList<Document>());
-
-	}
+    }
 
 //	/**
 //	 * Get the record with search parameters
@@ -165,21 +165,21 @@ public class CustomRepositoryImpl implements CustomRepository {
 //
 //	}
 
-	/**
-	 * 
-	 */
-	@Override
-	public List<Document> find(Map<String, String> param, Pageable p) {
-		return null;
-	}
+    /**
+     * 
+     */
+    @Override
+    public List<Document> find(Map<String, String> param, Pageable p) {
+	return null;
+    }
 
-	/***
-	 * Get List of Taxonomy terms in the form of flat JSON document
-	 */
-	@Override
-	public List<Document> findtaxonomy() {
-		MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
-		return mcollection.find().into(new ArrayList<Document>());
-	}
+    /***
+     * Get List of Taxonomy terms in the form of flat JSON document
+     */
+    @Override
+    public List<Document> findtaxonomy() {
+	MongoCollection<Document> mcollection = mconfig.getTaxonomyCollection();
+	return mcollection.find().into(new ArrayList<Document>());
+    }
 
 }

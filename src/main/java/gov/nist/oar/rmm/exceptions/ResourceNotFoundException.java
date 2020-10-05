@@ -15,51 +15,60 @@ package gov.nist.oar.rmm.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Resource Not Found") //404
+@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Resource Not Found") // 404
 /***
  * ResourceNotFoundException Class To return Http Not_Found error
+ * 
  * @author Deoyani Nandrekar-Heinis
  *
  */
 public class ResourceNotFoundException extends RuntimeException {
 
-	private static final long serialVersionUID = -3332292346834265371L;
+    private static final long serialVersionUID = -3332292346834265371L;
     private String requestUrl = "";
+
     /**
      * ResourceNotFoundException for given Id
+     * 
      * @param id
      */
-	public ResourceNotFoundException(int id){
-		super("ResourceNotFoundException with id="+id);
-	}
-	/**
-	 * ResourceNotFoundException 
-	 */
-	public ResourceNotFoundException(){
-		super("Resource you are looking for is not available.");
-	}
-	/***
-	 * ResourceNotFoundException for requestUrl
-	 * @param requestUrl String
-	 */
-	public ResourceNotFoundException(String requestUrl){
-		
-		super("Resource you are looking for is not available.");
-		this.setRequestUrl(requestUrl);
-	}
-	/***
-	 * GetRequestURL
-	 * @return String
-	 */
-	public String getRequestUrl(){
-		return this.requestUrl;
-	}
-	
-	/***
-	 * Set Request URL
-	 * @param url String
-	 */
-	public void setRequestUrl(String url){
-		this.requestUrl = url;
-	}
+    public ResourceNotFoundException(int id) {
+	super("ResourceNotFoundException with id=" + id);
+    }
+
+    /**
+     * ResourceNotFoundException
+     */
+    public ResourceNotFoundException() {
+	super("Resource you are looking for is not available.");
+    }
+
+    /***
+     * ResourceNotFoundException for requestUrl
+     * 
+     * @param requestUrl String
+     */
+    public ResourceNotFoundException(String requestUrl) {
+
+	super("Resource you are looking for is not available.");
+	this.setRequestUrl(requestUrl);
+    }
+
+    /***
+     * GetRequestURL
+     * 
+     * @return String
+     */
+    public String getRequestUrl() {
+	return this.requestUrl;
+    }
+
+    /***
+     * Set Request URL
+     * 
+     * @param url String
+     */
+    public void setRequestUrl(String url) {
+	this.requestUrl = url;
+    }
 }
