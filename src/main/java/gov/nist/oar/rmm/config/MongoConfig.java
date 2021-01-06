@@ -49,7 +49,7 @@ public class MongoConfig {
 	MongoClient mongoClient;
 
 	private MongoDatabase mongoDb;
-	private MongoCollection<Document> logCollection;
+	private MongoCollection<Document> fileslogCollection;
 	private MongoCollection<Document> recordsCollection;
 	private MongoCollection<Document> taxonomyCollection;
 	private MongoCollection<Document> resourceApiCollection;
@@ -72,9 +72,17 @@ public class MongoConfig {
 	@Value("${dbcollections.recordfields}")
 	private String rfields;
 	
-	@Value("${dbcollections.logs}")
-	private String logs;
+	@Value("${dbcollections.filelogs}")
+	private String filelogs;
 	
+	@Value("${dbcollections.recordlogs}")
+	private String recordlogs;
+	
+	@Value("${dbcollections.bundlelogs}")
+	private String bundlelogs;
+	
+	@Value("${dbcollections.bundlePlanlogs}")
+	private String bundlePlanlogs;
 
 	@Value("${oar.mongodb.port}")
 	private int port;
@@ -98,6 +106,10 @@ public class MongoConfig {
 		this.setTaxonomyCollection(this.taxonomy);
 		this.setResourceApiCollection(this.resourceApi);
 		this.setRecordFieldsCollection(this.rfields);
+		this.setfilesLogCollection(this.filelogs);
+		this.setbundleLogCollection(this.bundlelogs);
+		this.setBundlePlanCollection(this.bundlePlanlogs);
+		this.setrecordLogCollection(this.recordlogs);
 
 	}
 
@@ -192,19 +204,69 @@ public class MongoConfig {
 
 	
 	/***
+	 * To get individual files related logs from database
+	 * get name of the collection
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getfilesLogCollection() {
+		return fileslogCollection;
+	}
+
+	/**
+	 * Set filesLog collectionname
+	 */
+	private void setfilesLogCollection(String logs) {
+	    fileslogCollection = mongoDb.getCollection(logs);
+	}
+	
+	
+	/***
+	 * Get recordsLogs collection from DB
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getrecordLogCollection() {
+		return fileslogCollection;
+	}
+
+	/**
+	 * Set recordLogs collection name
+	 */
+	private void setrecordLogCollection(String logs) {
+	    fileslogCollection = mongoDb.getCollection(logs);
+	}
+	
+	/***
 	 * Get records collection from Mongodb
 	 * 
 	 * @return
 	 */
-	public MongoCollection<Document> getLogCollection() {
-		return logCollection;
+	public MongoCollection<Document> getbundleLogCollection() {
+		return fileslogCollection;
 	}
 
 	/**
 	 * Set records collection
 	 */
-	private void setLogCollection(String logs) {
-		logCollection = mongoDb.getCollection(logs);
+	private void setbundleLogCollection(String logs) {
+	    fileslogCollection = mongoDb.getCollection(logs);
+	}
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getbundlePlanLogCollection() {
+		return fileslogCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setBundlePlanCollection(String logs) {
+	    fileslogCollection = mongoDb.getCollection(logs);
 	}
 	/**
 	 * Get Mongo instance to run queries.
