@@ -5,7 +5,7 @@ spring:
     active: default
   cloud:
     config:
-      uri: http://localhost:8084
+      uri: http://localhost:8087
        
 
 #spring:
@@ -23,7 +23,7 @@ server:
     error:
       include-stacktrace: never
     connection-timeout: 60000
-    max-http-header-size: 8192
+    max-http-header-size: 65536
     tomcat:
       accesslog:
         directory: logs
@@ -48,4 +48,8 @@ dbcollections:
          resources: apis
          records: record 
          recordfields: fields
+         filelogs: filelogs
+         recordlogs: recordlogs
+         bundlelogs: bundlelogs
+         bundlePlanlogs: bundlePlanlogs
     
