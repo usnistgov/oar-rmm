@@ -29,38 +29,36 @@ public class LogRepositoryImpl implements LogRepository {
     @Autowired
     MongoConfig mconfig;
 
-    /**
-     * 
-     */
-    @Override
-    public Document findRecord(String ediid) {
-	Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
-	Matcher m = legal.matcher(ediid);
-	if (m.find())
-	    throw new IllegalArgumentException("Illegal identifier");
+//    /**
+//     * 
+//     */
+//    @Override
+//    public Document findRecord(String ediid) {
+//	Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
+//	Matcher m = legal.matcher(ediid);
+//	if (m.find())
+//	    throw new IllegalArgumentException("Illegal identifier");
+//
+//	MongoCollection<Document> recordLogs = mconfig.getrecordLogCollection();
+//
+//	String useid = ediid;
+//
+//	logger.debug("Searching for " + ediid + " as " + useid);
+//	long count = recordLogs.count(Filters.eq("ediid", useid));
+//	if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
+//	    // allow an ediid be an abbreviation of the ARK ID as specified
+//	    // by its local portion
+//	    // useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + ediid;
+//	    logger.debug("Searching for " + ediid + " as " + useid);
+//	    count = recordLogs.count(Filters.eq("ediid", useid));
+//	}
+//	if (count == 0)
+//	    throw new ResourceNotFoundException("No record available for given id.");
+//
+//	return recordLogs.find(Filters.eq("ediid", useid)).first();
+//    }
 
-	MongoCollection<Document> recordLogs = mconfig.getrecordLogCollection();
 
-	String useid = ediid;
-
-	logger.debug("Searching for " + ediid + " as " + useid);
-	long count = recordLogs.count(Filters.eq("ediid", useid));
-	if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
-	    // allow an ediid be an abbreviation of the ARK ID as specified
-	    // by its local portion
-	    // useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + ediid;
-	    logger.debug("Searching for " + ediid + " as " + useid);
-	    count = recordLogs.count(Filters.eq("ediid", useid));
-	}
-	if (count == 0)
-	    throw new ResourceNotFoundException("No record available for given id.");
-
-	return recordLogs.find(Filters.eq("ediid", useid)).first();
-    }
-
-    /**
-     * 
-     */
     @Override
     public Document findFileInfo(String filePath) {
 
@@ -138,6 +136,33 @@ public class LogRepositoryImpl implements LogRepository {
 	resultDoc.put("BundlePlansCount", count);
 	resultDoc.put("PageSize", request.getPageSize());
 	resultDoc.put("BundlePlansLogs", aggre);
+	return resultDoc;
+    }
+
+    /**
+     * Return bundle plan summary
+     */
+    @Override
+    public Document findBundlePlanSummary(MultiValueMap<String, String> params) {
+	ProcessRequest request = new ProcessRequest();
+	request.parseSearch(params);
+	
+	MongoCollection<Document> bundlePlanLogs = mconfig.getbundlePlanSummarylogsCollection();
+
+	long count = 0;
+	count = bundlePlanLogs.count(request.getFilter());
+
+	AggregateIterable<Document> aggre = null;
+	try {
+	    aggre = bundlePlanLogs.aggregate(request.getQueryList());
+	} catch (Exception e) {
+	    logger.error(e.getMessage());
+	}
+
+	Document resultDoc = new Document();
+	resultDoc.put("BundlePlanSummaryCount", count);
+	resultDoc.put("PageSize", request.getPageSize());
+	resultDoc.put("BundlePlansSummaryLogs", aggre);
 	return resultDoc;
     }
 

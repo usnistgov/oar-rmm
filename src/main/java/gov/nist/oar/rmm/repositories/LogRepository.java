@@ -11,8 +11,8 @@ public interface LogRepository {
      * @param id
      * @return Document in JSON format
      */
-    public Document findRecord(String id);
-
+//    public Document findRecord(String id);
+    
     /**
      * Search file in the Logs collection to get all the logging information
      * 
@@ -26,6 +26,7 @@ public interface LogRepository {
      * @return
      */
     public Document findSortPage(MultiValueMap<String, String> params);
+    
     /**
      * Return list of unique bundles and sizes
      */
@@ -35,4 +36,11 @@ public interface LogRepository {
      * Get the logs of BundlePlan requests
      */
     public Document listBundlePlan(MultiValueMap<String, String> params);
+    
+    /**
+     * Get the list of BundlePlanSummary
+     * @param params
+     * @return
+     */
+    public Document findBundlePlanSummary(MultiValueMap<String, String> params);
 }

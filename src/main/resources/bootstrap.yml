@@ -49,7 +49,7 @@ dbcollections:
          records: record 
          recordfields: fields
          filelogs: filelogs
-         recordlogs: recordlogs
+         bundlePlanSummarylogs: bundlePlanSummarylogs
          bundlelogs: bundlelogs
          bundlePlanlogs: bundlePlanlogs
     

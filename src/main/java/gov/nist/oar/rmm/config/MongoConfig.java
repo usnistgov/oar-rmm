@@ -49,11 +49,16 @@ public class MongoConfig {
 	MongoClient mongoClient;
 
 	private MongoDatabase mongoDb;
-	private MongoCollection<Document> fileslogCollection;
 	private MongoCollection<Document> recordsCollection;
 	private MongoCollection<Document> taxonomyCollection;
 	private MongoCollection<Document> resourceApiCollection;
 	private MongoCollection<Document> recordFieldsCollection;
+	//these are collections to collect and serve logs from parsing distribution service
+	private MongoCollection<Document> fileslogCollection;
+	private MongoCollection<Document> bundlePlanSummarylogsCollection;
+	private MongoCollection<Document> bundlelogCollection;
+	private MongoCollection<Document> bundlePlanlogsCollection;
+	
 	List<ServerAddress> servers = new ArrayList<ServerAddress>();
 	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
 
@@ -75,8 +80,8 @@ public class MongoConfig {
 	@Value("${dbcollections.filelogs}")
 	private String filelogs;
 	
-	@Value("${dbcollections.recordlogs}")
-	private String recordlogs;
+	@Value("${dbcollections.bundlePlanSummarylogs}")
+	private String bundlePlanSummarylogs;
 	
 	@Value("${dbcollections.bundlelogs}")
 	private String bundlelogs;
@@ -109,7 +114,7 @@ public class MongoConfig {
 		this.setfilesLogCollection(this.filelogs);
 		this.setbundleLogCollection(this.bundlelogs);
 		this.setBundlePlanCollection(this.bundlePlanlogs);
-		this.setrecordLogCollection(this.recordlogs);
+		this.setbundlePlanSummarylogsCollection(this.bundlePlanSummarylogs);
 
 	}
 
@@ -226,15 +231,15 @@ public class MongoConfig {
 	 * 
 	 * @return
 	 */
-	public MongoCollection<Document> getrecordLogCollection() {
-		return fileslogCollection;
+	public MongoCollection<Document> getbundlePlanSummarylogsCollection() {
+		return bundlePlanSummarylogsCollection;
 	}
 
 	/**
 	 * Set recordLogs collection name
 	 */
-	private void setrecordLogCollection(String logs) {
-	    fileslogCollection = mongoDb.getCollection(logs);
+	private void setbundlePlanSummarylogsCollection(String logs) {
+	    bundlePlanSummarylogsCollection = mongoDb.getCollection(logs);
 	}
 	
 	/***
@@ -243,14 +248,14 @@ public class MongoConfig {
 	 * @return
 	 */
 	public MongoCollection<Document> getbundleLogCollection() {
-		return fileslogCollection;
+		return bundlelogCollection;
 	}
 
 	/**
 	 * Set records collection
 	 */
 	private void setbundleLogCollection(String logs) {
-	    fileslogCollection = mongoDb.getCollection(logs);
+	    bundlelogCollection = mongoDb.getCollection(logs);
 	}
 	
 	/***
@@ -259,14 +264,14 @@ public class MongoConfig {
 	 * @return
 	 */
 	public MongoCollection<Document> getbundlePlanLogCollection() {
-		return fileslogCollection;
+		return bundlePlanlogsCollection;
 	}
 
 	/**
 	 * Set records collection
 	 */
 	private void setBundlePlanCollection(String logs) {
-	    fileslogCollection = mongoDb.getCollection(logs);
+	    bundlePlanlogsCollection = mongoDb.getCollection(logs);
 	}
 	/**
 	 * Get Mongo instance to run queries.
