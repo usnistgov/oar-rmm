@@ -74,11 +74,11 @@ public class LogsController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = { "/fileslist" }, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = { "/files" }, method = RequestMethod.GET, produces = "application/json")
     public Document search(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
     @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
 	logger.info("List all the files and provide sorting requirement: " + params);
-	return logRepo.findSortPage(params);
+	return logRepo.listfiles(params);
     }
     
     
@@ -90,10 +90,41 @@ public class LogsController {
      * @return Returns Document
      * @throws IOException
      */
-    @RequestMapping(value = { "/listbundles" }, method = RequestMethod.GET, produces = "application/json")
-    public Document listBundles() throws IOException {
+    @RequestMapping(value = { "/bundles" }, method = RequestMethod.GET, produces = "application/json")
+    public Document listBundles(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
 	logger.info("Get list of bundles requests with sizes and dates " );
-	return logRepo.listBundles();
+	return logRepo.listBundles(params);
+
+    }
+    
+    /**
+     * get the list of bundleplan requests
+     * @param params
+     * @param p
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = { "/bundleplans" }, method = RequestMethod.GET, produces = "application/json")
+    public Document listBundlePlans(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+	logger.info("Get list of bundle planss requests with sizes and dates " );
+	return logRepo.listBundlePlan(params);
+
+    }
+   
+    /**
+     * get the bundle plan summary
+     * @param params
+     * @param p
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = { "/bundlePlansSummary" }, method = RequestMethod.GET, produces = "application/json")
+    public Document listBundlePlanSummary(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+	logger.info("Get list of bundle planss requests with sizes and dates " );
+	return logRepo.findBundlePlanSummary(params);
 
     }
     

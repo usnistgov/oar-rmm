@@ -12,25 +12,25 @@ public interface LogRepository {
      * @return Document in JSON format
      */
 //    public Document findRecord(String id);
-    
-    /**
-     * Search file in the Logs collection to get all the logging information
-     * 
-     * @param filePtah
-     * @return Document in JSON format
-     */
-    public Document findFileInfo(String filePath);
+//    
+//    /**
+//     * Search file in the Logs collection to get all the logging information
+//     * 
+//     * @param filePtah
+//     * @return Document in JSON format
+//     */
+//    public Document findFileInfo(String filePath);
     
     /**
      * Search and sort logs from the filesLogs Collection in the database
      * @return
      */
-    public Document findSortPage(MultiValueMap<String, String> params);
+    public Document listfiles(MultiValueMap<String, String> params);
     
     /**
      * Return list of unique bundles and sizes
      */
-    public Document listBundles();
+    public Document listBundles(MultiValueMap<String, String> params);
     
     /**
      * Get the logs of BundlePlan requests

@@ -59,23 +59,23 @@ public class LogRepositoryImpl implements LogRepository {
 //    }
 
 
-    @Override
-    public Document findFileInfo(String filePath) {
-
-	MongoCollection<Document> fileLogs = mconfig.getfilesLogCollection();
-	logger.debug("Searching for filePath:" + filePath);
-	long count = fileLogs.count(Filters.eq("filepath", filePath));
-	if (count == 0)
-	    throw new ResourceNotFoundException("No record available for given filePath.");
-
-	return fileLogs.find(Filters.eq("filepath", filePath)).first();
-    }
+//    @Override
+//    public Document findFileInfo(String filePath) {
+//
+//	MongoCollection<Document> fileLogs = mconfig.getfilesLogCollection();
+//	logger.debug("Searching for filePath:" + filePath);
+//	long count = fileLogs.count(Filters.eq("filepath", filePath));
+//	if (count == 0)
+//	    throw new ResourceNotFoundException("No record available for given filePath.");
+//
+//	return fileLogs.find(Filters.eq("filepath", filePath)).first();
+//    }
 
     /**
      * 
      */
     @Override
-    public Document findSortPage(MultiValueMap<String, String>  params) {
+    public Document listfiles(MultiValueMap<String, String>  params) {
 	ProcessRequest request = new ProcessRequest();
 	request.parseSearch(params);
 	
@@ -92,9 +92,9 @@ public class LogRepositoryImpl implements LogRepository {
 	}
 
 	Document resultDoc = new Document();
-	resultDoc.put("LogResultsCount", count);
+	resultDoc.put("FilesCount", count);
 	resultDoc.put("PageSize", request.getPageSize());
-	resultDoc.put("LogResultData", aggre);
+	resultDoc.put("FilesData", aggre);
 	return resultDoc;
     }
 
@@ -102,14 +102,27 @@ public class LogRepositoryImpl implements LogRepository {
      * 
      */
     @Override
-    public Document listBundles() {
-	MongoCollection<Document> bundleLogs = mconfig.getbundleLogCollection();
-	logger.debug("Get Unique bundles and sizes." );
-	long count = bundleLogs.count();
-	if (count == 0)
-	    throw new ResourceNotFoundException("No record available for given filePath.");
+    public Document listBundles(MultiValueMap<String, String> params) {
+	ProcessRequest request = new ProcessRequest();
+	request.parseSearch(params);
+	
+	MongoCollection<Document> bundlePlanLogs = mconfig.getbundleLogCollection();
 
-	return bundleLogs.find().first();
+	long count = 0;
+	count = bundlePlanLogs.count(request.getFilter());
+
+	AggregateIterable<Document> aggre = null;
+	try {
+	    aggre = bundlePlanLogs.aggregate(request.getQueryList());
+	} catch (Exception e) {
+	    logger.error(e.getMessage());
+	}
+
+	Document resultDoc = new Document();
+	resultDoc.put("BundleCount", count);
+	resultDoc.put("PageSize", request.getPageSize());
+	resultDoc.put("Bundles", aggre);
+	return resultDoc;
     }
 
     /**
@@ -135,7 +148,7 @@ public class LogRepositoryImpl implements LogRepository {
 	Document resultDoc = new Document();
 	resultDoc.put("BundlePlansCount", count);
 	resultDoc.put("PageSize", request.getPageSize());
-	resultDoc.put("BundlePlansLogs", aggre);
+	resultDoc.put("BundlePlans", aggre);
 	return resultDoc;
     }
 
@@ -162,7 +175,7 @@ public class LogRepositoryImpl implements LogRepository {
 	Document resultDoc = new Document();
 	resultDoc.put("BundlePlanSummaryCount", count);
 	resultDoc.put("PageSize", request.getPageSize());
-	resultDoc.put("BundlePlansSummaryLogs", aggre);
+	resultDoc.put("BundlePlansSummary", aggre);
 	return resultDoc;
     }
 

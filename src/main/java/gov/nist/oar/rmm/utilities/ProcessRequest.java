@@ -53,6 +53,7 @@ public class ProcessRequest {
     private String include = "", exclude = "";
     private ArrayList<Bson> filtersList = new ArrayList<Bson>();
     private Bson searchphraseFilter = null;
+    private Bson filterGte = null, filterLt = null;
 
     /**
      * Filter on the search query
@@ -192,6 +193,8 @@ public class ProcessRequest {
 		    else
 			checkInteger(value);
 		    break;
+		case  "datefrom": 
+		case  "dateto":    
 		case "searchphrase":
 		default:
 		    break;
@@ -246,7 +249,15 @@ public class ProcessRequest {
 	    queryList.add(Aggregates.skip(pagenumber > 0 ? ((pagenumber - 1) * pagesize) : 0));
 	if (pagesize > 0)
 	    queryList.add(Aggregates.limit(pagesize));
-
+	if(filterGte != null)
+	    queryList.add(Aggregates.match(filterGte));
+	if(filterLt != null)
+	    queryList.add(Aggregates.match(filterLt));
+	    
+//	queryList.add(Aggregates.match(Filters.gte("timestamp", "07-01-2021 23:27:45.316")));
+//	queryList.add(Aggregates.match(Filters.lt("timestamp", "09-01-2021 23:27:45.316")));
+	
+	
     }
 
     /**
@@ -284,6 +295,14 @@ public class ProcessRequest {
 		break;
 	    case "sort.asc":
 		parseSorting(Sorts.ascending(value.get(i).split(",")));
+		break;
+	    case  "datefrom": 
+		if(!value.isEmpty())
+		    filterGte = Filters.gte("timestamp", value.get(i));
+		break;
+	    case  "dateto":    
+		if(!value.isEmpty())
+		    filterLt = Filters.lt("timestamp", value.get(i));
 		break;
 	    default:
 		updateMap(key, value.get(i));
