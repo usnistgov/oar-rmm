@@ -16,18 +16,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.BsonField;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Sorts;
@@ -253,12 +256,15 @@ public class ProcessRequest {
 	    queryList.add(Aggregates.match(filterGte));
 	if(filterLt != null)
 	    queryList.add(Aggregates.match(filterLt));
-	    
-//	queryList.add(Aggregates.match(Filters.gte("timestamp", "07-01-2021 23:27:45.316")));
-//	queryList.add(Aggregates.match(Filters.lt("timestamp", "09-01-2021 23:27:45.316")));
 	
+//	List<BsonField> fieldAccumulators = new LinkedList<>();
+//	fieldAccumulators.add(new BsonField("requestId",(Bson) new Document("requestId", this.requestRecordid)));
+//	fieldAccumulators.add(new BsonField("ediid",(Bson) new Document("ediid", this.requestRecordid )));
+
 	
     }
+    
+    String requestRecordid = "mds2-2113";
 
     /**
      * Depending on the search keyword and value pairs create filters to add to
@@ -303,6 +309,10 @@ public class ProcessRequest {
 	    case  "dateto":    
 		if(!value.isEmpty())
 		    filterLt = Filters.lt("timestamp", value.get(i));
+		break;
+	    case "recordrequestid":
+		if(!value.isEmpty())
+		    this.requestRecordid = value.get(i);
 		break;
 	    default:
 		updateMap(key, value.get(i));

@@ -43,4 +43,11 @@ public interface LogRepository {
      * @return
      */
     public Document findBundlePlanSummary(MultiValueMap<String, String> params);
+    
+    /**
+     * Get the given record related unique downloads.
+     * These are partial or complete downloads
+     */
+    
+    public Document getRecordDownloads(String recordid);
 }

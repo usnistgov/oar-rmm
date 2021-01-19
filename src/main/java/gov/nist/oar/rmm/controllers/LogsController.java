@@ -128,5 +128,18 @@ public class LogsController {
 
     }
     
+    /**
+     * 
+     * @param id
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = { "/downloadsPerRecord/{id}" }, method = RequestMethod.GET, produces = "application/json")
+    public Document downloadsPerRecords(@PathVariable @Valid String id) throws IOException {
+	logger.info("Get number of downloads per record "+id );
+	return logRepo.getRecordDownloads(id);
+
+    }
+    
 
 }
