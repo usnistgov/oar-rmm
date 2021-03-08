@@ -19,53 +19,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.nist.oar.rmm.repositories.LogRepository;
+import gov.nist.oar.rmm.repositories.MetricsRepository;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @Api(value = "API endpoints to search and update Logs.", tags = "Logs API")
 
 @Validated
-@RequestMapping("/logs")
-public class LogsController {
-    private Logger logger = LoggerFactory.getLogger(LogsController.class);
+@RequestMapping("/usagemetrics")
+public class MetricsController {
+    private Logger logger = LoggerFactory.getLogger(MetricsController.class);
 
     @Autowired
     private HttpServletRequest request;
     
     @Autowired
-    private LogRepository logRepo;
+    private MetricsRepository logRepo;
 
-//    @RequestMapping(value = { "/{id}" }, method = RequestMethod.GET, produces = "application/json")
-//    @ApiOperation(value = "Get Logs for NERDm record of given id.", nickname = "recordbyId", notes = "Resource returns a NERDm Record by given ediid.")
-//    /**
-//     * Get data for given record if and unique bundleid to get total number of bundle requests for this record.
-//     * 
-//     * @param id
-//     * @return Returns Document
-//     * @throws IOException
-//     */
-//    public Document record(@PathVariable @Valid String id) throws IOException {
-//	logger.info("Get record by id: " + id);
-//	return logRepo.findRecord(id);
-//
-//    }
-//
-//    /**
-//     * Get record for given file.
-//     * 
-//     * @param id
-//     * @return Returns Document
-//     * @throws IOException
-//     */
-//    @RequestMapping(value = { "/fileinfo" }, method = RequestMethod.GET, produces = "application/json")
-//    public Document fileInfo(@RequestParam  @Valid String filePath) throws IOException {
-//	logger.info("Get record by filePath: " + filePath);
-//	return logRepo.findFileInfo(filePath);
-//
-//    }
     
     /**
      * Get all the files list or request with specific id or filepath or any other field,value
@@ -80,66 +51,105 @@ public class LogsController {
 	logger.info("List all the files and provide sorting requirement: " + params);
 	return logRepo.listfiles(params);
     }
-    
-    
     /**
-     * Get information about bundles requests
-     * Return list of unique bundles, sizes, dates 
-     * 
-     * @param id
-     * @return Returns Document
-     * @throws IOException
+     * Get the files metrics for given recordid/dataset id
+     * @param recordid
+     * @return
      */
-    @RequestMapping(value = { "/bundles" }, method = RequestMethod.GET, produces = "application/json")
-    public Document listBundles(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
-	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
-	logger.info("Get list of bundles requests with sizes and dates " );
-	return logRepo.listBundles(params);
-
+    @RequestMapping(value = { "/{recordid}" }, method = RequestMethod.GET, produces = "application/json")
+    public Document searchRecord(@PathVariable @Valid String recordid,
+	    @ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
+	logger.info("List of all files in this record/dataset and its usage analytics");
+	return logRepo.findRecord(recordid, params);
+	
     }
     
     /**
-     * get the list of bundleplan requests
+     * Get the total size of download files per month
+     * @param recordid
      * @param params
-     * @param p
      * @return
-     * @throws IOException
      */
-    @RequestMapping(value = { "/bundleplans" }, method = RequestMethod.GET, produces = "application/json")
-    public Document listBundlePlans(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
-	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
-	logger.info("Get list of bundle planss requests with sizes and dates " );
-	return logRepo.listBundlePlan(params);
-
+    @RequestMapping(value = { "/totalsize" }, method = RequestMethod.GET, produces = "application/json")
+    public Document totalSize(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
+	logger.info("List of all files in this record/dataset and its usage analytics");
+	return logRepo.totalSize(params);
+	
     }
-   
+    
     /**
-     * get the bundle plan summary
+     * Get the total size of download files per month
+     * @param recordid
      * @param params
-     * @param p
      * @return
-     * @throws IOException
      */
-    @RequestMapping(value = { "/bundlePlansSummary" }, method = RequestMethod.GET, produces = "application/json")
-    public Document listBundlePlanSummary(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
-	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
-	logger.info("Get list of bundle planss requests with sizes and dates " );
-	return logRepo.findBundlePlanSummary(params);
-
+    @RequestMapping(value = { "/totalusers" }, method = RequestMethod.GET, produces = "application/json")
+    public Document totalUsers(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
+	logger.info("List of all files in this record/dataset and its usage analytics");
+	return logRepo.totalUsers(params);
+	
     }
     
-    /**
-     * 
-     * @param id
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping(value = { "/downloadsPerRecord/{id}" }, method = RequestMethod.GET, produces = "application/json")
-    public Document downloadsPerRecords(@PathVariable @Valid String id) throws IOException {
-	logger.info("Get number of downloads per record "+id );
-	return logRepo.getRecordDownloads(id);
-
-    }
+//    /**
+//     * 
+//     * @param id
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = { "/downloadsPerRecord/{id}" }, method = RequestMethod.GET, produces = "application/json")
+//    public Document downloadsPerRecords(@PathVariable @Valid String id) throws IOException {
+//	logger.info("Get number of downloads per record "+id );
+//	return logRepo.getRecordDownloads(id);
+//
+//    }
     
+    
+//    /**
+//     * Get information about bundles requests
+//     * Return list of unique bundles, sizes, dates 
+//     * 
+//     * @param id
+//     * @return Returns Document
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = { "/bundles" }, method = RequestMethod.GET, produces = "application/json")
+//    public Document listBundles(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+//	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+//	logger.info("Get list of bundles requests with sizes and dates " );
+//	return logRepo.listBundles(params);
+//
+//    }
+//    
+//    /**
+//     * get the list of bundleplan requests
+//     * @param params
+//     * @param p
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = { "/bundleplans" }, method = RequestMethod.GET, produces = "application/json")
+//    public Document listBundlePlans(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+//	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+//	logger.info("Get list of bundle planss requests with sizes and dates " );
+//	return logRepo.listBundlePlan(params);
+//
+//    }
+//   
+//    /**
+//     * get the bundle plan summary
+//     * @param params
+//     * @param p
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = { "/bundlePlansSummary" }, method = RequestMethod.GET, produces = "application/json")
+//    public Document listBundlePlanSummary(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+//	    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+//	logger.info("Get list of bundle planss requests with sizes and dates " );
+//	return logRepo.findBundlePlanSummary(params);
+//
+//    }
+//    
+
 
 }

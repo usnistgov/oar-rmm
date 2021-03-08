@@ -54,11 +54,15 @@ public class MongoConfig {
 	private MongoCollection<Document> resourceApiCollection;
 	private MongoCollection<Document> recordFieldsCollection;
 	//these are collections to collect and serve logs from parsing distribution service
-	private MongoCollection<Document> fileslogCollection;
-	private MongoCollection<Document> bundlePlanSummarylogsCollection;
-	private MongoCollection<Document> bundlelogCollection;
-	private MongoCollection<Document> bundlePlanlogsCollection;
+//	private MongoCollection<Document> fileslogCollection;
+//	private MongoCollection<Document> bundlePlanSummarylogsCollection;
+//	private MongoCollection<Document> bundlelogCollection;
+//	private MongoCollection<Document> bundlePlanlogsCollection;
 	
+	private MongoCollection<Document> recordMetricsCollection;
+	private MongoCollection<Document> fileMetricsCollection;
+	private MongoCollection<Document> uniqueUsersCollection;
+	private MongoCollection<Document> downloadSizeCollection;
 	List<ServerAddress> servers = new ArrayList<ServerAddress>();
 	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
 
@@ -76,19 +80,31 @@ public class MongoConfig {
 
 	@Value("${dbcollections.recordfields}")
 	private String rfields;
-	
-	@Value("${dbcollections.filelogs}")
-	private String filelogs;
-	
-	@Value("${dbcollections.bundlePlanSummarylogs}")
-	private String bundlePlanSummarylogs;
-	
-	@Value("${dbcollections.bundlelogs}")
-	private String bundlelogs;
-	
-	@Value("${dbcollections.bundlePlanlogs}")
-	private String bundlePlanlogs;
+//	
+//	@Value("${dbcollections.filelogs}")
+//	private String filelogs;
+//	
+//	@Value("${dbcollections.bundlePlanSummarylogs}")
+//	private String bundlePlanSummarylogs;
+//	
+//	@Value("${dbcollections.bundlelogs}")
+//	private String bundlelogs;
+//	
+//	@Value("${dbcollections.bundlePlanlogs}")
+//	private String bundlePlanlogs;
 
+	@Value("${dbcollections.recordMetrics}")
+	private String recordMetrics;
+	
+	@Value("${dbcollections.fileMetrics}")
+	private String fileMetrics;
+	
+	@Value("${dbcollections.uniqueUsers}")
+	private String uniqueusers;
+	
+	@Value("${dbcollections.downloadSize}")
+	private String downloadSize;
+	
 	@Value("${oar.mongodb.port}")
 	private int port;
 	@Value("${oar.mongodb.host}")
@@ -111,10 +127,14 @@ public class MongoConfig {
 		this.setTaxonomyCollection(this.taxonomy);
 		this.setResourceApiCollection(this.resourceApi);
 		this.setRecordFieldsCollection(this.rfields);
-		this.setfilesLogCollection(this.filelogs);
-		this.setbundleLogCollection(this.bundlelogs);
-		this.setBundlePlanCollection(this.bundlePlanlogs);
-		this.setbundlePlanSummarylogsCollection(this.bundlePlanSummarylogs);
+//		this.setfilesLogCollection(this.filelogs);
+//		this.setbundleLogCollection(this.bundlelogs);
+//		this.setBundlePlanCollection(this.bundlePlanlogs);
+//		this.setbundlePlanSummarylogsCollection(this.bundlePlanSummarylogs);
+		this.setRecordMetricsCollection(recordMetrics);
+		this.setfileMetricsCollection(fileMetrics);
+		this.setUniqueUsersMetricsCollection(uniqueusers);
+		this.setDownloadSizeCollection(downloadSize);
 
 	}
 
@@ -137,6 +157,71 @@ public class MongoConfig {
 		mongoDb = mongoClient.getDatabase(dbname);
 	}
 
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getDownloadSizeCollection() {
+		return this.downloadSizeCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setDownloadSizeCollection(String downloadSize) {
+	    this.downloadSizeCollection = mongoDb.getCollection(downloadSize);
+	}
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getUniqueUsersMetricsCollection() {
+		return this.uniqueUsersCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setUniqueUsersMetricsCollection(String uniqueusers) {
+	    this.uniqueUsersCollection = mongoDb.getCollection(uniqueusers);
+	}
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getfileMetricsCollection() {
+		return fileMetricsCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setfileMetricsCollection(String fileMetrics) {
+	    fileMetricsCollection = mongoDb.getCollection(fileMetrics);
+	}
+	
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getRecordMetricsCollection() {
+		return recordMetricsCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setRecordMetricsCollection(String recordMetrics) {
+	    recordMetricsCollection = mongoDb.getCollection(recordMetrics);
+	}
+	
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -207,72 +292,72 @@ public class MongoConfig {
 		recordFieldsCollection = mongoDb.getCollection(recordFields);
 	}
 
-	
-	/***
-	 * To get individual files related logs from database
-	 * get name of the collection
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getfilesLogCollection() {
-		return fileslogCollection;
-	}
-
-	/**
-	 * Set filesLog collectionname
-	 */
-	private void setfilesLogCollection(String logs) {
-	    fileslogCollection = mongoDb.getCollection(logs);
-	}
-	
-	
-	/***
-	 * Get recordsLogs collection from DB
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getbundlePlanSummarylogsCollection() {
-		return bundlePlanSummarylogsCollection;
-	}
-
-	/**
-	 * Set recordLogs collection name
-	 */
-	private void setbundlePlanSummarylogsCollection(String logs) {
-	    bundlePlanSummarylogsCollection = mongoDb.getCollection(logs);
-	}
-	
-	/***
-	 * Get records collection from Mongodb
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getbundleLogCollection() {
-		return bundlelogCollection;
-	}
-
-	/**
-	 * Set records collection
-	 */
-	private void setbundleLogCollection(String logs) {
-	    bundlelogCollection = mongoDb.getCollection(logs);
-	}
-	
-	/***
-	 * Get records collection from Mongodb
-	 * 
-	 * @return
-	 */
-	public MongoCollection<Document> getbundlePlanLogCollection() {
-		return bundlePlanlogsCollection;
-	}
-
-	/**
-	 * Set records collection
-	 */
-	private void setBundlePlanCollection(String logs) {
-	    bundlePlanlogsCollection = mongoDb.getCollection(logs);
-	}
+//	
+//	/***
+//	 * To get individual files related logs from database
+//	 * get name of the collection
+//	 * 
+//	 * @return
+//	 */
+//	public MongoCollection<Document> getfilesLogCollection() {
+//		return fileslogCollection;
+//	}
+//
+//	/**
+//	 * Set filesLog collectionname
+//	 */
+//	private void setfilesLogCollection(String logs) {
+//	    fileslogCollection = mongoDb.getCollection(logs);
+//	}
+//	
+//	
+//	/***
+//	 * Get recordsLogs collection from DB
+//	 * 
+//	 * @return
+//	 */
+//	public MongoCollection<Document> getbundlePlanSummarylogsCollection() {
+//		return bundlePlanSummarylogsCollection;
+//	}
+//
+//	/**
+//	 * Set recordLogs collection name
+//	 */
+//	private void setbundlePlanSummarylogsCollection(String logs) {
+//	    bundlePlanSummarylogsCollection = mongoDb.getCollection(logs);
+//	}
+//	
+//	/***
+//	 * Get records collection from Mongodb
+//	 * 
+//	 * @return
+//	 */
+//	public MongoCollection<Document> getbundleLogCollection() {
+//		return bundlelogCollection;
+//	}
+//
+//	/**
+//	 * Set records collection
+//	 */
+//	private void setbundleLogCollection(String logs) {
+//	    bundlelogCollection = mongoDb.getCollection(logs);
+//	}
+//	
+//	/***
+//	 * Get records collection from Mongodb
+//	 * 
+//	 * @return
+//	 */
+//	public MongoCollection<Document> getbundlePlanLogCollection() {
+//		return bundlePlanlogsCollection;
+//	}
+//
+//	/**
+//	 * Set records collection
+//	 */
+//	private void setBundlePlanCollection(String logs) {
+//	    bundlePlanlogsCollection = mongoDb.getCollection(logs);
+//	}
 	/**
 	 * Get Mongo instance to run queries.
 	 * 
