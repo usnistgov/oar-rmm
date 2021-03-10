@@ -20,8 +20,10 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.util.UrlPathHelper;
 import org.springframework.beans.factory.annotation.Value;
 
 @SpringBootApplication
@@ -69,6 +71,22 @@ public class AppConfig {
 	    public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**");
 	    }
+	    
+//	    @Override
+//	    public void configurePathMatch(PathMatchConfigurer matcher) {
+//	        matcher.setUseRegisteredSuffixPatternMatch(true);
+//	        matcher.setUseSuffixPatternMatch(false);
+//	    }
+	    @Override
+            public void configurePathMatch(PathMatchConfigurer configurer) {
+                UrlPathHelper uhlpr = configurer.getUrlPathHelper();
+                if (uhlpr == null) {
+                    uhlpr = new UrlPathHelper();
+                    configurer.setUrlPathHelper(uhlpr);
+                }
+                uhlpr.setRemoveSemicolonContent(false);
+            }
+	    
 	};
     }
 }

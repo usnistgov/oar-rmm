@@ -1,6 +1,7 @@
 package gov.nist.oar.rmm.controllers;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.HandlerMapping;
 
 import gov.nist.oar.rmm.repositories.MetricsRepository;
 import io.swagger.annotations.Api;
@@ -38,47 +40,98 @@ public class MetricsController {
     private MetricsRepository logRepo;
 
     
-    /**
-     * Get all the files list or request with specific id or filepath or any other field,value
-     * @param params
-     * @param p
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping(value = { "/files" }, method = RequestMethod.GET, produces = "application/json")
-    public Document search(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
-    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
-	logger.info("List all the files and provide sorting requirement: " + params);
-	return logRepo.listfiles(params);
-    }
+//    /**
+//     * Get all the files list or request with specific id or filepath or any other field,value
+//     * @param params
+//     * @param p
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = { "/files" }, method = RequestMethod.GET, produces = "application/json")
+//    public Document search(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+//    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+//	logger.info("List all the files and provide sorting requirement: " + params);
+//	return logRepo.listfiles(params);
+//    }
+    
+//    /**
+//     * Get all the files list or request with specific id or filepath or any other field,value
+//     * or specific to record
+//     * @param params
+//     * @param p
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = { "/files/<recordid>/**" }, method = RequestMethod.GET, produces = "application/json")
+//    public Document searchFiles( @PathVariable @Valid Optional<String> recordid, @PathVariable @Valid Optional<String> fileid,
+//	    @ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+//    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+//	String recordId = "", fileId= request.getRequestURI();
+//	if(recordid.isPresent()) recordId = recordid.get();
+//	if(fileid.isPresent()) fileId = fileid.get();
+//	logger.info("List all the files and provide sorting requirement: " + params);
+//	return logRepo.listfiles(recordId,fileId, params);
+//    }
+//    
+//    /**
+//     * Get all the files list or request with specific id or filepath or any other field,value
+//     * or specific to record
+//     * @param params
+//     * @param p
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = { "/files/ark:/{naan:\\\\d+}/{recordid}/<fileid>" }, method = RequestMethod.GET, produces = "application/json")
+//    public Document searchFilesArkId( @PathVariable @Valid Optional<String> recordid, @PathVariable @Valid Optional<String> fileid,
+//	    @ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params,
+//    @ApiIgnore @PageableDefault(size = 150) Pageable p) throws IOException {
+//	String recordId = "", fileId= "";
+//	if(recordid.isPresent()) recordId = recordid.get();
+//	if(fileid.isPresent()) fileId = fileid.get();
+//	logger.info("List all the files and provide sorting requirement: " + params);
+//	return logRepo.listfiles(recordId,fileId, params);
+//    }
     /**
      * Get the files metrics for given recordid/dataset id
      * @param recordid
      * @return
      */
-    @RequestMapping(value = { "/{recordid}" }, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = { "/records/{recordid}" }, method = RequestMethod.GET, produces = "application/json")
     public Document searchRecord(@PathVariable @Valid String recordid,
 	    @ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
-	logger.info("List of all files in this record/dataset and its usage analytics");
+	logger.info("Dataset level metrics");
 	return logRepo.findRecord(recordid, params);
-	
     }
     
     /**
-     * Get the total size of download files per month
+     * Get the monthly repo level metrics, size and number of users
      * @param recordid
      * @param params
      * @return
      */
-    @RequestMapping(value = { "/totalsize" }, method = RequestMethod.GET, produces = "application/json")
+//    @RequestMapping(value = { "/filemetrics/{recordid}/{fileid:.+}", "/filemetrics",  "/filemetrics/{recordid}/**" , "/filemetrics/{recordid}/**{}"}, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = { "/filemetrics/**" }, method = RequestMethod.GET, produces = "application/json")
+    public Document listFiles(@PathVariable(required = false) String recordid, @PathVariable(required = false) String fileid,@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
+	logger.info("List of all files in this record/dataset and its usage analytics");
+	String filepath=(String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+//	filepath = filepath.substring("/filemetrics".length() + recordid.length());
+	return logRepo.findFile(recordid, fileid, params);
+	
+    }
+    /**
+     * Get the monthly repo level metrics, size and number of users
+     * @param recordid
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = { "/repometrics" }, method = RequestMethod.GET, produces = "application/json")
     public Document totalSize(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("List of all files in this record/dataset and its usage analytics");
 	return logRepo.totalSize(params);
-	
     }
     
     /**
-     * Get the total size of download files per month
+     * Get the total users
      * @param recordid
      * @param params
      * @return
@@ -89,6 +142,7 @@ public class MetricsController {
 	return logRepo.totalUsers(params);
 	
     }
+    
     
 //    /**
 //     * 

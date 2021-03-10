@@ -18,7 +18,7 @@ public interface MetricsRepository {
      * Search and sort logs from the filesLogs Collection in the database
      * @return
      */
-    public Document listfiles(MultiValueMap<String, String> params);
+    public Document findFile(String id, String fileid,  MultiValueMap<String, String> params);
     
     /**
      * GEt the total size download per month

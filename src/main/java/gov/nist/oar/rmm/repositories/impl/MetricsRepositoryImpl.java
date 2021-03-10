@@ -223,44 +223,45 @@ public class MetricsRepositoryImpl implements MetricsRepository {
      * 
      */
     @Override
-    public Document listfiles(MultiValueMap<String, String>  params) {
-
+    public Document findFile(String recordid, String filepath, MultiValueMap<String, String>  params) {
+	 
+	if(recordid != null &&  filepath == null) {
+	    params.add("ediid", recordid);
+	    return this.processInputAndData(mconfig.getfileMetricsCollection(), params, "Files");
+	}
+	else if( filepath != null) {
+	    params.add("filepath", filepath);
+	    return this.processInputAndData(mconfig.getfileMetricsCollection(), params, "Files");
+	}
 	return this.processInputAndData(mconfig.getfileMetricsCollection(), params, "Files");
     }
     
     /**
-     * 
+     * Find the record/dataset related information about downloads and number of users
      */
     @Override
     public Document findRecord(String id, MultiValueMap<String, String>  params) {
 	MongoCollection<Document> recordMetrics = mconfig.getRecordMetricsCollection();
 	params.add("ediid", id);
 	return this.processInputAndData(recordMetrics, params, "Record Metrics");
-//	List<Bson> queryList = new ArrayList<Bson>();
-//	queryList.add(Aggregates.match(Filters.in("ediid",id)));
-//	
-//	AggregateIterable<Document> aggre = null;
-//	try {
-//	    aggre = bundles.aggregate(queryList);
-//	} catch (Exception e) {
-//	    logger.error(e.getMessage());
-//	}
-//	Document resultDoc = new Document();
-//	resultDoc.put("recordid", id);
-//	resultDoc.put("countDownloads", aggre);
-//	return resultDoc;
+
     }
 
+    /**
+     * Get monthly downloads size and number of unique users per repository
+     */
     @Override
     public Document totalSize(MultiValueMap<String, String>  params) {
 	MongoCollection<Document> downloadMetrics = mconfig.getDownloadSizeCollection();
 	return this.processInputAndData(downloadMetrics, params, "Total Size"); 
     }
 
+    /**
+     * 
+     */
     @Override
     public Document totalUsers(MultiValueMap<String, String>  params) {
 	MongoCollection<Document> userMetrics = mconfig.getUniqueUsersMetricsCollection();
-//	MultiValueMap<String, String>  params = new LinkedMultiValueMap<String, String>();
 	return this.processInputAndData(userMetrics, params, "Total Usres"); 
 	
     }
