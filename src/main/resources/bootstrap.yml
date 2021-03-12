@@ -19,37 +19,47 @@ spring:
       
 server: 
     port: 8085
-    contextPath: /rmm
+    servlet:
+      context-path:  /rmm
     error:
       include-stacktrace: never
     connection-timeout: 60000
     max-http-header-size: 65536
     tomcat:
       accesslog:
-        directory: logs
-        enabled: false
+        directory: /tmp/logs/oar-rmm
+        enabled: true
+        file-date-format: yyyy-MM-dd
+        prefix: tomcat-access-log
+        suffix: .log
+        rotate: true
+      accept-count: 100
+      max-connections: 10000
+      max-threads: 200
+      min-spare-threads: 10
+#        
     
 logging:
   file: rmmapp.log
-  path : /var/log/rmm/
+  path : /tmp/rmm/
   exception-conversion-word: '%wEx'
-  
-security:
-    headers:
-      frame: true
-      xss: true
-      hsts: all
-    enable-csrf: false
+#  
+#security:
+#    headers:
+#      frame: true
+#      xss: true
+#      hsts: all
+#    enable-csrf: false
 
-management.add-application-context-header: false
+#management.add-application-context-header: false
 
 dbcollections: 
          taxonomy: taxonomy
          resources: apis
          records: record 
          recordfields: fields
-         filelogs: filelogs
-         bundlePlanSummarylogs: bundlePlanSummarylogs
-         bundlelogs: bundlelogs
-         bundlePlanlogs: bundlePlanlogs
+         recordMetrics: RecordMetrics
+         fileMetrics: fileMetrics
+         downloadSize: downloadSize
+         uniqueUsers: uniqueUsers
     

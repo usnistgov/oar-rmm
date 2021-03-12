@@ -85,6 +85,8 @@ public class AppConfig {
                     configurer.setUrlPathHelper(uhlpr);
                 }
                 uhlpr.setRemoveSemicolonContent(false);
+	        configurer.setUseRegisteredSuffixPatternMatch(true);
+	        configurer.setUseSuffixPatternMatch(false);
             }
 	    
 	};
