@@ -27,7 +27,7 @@ server:
     max-http-header-size: 65536
     tomcat:
       accesslog:
-        directory: /tmp/logs/oar-rmm
+        directory: /var/log/rmm/
         enabled: true
         file-date-format: yyyy-MM-dd
         prefix: tomcat-access-log
@@ -41,7 +41,7 @@ server:
     
 logging:
   file: rmmapp.log
-  path : /tmp/rmm/
+  path : /var/log/rmm/
   exception-conversion-word: '%wEx'
 #  
 #security:
@@ -58,8 +58,8 @@ dbcollections:
          resources: apis
          records: record 
          recordfields: fields
-         recordMetrics: RecordMetrics
+         recordMetrics: recordMetrics
          fileMetrics: fileMetrics
-         downloadSize: downloadSize
+         downloadSize: repoMetrics
          uniqueUsers: uniqueUsers
     
