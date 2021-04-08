@@ -82,8 +82,8 @@ public class MetricsRepositoryImpl implements MetricsRepository {
      * Get monthly downloads size and number of unique users per repository
      */
     @Override
-    public Document totalSize(MultiValueMap<String, String>  params) {
-	MongoCollection<Document> downloadMetrics = mconfig.getDownloadSizeCollection();
+    public Document findRepo(MultiValueMap<String, String>  params) {
+	MongoCollection<Document> downloadMetrics = mconfig.getRepoMetricsCollection();
 	return this.processInputAndData(downloadMetrics, params, "RepoMetrics"); 
     }
 

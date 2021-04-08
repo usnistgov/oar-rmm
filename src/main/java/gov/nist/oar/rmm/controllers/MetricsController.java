@@ -40,11 +40,31 @@ public class MetricsController {
      * @param recordid
      * @return
      */
-    @RequestMapping(value = {"/records" ,"/records/{recordid}" }, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = {"/records"  }, method = RequestMethod.GET, produces = "application/json")
     public Document searchRecord(@PathVariable(required = false) String recordid,
 	    @ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("Dataset level metrics");
-	if (recordid != null) recordid="";
+//	if (recordid != null) recordid="";
+	return logRepo.findRecord(recordid, params);
+    }
+    
+    /**
+     * Get the files metrics for given recordid/dataset id
+     * @param recordid
+     * @return
+     */
+    @RequestMapping(value = {"/records/**"  }, method = RequestMethod.GET, produces = "application/json")
+    public Document getRecord(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
+	logger.info("Dataset level metrics");
+	
+	String requestPath=(String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+	String recordid = "";
+	String[] filepaths = requestPath.split("/");
+	if(requestPath.contains("ark:")) {
+	    recordid = filepaths[3]+"/"+filepaths[4]+"/"+filepaths[5];
+	} else 
+	    recordid = filepaths[3];
+
 	return logRepo.findRecord(recordid, params);
     }
     
@@ -80,7 +100,7 @@ public class MetricsController {
 	    recordid = filepaths[3];
 
 	if(filepath.contains("."))
-	    fileid = filepath.substring(filepath.indexOf("/files")+6,filepath.length());
+	    fileid = filepath.substring(filepath.indexOf("/files")+7,filepath.length());
 	return logRepo.findFile(recordid, fileid, params);
 	
     }
@@ -91,9 +111,9 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/repo" }, method = RequestMethod.GET, produces = "application/json")
-    public Document totalSize(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
+    public Document repoMetrics(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("List of all files in this record/dataset and its usage analytics");
-	return logRepo.totalSize(params);
+	return logRepo.findRepo(params);
     }
     
     /**

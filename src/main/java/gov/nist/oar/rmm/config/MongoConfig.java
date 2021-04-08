@@ -57,7 +57,7 @@ public class MongoConfig {
 	private MongoCollection<Document> recordMetricsCollection;
 	private MongoCollection<Document> fileMetricsCollection;
 	private MongoCollection<Document> uniqueUsersCollection;
-	private MongoCollection<Document> downloadSizeCollection;
+	private MongoCollection<Document> repoMetricsCollection;
 	List<ServerAddress> servers = new ArrayList<ServerAddress>();
 	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
 
@@ -82,8 +82,8 @@ public class MongoConfig {
 	@Value("${dbcollections.uniqueUsers}")
 	private String uniqueusers;
 	
-	@Value("${dbcollections.downloadSize}")
-	private String downloadSize;
+	@Value("${dbcollections.repoMetrics}")
+	private String repoMetrics;
 	
 	@Value("${oar.mongodb.port}")
 	private int port;
@@ -110,7 +110,7 @@ public class MongoConfig {
 		this.setRecordMetricsCollection(recordMetrics);
 		this.setfileMetricsCollection(fileMetrics);
 		this.setUniqueUsersMetricsCollection(uniqueusers);
-		this.setDownloadSizeCollection(downloadSize);
+		this.setRepoMetricsCollection(repoMetrics);
 
 	}
 
@@ -138,15 +138,15 @@ public class MongoConfig {
 	 * 
 	 * @return
 	 */
-	public MongoCollection<Document> getDownloadSizeCollection() {
-		return this.downloadSizeCollection;
+	public MongoCollection<Document> getRepoMetricsCollection() {
+		return this.repoMetricsCollection;
 	}
 
 	/**
 	 * Set records collection
 	 */
-	private void setDownloadSizeCollection(String downloadSize) {
-	    this.downloadSizeCollection = mongoDb.getCollection(downloadSize);
+	private void setRepoMetricsCollection(String repoMetrics) {
+	    this.repoMetricsCollection = mongoDb.getCollection(repoMetrics);
 	}
 	
 	/***

@@ -24,7 +24,7 @@ public interface MetricsRepository {
      * GEt the total size download per month
      */
     
-    public Document totalSize(MultiValueMap<String, String>  params);
+    public Document findRepo(MultiValueMap<String, String>  params);
     
     /**
      * Get total unique users

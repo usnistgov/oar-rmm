@@ -60,6 +60,6 @@ dbcollections:
          recordfields: fields
          recordMetrics: recordMetrics
          fileMetrics: fileMetrics
-         downloadSize: repoMetrics
+         repoMetrics: repoMetrics
          uniqueUsers: uniqueUsers
     

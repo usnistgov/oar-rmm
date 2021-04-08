@@ -72,11 +72,7 @@ public class AppConfig {
 		registry.addMapping("/**");
 	    }
 	    
-//	    @Override
-//	    public void configurePathMatch(PathMatchConfigurer matcher) {
-//	        matcher.setUseRegisteredSuffixPatternMatch(true);
-//	        matcher.setUseSuffixPatternMatch(false);
-//	    }
+
 	    @Override
             public void configurePathMatch(PathMatchConfigurer configurer) {
                 UrlPathHelper uhlpr = configurer.getUrlPathHelper();
