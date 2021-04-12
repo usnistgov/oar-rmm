@@ -4,7 +4,8 @@ import org.bson.Document;
 import org.springframework.util.MultiValueMap;
 
 public interface MetricsRepositoryTest {
-    /**
+
+   /**
      * Search record for given identifier in RecordsLog collection
      * 
      * @param id
@@ -23,11 +24,12 @@ public interface MetricsRepositoryTest {
      * GEt the total size download per month
      */
     
-    public Document totalSize(MultiValueMap<String, String>  params);
+    public Document findRepo(MultiValueMap<String, String>  params);
     
     /**
      * Get total unique users
      */
     public Document totalUsers(MultiValueMap<String, String>  params);
+    
     
 }

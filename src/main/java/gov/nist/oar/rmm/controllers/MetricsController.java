@@ -36,7 +36,7 @@ public class MetricsController {
 
 
     /**
-     * Get the files metrics for given recordid/dataset id
+     * Get list of Metrics of all the datasets/records 
      * @param recordid
      * @return
      */
@@ -49,7 +49,7 @@ public class MetricsController {
     }
     
     /**
-     * Get the files metrics for given recordid/dataset id
+     * Get record/dataset specific  metrics information
      * @param recordid
      * @return
      */

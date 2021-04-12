@@ -59,8 +59,8 @@ public class TestIntegrationSearchController {
 	@Autowired
 	private SearchController searchController;
     
-    @Inject
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+	@Inject
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
     
 	@Before
 	public void setup() {
