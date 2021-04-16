@@ -18,16 +18,24 @@ import gov.nist.oar.rmm.utilities.ProcessRequest;
 public class MetricsRepositoryImpl implements MetricsRepository {
 
     private Logger logger = LoggerFactory.getLogger(MetricsRepositoryImpl.class);
-   
+
     @Autowired
     MongoConfig mconfig;
 
-
     /**
-     * Get the input requested parameters and process to create Mongodb query, process results and return in desired format
+     * Get the input requested parameters and process to create Mongodb query,
+     * process results and return in desired format
      */
-    
-    private Document processInputAndData(MongoCollection<Document> mdCollection,MultiValueMap<String, String> params, String collectionName ) {
+
+    private Document processInputAndData(MongoCollection<Document> mdCollection, MultiValueMap<String, String> params,
+	    String collectionName) {
+
+	if (params.containsKey("include"))
+	    params.remove("include");
+	if (params.containsKey("exclude"))
+	    params.remove("exclude");
+
+	params.add("exclude", "_id,ip_list");
 	
 	ProcessRequest request = new ProcessRequest();
 	request.parseSearch(params);
@@ -43,7 +51,7 @@ public class MetricsRepositoryImpl implements MetricsRepository {
 	}
 
 	Document resultDoc = new Document();
-	resultDoc.put(collectionName+"Count", count);
+	resultDoc.put(collectionName + "Count", count);
 	resultDoc.put("PageSize", request.getPageSize());
 	resultDoc.put(collectionName, aggre);
 	return resultDoc;
@@ -53,27 +61,28 @@ public class MetricsRepositoryImpl implements MetricsRepository {
      * get the individual files
      */
     @Override
-    public Document findFile(String recordid, String filepath, MultiValueMap<String, String>  params) {
-	 
-	if(!recordid.isEmpty() &&  filepath.isEmpty()) {
+    public Document findFile(String recordid, String filepath, MultiValueMap<String, String> params) {
+
+
+	if (!recordid.isEmpty() && filepath.isEmpty()) {
 	    params.add("ediid", recordid);
 	    return this.processInputAndData(mconfig.getfileMetricsCollection(), params, "FilesMetrics");
-	}
-	else if( !filepath.isEmpty()) {
+	} else if (!filepath.isEmpty()) {
 	    params.add("filepath", filepath);
 	    return this.processInputAndData(mconfig.getfileMetricsCollection(), params, "FilesMetrics");
 	}
 	return this.processInputAndData(mconfig.getfileMetricsCollection(), params, "FilesMetrics");
     }
-    
+
     /**
-     * Find the record/dataset related information about downloads and number of users
+     * Find the record/dataset related information about downloads and number of
+     * users
      */
     @Override
-    public Document findRecord(String id, MultiValueMap<String, String>  params) {
+    public Document findRecord(String id, MultiValueMap<String, String> params) {
 	MongoCollection<Document> recordMetrics = mconfig.getRecordMetricsCollection();
-	if(id != null)
-	params.add("ediid", id);
+	if (id != null)
+	    params.add("ediid", id);
 	return this.processInputAndData(recordMetrics, params, "DataSetMetrics");
 
     }
@@ -82,22 +91,23 @@ public class MetricsRepositoryImpl implements MetricsRepository {
      * Get monthly downloads size and number of unique users per repository
      */
     @Override
-    public Document findRepo(MultiValueMap<String, String>  params) {
+    public Document findRepo(MultiValueMap<String, String> params) {
 	MongoCollection<Document> downloadMetrics = mconfig.getRepoMetricsCollection();
-	return this.processInputAndData(downloadMetrics, params, "RepoMetrics"); 
+	return this.processInputAndData(downloadMetrics, params, "RepoMetrics");
     }
 
     /**
      * 
      */
     @Override
-    public Document totalUsers(MultiValueMap<String, String>  params) {
+    public Document totalUsers(MultiValueMap<String, String> params) {
 	MongoCollection<Document> userMetrics = mconfig.getUniqueUsersMetricsCollection();
-	return this.processInputAndData(userMetrics, params, "TotalUsres"); 
-	
+	return this.processInputAndData(userMetrics, params, "TotalUsres");
+
     }
     /**
-     * For given recordid fine the distinct requestids to count total number of downloads attempted.
+     * For given recordid fine the distinct requestids to count total number of
+     * downloads attempted.
      */
 //    @Override
 //    public Document getRecordDownloads(String recordid) {
@@ -155,7 +165,6 @@ public class MetricsRepositoryImpl implements MetricsRepository {
 //
 //	return recordLogs.find(Filters.eq("ediid", useid)).first();
 // }
-
 
 // @Override
 // public Document findFileInfo(String filePath) {

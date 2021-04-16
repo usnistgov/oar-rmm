@@ -18,10 +18,14 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import gov.nist.oar.rmm.repositories.MetricsRepository;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@Api(value = "API endpoints to search and update Logs.", tags = "Logs API")
+@Api(value = "API endpoints to search and access Metrics.", tags = "Metrics API")
 
 @Validated
 @RequestMapping("/usagemetrics")
@@ -34,6 +38,16 @@ public class MetricsController {
     @Autowired
     private MetricsRepository logRepo;
 
+    
+    @ApiImplicitParams({
+	    @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "Results page you want to retrieve (0..N)"),
+	    @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query", value = "Number of records per page."),
+	    @ApiImplicitParam(name = "sort.desc", allowMultiple = true, dataType = "string", paramType = "query", value = "sort on the fields seperated by comma (one or more)."),
+	    @ApiImplicitParam(name = "sort.asc", allowMultiple = true, dataType = "string", paramType = "query", value = "Sort in ascending order seperated by comma (one or more).") })
+@ApiOperation(value = "Get the metrics for given dataset or list of datasets", nickname = "DataSetMetrics", notes = "Returns all the metrics information related to datasets."
+	    + "\n following are some search query examples" + "\n 1. /records"
+	    + "\n /records?page=1&size=2"
+	    + "\n /recorsd?sort.desc=<field or comma seperated list of fields>")
 
     /**
      * Get list of Metrics of all the datasets/records 
@@ -41,12 +55,15 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = {"/records"  }, method = RequestMethod.GET, produces = "application/json")
-    public Document searchRecord(@PathVariable(required = false) String recordid,
+     public Document searchRecord(@PathVariable(required = false) String recordid,
 	    @ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("Dataset level metrics");
 //	if (recordid != null) recordid="";
 	return logRepo.findRecord(recordid, params);
     }
+    
+    
+    
     
     /**
      * Get record/dataset specific  metrics information
@@ -54,6 +71,8 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = {"/records/**"  }, method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "Get the metrics for given dataset or list of datasets", nickname = "DataSetMetrics", notes = "Returns all the metrics information related to given datasets.")
+    
     public Document getRecord(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("Dataset level metrics");
 	
@@ -75,6 +94,8 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/files" }, method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "List all files and respective metrics information", nickname = "FileMetrics All", notes = "Returns all the metrics information related to files.")
+    
     public Document listFile(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("List of all files in this record/dataset and its usage analytics");
 	String recordid = "", fileid ="";	
@@ -89,6 +110,8 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/files/**" }, method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "Get metrics for particular file or list of files in particualr dataset", nickname = "FileMetrics Selected", notes = "Returns all the metrics information related to particualr file or list of files from particular dataset.")
+    
     public Document getFile(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("List of all files in this record/dataset and its usage analytics");
 	String filepath=(String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
@@ -111,8 +134,10 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/repo" }, method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "Repository level metrics summary", nickname = "RepoMetrics", notes = "Returns all the metrics information related to complete repository.")
+    
     public Document repoMetrics(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
-	logger.info("List of all files in this record/dataset and its usage analytics");
+	logger.info("Repository level metrics summmary.");
 	return logRepo.findRepo(params);
     }
     
@@ -123,8 +148,10 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/totalusers" }, method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "Get the metrics for given dataset or list of datasets", nickname = "DataSetMetrics", notes = "Returns all the metrics information related to datasets.")
+    
     public Document totalUsers(@ApiIgnore @Valid @RequestParam MultiValueMap<String, String> params) {
-	logger.info("List of all files in this record/dataset and its usage analytics");
+	logger.info("Total unique users of the repository");
 	return logRepo.totalUsers(params);
 	
     }
