@@ -27,7 +27,7 @@ server:
     max-http-header-size: 65536
     tomcat:
       accesslog:
-        directory: /var/log/rmm/
+        directory: /var/log/rmm
         enabled: true
         file-date-format: yyyy-MM-dd
         prefix: tomcat-access-log
@@ -41,7 +41,7 @@ server:
     
 logging:
   file: rmmapp.log
-  path : /var/log/rmm/
+  path : /var/log/rmm
   exception-conversion-word: '%wEx'
 #  
 #security:
