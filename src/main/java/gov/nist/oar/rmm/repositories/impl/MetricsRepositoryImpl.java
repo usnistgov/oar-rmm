@@ -52,7 +52,7 @@ public class MetricsRepositoryImpl implements MetricsRepository {
 
 	Document resultDoc = new Document();
 	resultDoc.put(collectionName + "Count", count);
-	if (collectionName.equalsIgnoreCase("TotalUsres")) {
+	if (collectionName.equalsIgnoreCase("TotalUsers")) {
 	    return resultDoc;
 	}
 	resultDoc.put("PageSize", request.getPageSize());
@@ -105,7 +105,7 @@ public class MetricsRepositoryImpl implements MetricsRepository {
     @Override
     public Document totalUsers(MultiValueMap<String, String> params) {
 	MongoCollection<Document> userMetrics = mconfig.getUniqueUsersMetricsCollection();
-	return this.processInputAndData(userMetrics, params, "TotalUsres");
+	return this.processInputAndData(userMetrics, params, "TotalUsers");
 
     }
     /**
