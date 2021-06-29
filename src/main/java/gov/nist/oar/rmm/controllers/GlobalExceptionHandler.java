@@ -12,7 +12,6 @@
  */
 package gov.nist.oar.rmm.controllers;
 
-
 import java.io.IOException;
 
 import org.slf4j.Logger;
@@ -33,143 +32,162 @@ import gov.nist.oar.rmm.exceptions.InternalServerException;
 import gov.nist.oar.rmm.exceptions.KeyWordNotFoundException;
 import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
 import gov.nist.oar.rmm.utilities.entities.ErrorInfo;
+
 @ControllerAdvice
 /***
- * GlobalExceptionHandler class takes care of any exceptions thrown in the code and 
- * returns appropriate messages
+ * GlobalExceptionHandler class takes care of any exceptions thrown in the code
+ * and returns appropriate messages
+ * 
  * @author Deoyani Nandrekar-Heinis
  *
  */
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
-	
-	private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-	@Autowired
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    @Autowired
     WebRequest request;
-	@ResponseStatus(HttpStatus.CONFLICT)
- 	  @ExceptionHandler(JsonMappingException.class)
-	  @ResponseBody
-	  /**
-	   * Handles General Exception
-	   * @param exception
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo  myErrors(JsonMappingException exception) {
-	    logger.error("----Caught JsonMappingException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
-	    return new ErrorInfo(request.getContextPath(), "General Exception",HttpStatus.CONFLICT.toString());
-      
-	  }
-	
- 	 @ResponseStatus(HttpStatus.CONFLICT)
- 	 @ExceptionHandler(MongoCommandException.class)
-	  @ResponseBody
-	  /**
-	   * Handles General Exception
-	   * @param exception
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo  myErrorTest(com.mongodb.MongoCommandException exception) {
-	    logger.error("----Caught IOException----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
-	    return new ErrorInfo(request.getContextPath(), "General Exception",HttpStatus.CONFLICT.toString());
-     
-	  }
- 	 
-	  @ResponseStatus(HttpStatus.CONFLICT)
-	  @ExceptionHandler(Exception.class)
-	  @ResponseBody
-	  /**
-	   * Handles General Exception
-	   * @param exception
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo  myError(Exception exception) {
-	    logger.error("----Caught Exception----\n"+request.getDescription(false)+"\n Detail IOException:"+exception.getStackTrace());
-	    return new ErrorInfo(request.getContextPath(), "General Exception",HttpStatus.CONFLICT.toString());
-        
-	  }
-	  
-	  @ResponseStatus(HttpStatus.BAD_REQUEST)
-	  @ExceptionHandler(IllegalArgumentException.class)
-	  @ResponseBody
-	  /**
-	   * Handles IllegalArgumentException
-	   * @param IllegalArgumentException
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo illegal(IllegalArgumentException exception) {
-            logger.error("----This is a ilegal argument exception ----\n"+request.getDescription(false)+"\n Detail ArgumentException:"+exception.getStackTrace());
-            return new ErrorInfo(request.getContextPath(), "IllegalArgumentException",HttpStatus.BAD_REQUEST.toString());
-            
-	  }
-	  
-	  @ResponseStatus(HttpStatus.NOT_FOUND)
-	  @ExceptionHandler(KeyWordNotFoundException.class)
-	  @ResponseBody
-	  /***
-	   * Handles KeywordNotFoundException
-	   * @param exception
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo notFound(KeyWordNotFoundException exception) {
-            logger.error("----Caught KeywordNotFoundException----\n"+request.getDescription(false)+"\n Detail NotFoundException:"+exception.getStackTrace());
-            return new ErrorInfo(request.getContextPath(), "KeyWordNotFoundException",HttpStatus.NOT_FOUND.toString());
-            
-	  }
-	  
-	  
-	  @ResponseStatus(HttpStatus.NOT_FOUND)
-	  @ExceptionHandler(ResourceNotFoundException.class)
-	  @ResponseBody
-	  /***
-	   * Handles ResourceNotFoundException
-	   * @param ResourceNotFoundException
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo resourceNotFound(ResourceNotFoundException exception) {
-            logger.error("----Caught ResourceNotFoundException----\n"+request.getDescription(false)+"\n Detail ResourceNotFoundException:"+exception.getStackTrace());
-            return new ErrorInfo(request.getContextPath(), "ResourceNotFoundException",HttpStatus.NOT_FOUND.toString());
-            
-	  }
-	  
-	  @ResponseStatus(HttpStatus.BAD_REQUEST)
-	  @ExceptionHandler(IOException.class)
-	  @ResponseBody
-	  /***
-	   * Handles BadRequest
-	   * @param Exception
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo badRequest(Exception exception) {
-            logger.error("----Caught IOException----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
-            return new ErrorInfo(request.getContextPath(), "IOException",HttpStatus.BAD_REQUEST.toString());
-	  }
-	  
-	  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	  @ExceptionHandler(InternalServerException.class)
-	  @ResponseBody
-	  /***
-	   * Handles BadRequest
-	   * @param Exception
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo internalError(Exception exception) {
-            logger.error("----Caught Internal Error Exception----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
-            return new ErrorInfo(request.getContextPath(), "InternalServer Error",HttpStatus.INTERNAL_SERVER_ERROR.toString());
-	  }
-	  
-	  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	  @ExceptionHandler(RuntimeException.class)
-	  @ResponseBody
-	  /***
-	   * Handles BadRequest
-	   * @param Exception
-	   * @return ErrorInfo object with error details
-	   */
-	  public ErrorInfo runtimeError(RuntimeException exception) {
-            logger.error("----Caught Runtime Exception----\n"+request.getDescription(false)+"\n Detail BadRequestException:"+exception.getStackTrace());
-            return new ErrorInfo(request.getContextPath(), "InternalServer Error",HttpStatus.INTERNAL_SERVER_ERROR.toString());
-	  }
-	  
-	  
-	  
-	  
-} 
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(JsonMappingException.class)
+    @ResponseBody
+    /**
+     * Handles General Exception
+     * 
+     * @param exception
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo myErrors(JsonMappingException exception) {
+	logger.error("----Caught JsonMappingException----\n" + request.getDescription(false) + "\n Detail IOException:"
+		+ exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "General Exception", HttpStatus.CONFLICT.toString());
+
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(MongoCommandException.class)
+    @ResponseBody
+    /**
+     * Handles General Exception
+     * 
+     * @param exception
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo myErrorTest(com.mongodb.MongoCommandException exception) {
+	logger.error("----Caught IOException----\n" + request.getDescription(false) + "\n Detail IOException:"
+		+ exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "General Exception", HttpStatus.CONFLICT.toString());
+
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    /**
+     * Handles General Exception
+     * 
+     * @param exception
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo myError(Exception exception) {
+	logger.error("----Caught Exception----\n" + request.getDescription(false) + "\n Detail IOException:"
+		+ exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "General Exception", HttpStatus.CONFLICT.toString());
+
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    /**
+     * Handles IllegalArgumentException
+     * 
+     * @param IllegalArgumentException
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo illegal(IllegalArgumentException exception) {
+	logger.error("----This is a ilegal argument exception ----\n" + request.getDescription(false)
+		+ "\n Detail ArgumentException:" + exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "IllegalArgumentException", HttpStatus.BAD_REQUEST.toString());
+
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(KeyWordNotFoundException.class)
+    @ResponseBody
+    /***
+     * Handles KeywordNotFoundException
+     * 
+     * @param exception
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo notFound(KeyWordNotFoundException exception) {
+	logger.error("----Caught KeywordNotFoundException----\n" + request.getDescription(false)
+		+ "\n Detail NotFoundException:" + exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "KeyWordNotFoundException", HttpStatus.NOT_FOUND.toString());
+
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseBody
+    /***
+     * Handles ResourceNotFoundException
+     * 
+     * @param ResourceNotFoundException
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo resourceNotFound(ResourceNotFoundException exception) {
+	logger.error("----Caught ResourceNotFoundException----\n" + request.getDescription(false)
+		+ "\n Detail ResourceNotFoundException:" + exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "ResourceNotFoundException", HttpStatus.NOT_FOUND.toString());
+
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IOException.class)
+    @ResponseBody
+    /***
+     * Handles BadRequest
+     * 
+     * @param Exception
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo badRequest(Exception exception) {
+	logger.error("----Caught IOException----\n" + request.getDescription(false) + "\n Detail BadRequestException:"
+		+ exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "IOException", HttpStatus.BAD_REQUEST.toString());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InternalServerException.class)
+    @ResponseBody
+    /***
+     * Handles BadRequest
+     * 
+     * @param Exception
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo internalError(Exception exception) {
+	logger.error("----Caught Internal Error Exception----\n" + request.getDescription(false)
+		+ "\n Detail BadRequestException:" + exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "InternalServer Error",
+		HttpStatus.INTERNAL_SERVER_ERROR.toString());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseBody
+    /***
+     * Handles BadRequest
+     * 
+     * @param Exception
+     * @return ErrorInfo object with error details
+     */
+    public ErrorInfo runtimeError(RuntimeException exception) {
+	logger.error("----Caught Runtime Exception----\n" + request.getDescription(false)
+		+ "\n Detail BadRequestException:" + exception.getStackTrace());
+	return new ErrorInfo(request.getContextPath(), "InternalServer Error",
+		HttpStatus.INTERNAL_SERVER_ERROR.toString());
+    }
+
+}

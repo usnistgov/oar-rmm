@@ -12,60 +12,66 @@
  */
 package gov.nist.oar.rmm.exceptions;
 
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * InternalServerException exception
+ * 
  * @author Deoyani Nandrekar-Heinis
  *
  */
-@ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR, reason="Internal Server Error") //500
-public class InternalServerException  extends RuntimeException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String requestUrl = "";
-	/***
-	 * InternalServerException for given id
-	 * @param id requested identifier
-	 */
-	public InternalServerException(int id){
-		super("The record with given Id="+id);
-	}
-	/**
-	 * InternalServerException
-	 */
-	public InternalServerException(){
-		super("There is an error running your query on the server.");
-	}
-	/***
-	 * KeyWordNotFoundException for requested URL
-	 * @param requestUrl
-	 */
-	public InternalServerException(String requestUrl){
-		
-		super("Internal Server Error for given URL."+requestUrl );
-		this.setRequestUrl(requestUrl);
-	}
-	
-	/***
-	 * Get RequestedURL
-	 * @return String
-	 */
-	public String getRequestUrl(){
-		return this.requestUrl;
-	}
-	
-	/***
-	 * Set RequestedURL
-	 * @param url String
-	 */
-	public void setRequestUrl(String url){
-		this.requestUrl = url;
-	}
-	
+@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Internal Server Error") // 500
+public class InternalServerException extends RuntimeException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private String requestUrl = "";
+
+    /***
+     * InternalServerException for given id
+     * 
+     * @param id requested identifier
+     */
+    public InternalServerException(int id) {
+	super("The record with given Id=" + id);
+    }
+
+    /**
+     * InternalServerException
+     */
+    public InternalServerException() {
+	super("There is an error running your query on the server.");
+    }
+
+    /***
+     * KeyWordNotFoundException for requested URL
+     * 
+     * @param requestUrl
+     */
+    public InternalServerException(String requestUrl) {
+
+	super("Internal Server Error for given URL." + requestUrl);
+	this.setRequestUrl(requestUrl);
+    }
+
+    /***
+     * Get RequestedURL
+     * 
+     * @return String
+     */
+    public String getRequestUrl() {
+	return this.requestUrl;
+    }
+
+    /***
+     * Set RequestedURL
+     * 
+     * @param url String
+     */
+    public void setRequestUrl(String url) {
+	this.requestUrl = url;
+    }
+
 }

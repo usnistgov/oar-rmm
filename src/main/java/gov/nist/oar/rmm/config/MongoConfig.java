@@ -38,7 +38,7 @@ import com.mongodb.client.MongoDatabase;
 /**
  * MongoDB configuration, reading all the conf details from application.yml
  * 
- * @author dsn1
+ * @author Deoyani Nandrekar-Heinis
  *
  */
 public class MongoConfig {
@@ -53,11 +53,13 @@ public class MongoConfig {
 	private MongoCollection<Document> taxonomyCollection;
 	private MongoCollection<Document> resourceApiCollection;
 	private MongoCollection<Document> recordFieldsCollection;
+	//these are collections to collect and serve logs from parsing distribution service
+	private MongoCollection<Document> recordMetricsCollection;
+	private MongoCollection<Document> fileMetricsCollection;
+	private MongoCollection<Document> uniqueUsersCollection;
+	private MongoCollection<Document> repoMetricsCollection;
 	List<ServerAddress> servers = new ArrayList<ServerAddress>();
 	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
-
-//	 @Value("${spring.data.mongodb.database}")
-//	    private String dbname;
 
 	@Value("${dbcollections.records}")
 	private String record;
@@ -71,6 +73,18 @@ public class MongoConfig {
 	@Value("${dbcollections.recordfields}")
 	private String rfields;
 
+	@Value("${dbcollections.recordMetrics}")
+	private String recordMetrics;
+	
+	@Value("${dbcollections.fileMetrics}")
+	private String fileMetrics;
+	
+	@Value("${dbcollections.uniqueUsers}")
+	private String uniqueusers;
+	
+	@Value("${dbcollections.repoMetrics}")
+	private String repoMetrics;
+	
 	@Value("${oar.mongodb.port}")
 	private int port;
 	@Value("${oar.mongodb.host}")
@@ -93,6 +107,10 @@ public class MongoConfig {
 		this.setTaxonomyCollection(this.taxonomy);
 		this.setResourceApiCollection(this.resourceApi);
 		this.setRecordFieldsCollection(this.rfields);
+		this.setRecordMetricsCollection(recordMetrics);
+		this.setfileMetricsCollection(fileMetrics);
+		this.setUniqueUsersMetricsCollection(uniqueusers);
+		this.setRepoMetricsCollection(repoMetrics);
 
 	}
 
@@ -115,6 +133,71 @@ public class MongoConfig {
 		mongoDb = mongoClient.getDatabase(dbname);
 	}
 
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getRepoMetricsCollection() {
+		return this.repoMetricsCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setRepoMetricsCollection(String repoMetrics) {
+	    this.repoMetricsCollection = mongoDb.getCollection(repoMetrics);
+	}
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getUniqueUsersMetricsCollection() {
+		return this.uniqueUsersCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setUniqueUsersMetricsCollection(String uniqueusers) {
+	    this.uniqueUsersCollection = mongoDb.getCollection(uniqueusers);
+	}
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getfileMetricsCollection() {
+		return fileMetricsCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setfileMetricsCollection(String fileMetrics) {
+	    fileMetricsCollection = mongoDb.getCollection(fileMetrics);
+	}
+	
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getRecordMetricsCollection() {
+		return recordMetricsCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setRecordMetricsCollection(String recordMetrics) {
+	    recordMetricsCollection = mongoDb.getCollection(recordMetrics);
+	}
+	
 	/***
 	 * Get records collection from Mongodb
 	 * 

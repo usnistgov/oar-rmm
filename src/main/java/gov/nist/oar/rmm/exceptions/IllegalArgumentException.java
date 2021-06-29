@@ -1,6 +1,5 @@
 package gov.nist.oar.rmm.exceptions;
 
-
 /**
  * This software was developed at the National Institute of Standards and Technology by employees of
  * the Federal Government in the course of their official duties. Pursuant to title 17 Section 105
@@ -14,55 +13,63 @@ package gov.nist.oar.rmm.exceptions;
  * @author: Deoyani Nandrekar-Heinis
  */
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="Argument is not allowed.") //400
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Argument is not allowed.") // 400
 /***
  * ResourceNotFoundException Class To return Http Not_Found error
+ * 
  * @author Deoyani Nandrekar-Heinis
  *
  */
 public class IllegalArgumentException extends RuntimeException {
 
-	private static final long serialVersionUID = -333229234683426537L;
+    private static final long serialVersionUID = -333229234683426537L;
     private String requestUrl = "";
+
     /**
      * ResourceNotFoundException for given Id
+     * 
      * @param id
      */
-	public IllegalArgumentException(int id){
-		super("IllegalArgumentException with id="+id);
-	}
-	/**
-	 * ResourceNotFoundException 
-	 */
-	public IllegalArgumentException(){
-		super("Parameters are missplaced or values are missing.");
-	}
-	/***
-	 * ResourceNotFoundException for requestUrl
-	 * @param requestUrl String
-	 */
-	public IllegalArgumentException(String requestUrl){
-		
-		super("Parameters are missplaced or values are missing.");
-		this.setRequestUrl(requestUrl);
-	}
-	/***
-	 * GetRequestURL
-	 * @return String
-	 */
-	public String getRequestUrl(){
-		return this.requestUrl;
-	}
-	
-	/***
-	 * Set Request URL
-	 * @param url String
-	 */
-	public void setRequestUrl(String url){
-		this.requestUrl = url;
-	}
+    public IllegalArgumentException(int id) {
+	super("IllegalArgumentException with id=" + id);
+    }
+
+    /**
+     * ResourceNotFoundException
+     */
+    public IllegalArgumentException() {
+	super("Parameters are missplaced or values are missing.");
+    }
+
+    /***
+     * ResourceNotFoundException for requestUrl
+     * 
+     * @param requestUrl String
+     */
+    public IllegalArgumentException(String requestUrl) {
+
+	super("Parameters are missplaced or values are missing.");
+	this.setRequestUrl(requestUrl);
+    }
+
+    /***
+     * GetRequestURL
+     * 
+     * @return String
+     */
+    public String getRequestUrl() {
+	return this.requestUrl;
+    }
+
+    /***
+     * Set Request URL
+     * 
+     * @param url String
+     */
+    public void setRequestUrl(String url) {
+	this.requestUrl = url;
+    }
 }

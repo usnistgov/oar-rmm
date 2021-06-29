@@ -20,52 +20,71 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.util.UrlPathHelper;
 import org.springframework.beans.factory.annotation.Value;
 
 @SpringBootApplication
 @RefreshScope
-@ComponentScan(basePackages = {"gov.nist.oar.rmm"})
+@ComponentScan(basePackages = { "gov.nist.oar.rmm" })
 /**
- * Application configuration.
- * Spring Boot initialization.
+ * Application configuration. Spring Boot initialization.
+ * 
  * @author Deoyani Nandrekar-Heinis
  * 
  *
  */
 public class AppConfig {
 
-	 private static Logger log = LoggerFactory.getLogger(AppConfig.class);
+    private static Logger log = LoggerFactory.getLogger(AppConfig.class);
 
-          @Value("${oar.id.ark_naan.default}")
-          private String defnaan;
+    @Value("${oar.id.ark_naan.default}")
+    private String defnaan;
 
-          /** return the default NAAN associated with ARK identifiers in the repository */
-          public String getDefaultNAAN() { return defnaan; }
+    /** return the default NAAN associated with ARK identifiers in the repository */
+    public String getDefaultNAAN() {
+	return defnaan;
+    }
 
-	  /**
-	   * Main runner of the spring-boot class
-	   * @param args
-	   */
-	  
-	  public static void main(String... args) {
-	    log.info("########## Starting oar rmm service ########");
-	    SpringApplication.run(AppConfig.class, args);
-	  }
-	  /**
-	   *Add CORS 
-	   * @return
-	   */
-	  @Bean
-	    public WebMvcConfigurer corsConfigurer() {
-	        return new WebMvcConfigurerAdapter() {
-	            @Override
-	            public void addCorsMappings(CorsRegistry registry) {
-	                registry.addMapping("/**").allowedOrigins("*")
-                                                  .allowCredentials(false);
-	            }
-	        };
+    /**
+     * Main runner of the spring-boot class
+     * 
+     * @param args
+     */
+
+    public static void main(String... args) {
+	log.info("########## Starting oar rmm service ########");
+	SpringApplication.run(AppConfig.class, args);
+    }
+
+    /**
+     * Add CORS
+     * 
+     * @return
+     */
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+	return new WebMvcConfigurerAdapter() {
+	    @Override
+	    public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**");
 	    }
-}
+	    
 
+	    @Override
+            public void configurePathMatch(PathMatchConfigurer configurer) {
+                UrlPathHelper uhlpr = configurer.getUrlPathHelper();
+                if (uhlpr == null) {
+                    uhlpr = new UrlPathHelper();
+                    configurer.setUrlPathHelper(uhlpr);
+                }
+                uhlpr.setRemoveSemicolonContent(false);
+	        configurer.setUseRegisteredSuffixPatternMatch(true);
+	        configurer.setUseSuffixPatternMatch(false);
+            }
+	    
+	};
+    }
+}

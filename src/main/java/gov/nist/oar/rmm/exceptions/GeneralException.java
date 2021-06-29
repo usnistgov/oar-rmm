@@ -11,23 +11,27 @@
  * @author: Deoyani Nandrekar-Heinis
  */
 package gov.nist.oar.rmm.exceptions;
+
 /***
  * GeneralException extends Exception
+ * 
  * @author Deoyani Nandrekar-Heinis
  *
  */
 public class GeneralException extends Exception {
 
-	private static final long serialVersionUID = 1L;
-	
-	public GeneralException(int id){
-		super("Exception Thrown for this record="+id);
-	}
-	public GeneralException(String requestUrl){
-		super("Exception Thrown for this request="+requestUrl);
-	}
-	public GeneralException(){
-		super("Resource you are looking for is not available.");
-	}
-	
+    private static final long serialVersionUID = 1L;
+
+    public GeneralException(int id) {
+	super("Exception Thrown for this record=" + id);
+    }
+
+    public GeneralException(String requestUrl) {
+	super("Exception Thrown for this request=" + requestUrl);
+    }
+
+    public GeneralException() {
+	super("Resource you are looking for is not available.");
+    }
+
 }

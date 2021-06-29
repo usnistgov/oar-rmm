@@ -28,61 +28,61 @@ import org.springframework.util.MultiValueMap;
  */
 public interface CustomRepository {
 
-	/**
-	 * Return the list of records found in database based on given criteria or
-	 * request parameters. Pageable parameter accepts request for number of records
-	 * per page and sorting order.
-	 * 
-	 * @param param request criteria/parameters
-	 * @param p     Pageable request parameters
-	 * @return List of Documents in JSON format
-	 */
-	public List<Document> find(Map<String, String> param, Pageable p);
+    /**
+     * Return the list of records found in database based on given criteria or
+     * request parameters. Pageable parameter accepts request for number of records
+     * per page and sorting order.
+     * 
+     * @param param request criteria/parameters
+     * @param p     Pageable request parameters
+     * @return List of Documents in JSON format
+     */
+    public List<Document> find(Map<String, String> param, Pageable p);
 
-	/**
-	 * Search record with requested parameters without any paging requests.
-	 * 
-	 * @param param search criteria
-	 * @return Document a JSON format with identified record/s
-	 */
-	public Document find(MultiValueMap<String, String> param);
+    /**
+     * Search record with requested parameters without any paging requests.
+     * 
+     * @param param search criteria
+     * @return Document a JSON format with identified record/s
+     */
+    public Document find(MultiValueMap<String, String> param);
 
-	/**
-	 * Returns a list of Taxonomy terms used in the records in the form of flat JSON
-	 * file
-	 * 
-	 * @param param requested parameters
-	 * @return List of Documents/records in JSON format
-	 */
-	public List<Document> findtaxonomy(Map<String, String> param);
+    /**
+     * Returns a list of Taxonomy terms used in the records in the form of flat JSON
+     * file
+     * 
+     * @param param requested parameters
+     * @return List of Documents/records in JSON format
+     */
+    public List<Document> findtaxonomy(Map<String, String> param);
 
-	/**
-	 * Return the list of taxonomy document
-	 * 
-	 * @return
-	 */
-	public List<Document> findtaxonomy();
+    /**
+     * Return the list of taxonomy document
+     * 
+     * @return
+     */
+    public List<Document> findtaxonomy();
 
-	/**
-	 * Get list of resource APIs available
-	 * 
-	 * @return
-	 */
-	public List<Document> findResourceApis();
+    /**
+     * Get list of resource APIs available
+     * 
+     * @return
+     */
+    public List<Document> findResourceApis();
 
-	/**
-	 * Search record for given identifier
-	 * 
-	 * @param id
-	 * @return Document in JSON format
-	 */
-	public Document findRecord(String id);
+    /**
+     * Search record for given identifier
+     * 
+     * @param id
+     * @return Document in JSON format
+     */
+    public Document findRecord(String id);
 
-	/**
-	 * Get the fields or keywords available in database
-	 * 
-	 * @return
-	 */
-	public List<Document> findFieldnames();
+    /**
+     * Get the fields or keywords available in database
+     * 
+     * @return
+     */
+    public List<Document> findFieldnames();
 
 }
