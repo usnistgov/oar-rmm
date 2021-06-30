@@ -1,0 +1,20 @@
+[{"ediid" : "ark:/88434/mds2-2336", "first_time_logged" :"2021-02-01T12:14:05Z", "last_time_logged" : "2021-02-05T22:35:15Z", "total_size" : 16576, "success_get" : 2, "number_users" : 2 }
+,{"ediid" : "mds2-2124", "first_time_logged" : "2021-02-01T12:52:14Z", "last_time_logged" : "2021-02-09T22:27:24Z", "total_size" : 12571650, "success_get" : 15, "number_users" : 9 }
+,{"ediid" : "6CF509047B474AC9E05324570681DE731930", "first_time_logged" : "2021-02-01T13:17:06Z", "last_time_logged" : "2021-02-04T11:08:31Z", "total_size" : 23381824, "success_get" : 13, "number_users" : 9 }
+,{"ediid" : "mds2-2154", "first_time_logged" : "2021-02-01T14:15:21Z", "last_time_logged" : "2021-02-09T19:33:13Z", "total_size" : 112748946, "success_get" : 18, "number_users" : 7 }
+,{"ediid" : "686BF41FF1D773D3E0532457068166DD1903", "first_time_logged" : "2021-02-01T17:38:49Z", "last_time_logged" : "2021-02-09T05:03:15Z", "total_size" : 27339, "success_get" : 4, "number_users" : 4 }
+,{"ediid" : "691DDF3315711C14E0532457068146BE1907", "first_time_logged" : "2021-02-01T18:13:17Z", "last_time_logged" : "2021-02-04T14:56:21Z", "total_size" : 428555, "success_get" : 20, "number_users" : 5 }
+,{"ediid" : "7CAEA9D04EC628DEE05324570681AF372008", "first_time_logged" : "2021-02-01T18:39:36Z", "last_time_logged" : "2021-02-08T12:15:22Z", "total_size" : 64, "success_get" : 1, "number_users" : 2 }
+,{"ediid" : "576CE869311197F3E0531A570681C5C71857", "first_time_logged" : "2021-02-01T20:33:30Z", "last_time_logged" : "2021-02-03T11:11:58Z", "total_size" : 53558, "success_get" : 4, "number_users" : 2 }
+,{"ediid" : "mds2-2303", "first_time_logged" : "2021-02-01T20:42:29Z", "last_time_logged" : "2021-02-08T20:52:46Z", "total_size" : 861, "success_get" : 0, "number_users" : 2 }
+,{"ediid" : "mds2-2225", "first_time_logged" : "2021-02-01T21:51:15Z", "last_time_logged" : "2021-02-02T16:02:04Z", "total_size" : 29746, "success_get" : 11, "number_users" : 3 }
+,{"ediid" : "686C2D502F995C4EE053245706815BD91904", "first_time_logged" : "2021-02-02T00:40:25Z", "last_time_logged" : "2021-02-08T12:14:06Z", "total_size" : 309, "success_get" : 1, "number_users" : 2 }
+,{"ediid" : "7C25917BBFA96466E05324570681F6ED1994", "first_time_logged" : "2021-02-02T00:59:35Z", "last_time_logged" : "2021-02-08T12:08:59Z", "total_size" : 581, "success_get" : 1, "number_users" : 3 }
+,{"ediid" : "mds2-2184", "first_time_logged" : "2021-02-02T01:02:32Z", "last_time_logged" : "2021-02-08T14:31:25Z", "total_size" : 2466, "success_get" : 1, "number_users" : 3 }
+,{"ediid" : "8E0EBB30A2CA18B8E053245706813B342089", "first_time_logged" : "2021-02-02T08:22:07Z", "last_time_logged" : "2021-02-02T08:25:48Z", "total_size" : 231196, "success_get" : 2, "number_users" : 1 }
+,{"ediid" : "6A4D752E493C3B19E053245706819BFD1917", "first_time_logged" : "2021-02-02T10:57:01Z", "last_time_logged" : "2021-02-08T12:16:08Z", "total_size" : 23603, "success_get" : 1, "number_users" : 2 }
+,{"ediid" : "ark:/88434/mds2-2202", "first_time_logged" : "2021-02-02T11:18:10Z", "last_time_logged" : "2021-02-09T15:23:10Z", "total_size" : 602977306, "success_get" : 65, "number_users" : 10 }
+,{"ediid" : "mds2-2160", "first_time_logged" : "2021-02-02T14:34:22Z", "last_time_logged" : "2021-02-05T13:56:02Z", "total_size" : 192, "success_get" : 3, "number_users" : 3 }
+,{"ediid" : "mds2-2254", "first_time_logged" : "2021-02-02T20:02:53Z", "last_time_logged" : "2021-02-04T10:13:01Z", "total_size" : 64, "success_get" : 1, "number_users" : 2 }
+,{"ediid" : "8697BBCF15D113AEE05324570681C74F2061", "first_time_logged" : "2021-02-02T20:37:42Z", "last_time_logged" : "2021-02-06T14:02:06Z", "total_size" : 446860, "success_get" : 4, "number_users" : 3 }
+,{"ediid" : "mds2-2271", "first_time_logged" : "2021-02-02T21:52:37Z", "last_time_logged" : "2021-02-02T21:54:20Z", "total_size" : 2882, "success_get" : 2, "number_users" : 1 }]
