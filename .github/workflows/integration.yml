@@ -1,5 +1,8 @@
-name: testall
-on:   [pull_request, workflow_dispatch]
+name: integration
+on:
+  workflow_dispatch:
+  push:
+    branches: [integration]
 jobs:
   testall:
     runs-on: ubuntu-20.04
