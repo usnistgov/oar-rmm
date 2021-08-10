@@ -14,6 +14,7 @@ package gov.nist.oar.rmm.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -24,7 +25,11 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
-import org.springframework.beans.factory.annotation.Value;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 
 @SpringBootApplication
 @RefreshScope
@@ -87,4 +92,16 @@ public class AppConfig {
 	    
 	};
     }
+    
+    @Bean
+    public OpenAPI customOpenAPI(@Value("1.1") String appVersion) {
+       return new OpenAPI()
+//        .components(new Components().addSecuritySchemes("basicScheme",
+//                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
+	       .components(new Components())
+        .info(new Info().title("Resource Metadata Management API").version(appVersion)
+                .license(new License().name("NIST Software").url("https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications")));
+    }
+    
+
 }

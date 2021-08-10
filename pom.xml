@@ -66,18 +66,24 @@
 		</dependency>
 
 		<!-- swagger docs -->
+		
 		<dependency>
+      		<groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.5.10</version>
+        </dependency>
+<!-- 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${springfox.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>io.springfox</groupId> <artifactId>springfox-staticdocs</artifactId> 
-			<version>${springfox.version}</version> </dependency> -->
+		<dependency> <groupId>io.springfox</groupId> <artifactId>springfox-staticdocs</artifactId> 
+			<version>${springfox.version}</version> </dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>${springfox.version}</version>
-		</dependency>
+		</dependency> -->
 		<!-- mongodb -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
