@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.*;
 //import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@Tag(name = "Metrics API")
+@Tag(name = "Metrics API", description = "This set of endpoints  serve the usage metrics for data distribution by public data repository.")
 
 @Validated
 @RequestMapping("/usagemetrics")
@@ -48,7 +48,7 @@ public class MetricsController {
 	 @Parameter(name = "size", description = "Number of records per page."),
 	 @Parameter(name = "sort.desc", description = "sort on the fields seperated by comma (one or more)."),
 	 @Parameter(name = "sort.asc", description = "Sort in ascending order seperated by comma (one or more).") })
-    @Operation(summary = "Get the metrics for given dataset or list of datasets", description = "Returns all the metrics information related to datasets."
+    @Operation(summary = "Metrics List of datasets", description = "Get the metrics for given dataset or list of datasets."
 	    + "\n following are some search query examples" + "\n 1. /records"
 	    + "\n /records?page=1&size=2"
 	    + "\n /recorsd?sort.desc=<field or comma seperated list of fields>")
@@ -75,7 +75,7 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = {"/records/**"  }, method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Get the metrics for given dataset or list of datasets",description = "Returns all the metrics information related to given datasets.")
+    @Operation(summary = "Dataset metrics",description = "Returns all the metrics information related to given datasets.")
     
     public Document getRecord(@Parameter(hidden = true) @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("Dataset level metrics");
@@ -98,7 +98,7 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/files" }, method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "List all files and respective metrics information", description = "Returns all the metrics information related to files.")
+    @Operation(summary = "All Files Metrics", description = "Returns all the metrics information related to files.")
     
     public Document listFile(@Parameter(hidden = true) @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("List of all files in this record/dataset and its usage analytics");
@@ -114,7 +114,7 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/files/**" }, method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Get metrics for particular file or list of files in particualr dataset", description = "Returns all the metrics information related to particualr file or list of files from particular dataset.")
+    @Operation(summary = "File Metrics", description = "Returns all the metrics information related to requested file or list of files from given dataset.")
     
     public Document getFile(@Parameter(hidden = true) @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("List of all files in this record/dataset and its usage analytics");
@@ -138,7 +138,7 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/repo" }, method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Repository level metrics summary",  description = "Returns all the metrics information related to complete repository.")
+    @Operation(summary = "Repository Metrics",  description = "Returns all the metrics information related to complete repository.")
     
     public Document repoMetrics(@Parameter(hidden = true) @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("Repository level metrics summmary.");
@@ -152,7 +152,7 @@ public class MetricsController {
      * @return
      */
     @RequestMapping(value = { "/totalusers" }, method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Get the metrics for given dataset or list of datasets", description =  "Returns all the metrics information related to datasets.")
+    @Operation(summary = "Total Unique Users", description =  "Returns all the metrics information related to datasets.")
     public Document totalUsers(@Parameter(hidden = true) @Valid @RequestParam MultiValueMap<String, String> params) {
 	logger.info("Total unique users of the repository");
 	return logRepo.totalUsers(params);

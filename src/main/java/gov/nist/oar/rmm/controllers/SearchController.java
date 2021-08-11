@@ -45,7 +45,7 @@ import io.swagger.v3.oas.annotations.*;
 //import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@Tag(name = "API endpoints to search EDI/PDL data")
+@Tag(name = "Search API", description =" These endpoints provide search functionality for public data repository metadata")
 /***
  * Main search controller. Searches data in Mongodb database.
  * 

@@ -12,6 +12,10 @@
  */
 package gov.nist.oar.rmm.config;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +29,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
+
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -94,13 +99,48 @@ public class AppConfig {
     }
     
     @Bean
-    public OpenAPI customOpenAPI(@Value("1.1") String appVersion) {
+    public OpenAPI customOpenAPI(@Value("1.1.0") String appVersion) {
+	appVersion = VERSION;
        return new OpenAPI()
 //        .components(new Components().addSecuritySchemes("basicScheme",
 //                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
 	       .components(new Components())
         .info(new Info().title("Resource Metadata Management API").version(appVersion)
                 .license(new License().name("NIST Software").url("https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications")));
+    }
+    
+    
+    /**
+     * The service name
+     */
+    public final static String NAME;
+
+    /**
+     * The version of the service
+     */
+    public final static String VERSION;
+
+    static {
+        String name = null;
+        String version = null;
+        try (InputStream verf =  AppConfig.class.getClassLoader().getResourceAsStream("VERSION")) {
+            if (verf == null) {
+                name = "oar-rmm";
+                version = "not set";
+            }
+            else {
+                BufferedReader vrdr = new BufferedReader(new InputStreamReader(verf));
+                String line = vrdr.readLine();
+                String[] parts = line.split("\\s+");
+                name = parts[0];
+                version = (parts.length > 1) ? parts[1] : "missing";
+            }
+        } catch (Exception ex) {
+            name = "oar-rmm";
+            version = "unknown";
+        }
+        NAME = name;
+        VERSION = version;
     }
     
 
