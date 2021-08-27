@@ -64,19 +64,18 @@ public class VersionsReleasesController {
 	    @Parameter(name = "size", description = "Number of records per page."),
 	    @Parameter(name = "sort.desc", description = "sort on the fields seperated by comma (one or more)."),
 	    @Parameter(name = "sort.asc", description = "Sort in ascending order seperated by comma (one or more).") })
-    @Operation(summary = "Get/Search NERDm records.", description = "Resource returns all the data if no request parameter mentioned."
-	    + "\n following are some search query examples" + "\n 1. /records?searchphrase=<phrase or words>"
-	    + "\n 2. /records?key1=value1&logicalOp=AND&key2=value2..."
-	    + "\n 3. /records?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
-	    + "\n 5. /recorsd?sort.desc=<field or comma seperated list of fields>")
+    @Operation(summary = "Get/Search Versions dataset.", description = "Return all the versions available based on query criteria."
+	    + "\n following are some search query examples" + "\n 1. /versions?searchphrase=<phrase or words>"
+	    + "\n 2. /versions?key1=value1&logicalOp=AND&key2=value2..."
+	    + "\n 3. /versions?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
+	    + "\n 5. /versions?sort.desc=<field or comma seperated list of fields>")
     @RequestMapping(value = { "/versions" }, method = RequestMethod.GET, produces = "application/json")
     /**
-     * Search the records repository, if no parameters given returns whole
-     * collection
+     * Search versions dataset for given record or dataset identifier.
      * 
      * @param params number of query parameters
      * @param p      pagination
-     * @return Returns document containing result count and results array.
+     * @return Returns document containing record/document for specific version
      * @throws IOException
      */
     public Document searchVersions(@Parameter(hidden = true)  @Valid @RequestParam MultiValueMap<String, String> params,
@@ -109,10 +108,10 @@ public class VersionsReleasesController {
 	return repo.findVersion(params, p);
     }
 
-    @RequestMapping(value = { "/records/{id}" }, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = { "/versions/{id}" }, method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Get NERDm record of given id.",description = "Resource returns a NERDm Record by given ediid.")
     /**
-     * Get record for given id to get all the versions
+     * Get versions data for given identifier
      * 
      * @param id
      * @return Returns Document
@@ -124,20 +123,100 @@ public class VersionsReleasesController {
     }
 
     @RequestMapping(value = {
-	    "/records/ark:/{naan:\\d+}/{id}" }, method = RequestMethod.GET, produces = "application/json")
+	    "/versions/ark:/{naan:\\d+}/{id}" }, method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ark identifier.")
     /**
-     * Get record for given id
+     * Get versions data for given identifier
      * 
      * @param id   the local portion of an ARK identifier to match
      * @param naan the ARK identifier's naming authority number (NAAN)
      * @return Returns Document
      * @throws IOException
      */
-    public Document record(@PathVariable @Valid String id, @PathVariable String naan) throws IOException {
+    public Document getVersion(@PathVariable @Valid String id, @PathVariable String naan) throws IOException {
 	String ediid = "ark:/" + naan + "/" + id;
 	logger.info("Get record by full ARK id: " + ediid);
 	return repo.findVersion(ediid);
     }
 
+    @Parameters ({
+	    @Parameter(name = "page", description = "Results page you want to retrieve (0..N)"),
+	    @Parameter(name = "size", description = "Number of records per page."),
+	    @Parameter(name = "sort.desc", description = "sort on the fields seperated by comma (one or more)."),
+	    @Parameter(name = "sort.asc", description = "Sort in ascending order seperated by comma (one or more).") })
+    @Operation(summary = "Search Releasesets repository.", description = "Returns all the documents in Releaseset collection based on input criteria."
+	    + "\n following are some search query examples" + "\n 1. /releaseSets?searchphrase=<phrase or words>"
+	    + "\n 2. /releaseSets?key1=value1&logicalOp=AND&key2=value2..."
+	    + "\n 3. /releaseSets?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
+	    + "\n 5. /releaseSets?sort.desc=<field or comma seperated list of fields>")
+    @RequestMapping(value = { "/releaseSets" }, method = RequestMethod.GET, produces = "application/json")
+    /**
+     * Search the Releassets repository, if no parameters given returns whole
+     * collection
+     * 
+     * @param params number of query parameters
+     * @param p      pagination
+     * @return Returns document containing result count and results array.
+     * @throws IOException
+     */
+    public Document serachReleasesets(@Parameter(hidden = true)  @Valid @RequestParam MultiValueMap<String, String> params,
+	    @Parameter(hidden = true)  @PageableDefault(size = 150) Pageable p) throws IOException {
+
+	/**
+	 * This particular snippet has been added because if there are same name keys
+	 * are used the input parameters will be grouped in array In that case the
+	 * sequence from left to right was not kept as it is. In that case logicalOp was
+	 * always after all the key,value pairs and position of logical operator was
+	 * difficult to determine. Hence the original query string is used for initial
+	 * validation of the request.
+	 */
+	if (request.getQueryString() != null) {
+	    String[] rParams = request.getQueryString().split("&");
+	    String prevParam = "";
+	    for (int i = 0; i < rParams.length; i++) {
+		String paramName = rParams[i].split("=")[0];
+		if (prevParam.equalsIgnoreCase("logicalOp")
+			&& (paramName.equals("include") || paramName.equalsIgnoreCase("exclude"))) {
+		    throw new IllegalArgumentException(
+			    "check parameters, There should be key=value parameter after logicalOp.");
+		}
+		prevParam = paramName;
+	    }
+	}
+
+	logger.info(
+		"Search request sent to" + request.getRequestURI() + " with query string:" + request.getQueryString());
+	return repo.findReleaseset(params, p);
+    }
+
+    @RequestMapping(value = { "/releaseSets/{id}" }, method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Get NERDm record of given id.",description = "Resource returns a NERDm Record by given ediid.")
+    /**
+     * Get ReleaseSet for given id to get all the versions
+     * 
+     * @param id
+     * @return Returns Document representing ReleaseSets
+     * @throws IOException
+     */
+    public Document getReleaseSets(@PathVariable @Valid String id) throws IOException {
+	logger.info("Get record by id: " + id);
+	return repo.findReleaseset(id);
+    }
+
+    @RequestMapping(value = {
+	    "/releaseSets/ark:/{naan:\\d+}/{id}" }, method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ark identifier.")
+    /**
+     * Get all the ReleaseSet for given record id
+     * 
+     * @param id   the local portion of an ARK identifier to match
+     * @param naan the ARK identifier's naming authority number (NAAN)
+     * @return Returns Document representing Releasesets
+     * @throws IOException
+     */
+    public Document getReleaseSets(@PathVariable @Valid String id, @PathVariable String naan) throws IOException {
+	String ediid = "ark:/" + naan + "/" + id;
+	logger.info("Get record by full ARK id: " + ediid);
+	return repo.findReleaseset(ediid);
+    }
 }
