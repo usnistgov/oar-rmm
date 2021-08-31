@@ -1,7 +1,5 @@
 package gov.nist.oar.rmm.repositories.impl;
 
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,32 +22,61 @@ import gov.nist.oar.rmm.repositories.VersionReleasesetsRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
 @Service
-public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepository{
-    
+public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepository {
+
     private Logger logger = LoggerFactory.getLogger(VersionReleasesetsRepositoryImpl.class);
-    
+
     @Autowired
     MongoConfig mconfig;
 
     @Autowired
     AppConfig appconfig;
 
-    
+    /**
+     * Search Versions dataset to get version of the record This can be queried
+     * using key,value pairs as parameters
+     * 
+     * @param param key,value parameters
+     * @param p     pagination
+     * @return
+     */
     @Override
     public Document findVersion(MultiValueMap<String, String> param, Pageable p) {
-	
+
 	return this.queryResults(param, p, "Versions");
     }
-    
-   private Document queryResults(MultiValueMap<String, String> param, Pageable p, String collectionName) {
-        ProcessRequest request = new ProcessRequest();
+
+    /**
+     * Search Releasesets dataset using key,value pair where key is any field in the
+     * Releasets metadata schema
+     * 
+     * @param param
+     * @param p
+     * @return
+     */
+    @Override
+    public Document findReleaseset(MultiValueMap<String, String> param, Pageable p) {
+	return this.queryResults(param, p, "ReleaseSets");
+    }
+
+    /**
+     * This is a common utility used by the findVersions and findReleasesets. This
+     * helps query given collection with specified criteria.
+     * 
+     * @param param          key,value pairs
+     * @param p              pagination information
+     * @param collectionName Name of the dataset to search from
+     * @return
+     */
+    private Document queryResults(MultiValueMap<String, String> param, Pageable p, String collectionName) {
+	ProcessRequest request = new ProcessRequest();
 	request.parseSearch(param);
 	MongoCollection<Document> mcollection = null;
-	if("versions".equalsIgnoreCase(collectionName))
+	if ("versions".equalsIgnoreCase(collectionName))
 	    mcollection = mconfig.getVersionsCollection();
-	else if("releaseSets".equalsIgnoreCase(collectionName)) 
+	else if ("releaseSets".equalsIgnoreCase(collectionName))
 	    mcollection = mconfig.getReleaseSetsCollection();
-	
+
 	long count = 0;
 	count = mcollection.count(request.getFilter());
 
@@ -61,28 +88,52 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
 	}
 
 	Document resultDoc = new Document();
-	resultDoc.put(collectionName+" Count", count);
+	resultDoc.put(collectionName + " Count", count);
 	resultDoc.put("PageSize", request.getPageSize());
-	resultDoc.put(collectionName+" data", aggre);
+	resultDoc.put(collectionName + " data", aggre);
 	return resultDoc;
-   }
-
-    @Override
-    public Document findReleaseset(MultiValueMap<String, String> param, Pageable p) {
-	return this.queryResults(param, p, "ReleaseSets");
     }
 
+    /**
+     * Find the document from Versions dataset for given version identifier
+     * 
+     * @param id version identifier
+     * @return
+     */
+    @Override
+    public Document findVersion(String ediid) {
+	return queryResult(ediid, "versions");
+    }
 
+    /**
+     * Find the document from the ReleaseSets for given releasesets identifier
+     * 
+     * @param id
+     * @return
+     */
+    @Override
+    public Document findReleaseset(String id) {
+	return queryResult(id, "releasesets");
+    }
+
+    /**
+     * The common query processor and executor for both versions and releasesets
+     * 
+     * @param id             requested identifier
+     * @param collectionName Name of the collection to be queried
+     * @return
+     */
     private Document queryResult(String id, String collectionName) {
-	Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
+
+	Pattern legal = Pattern.compile("[^a-z0-9:/-][.]", Pattern.CASE_INSENSITIVE);
 	Matcher m = legal.matcher(id);
 	if (m.find())
 	    throw new IllegalArgumentException("Illegal identifier");
 
 	MongoCollection<Document> mcollection = null;
-	if("versions".equalsIgnoreCase(collectionName))
+	if ("versions".equalsIgnoreCase(collectionName))
 	    mcollection = mconfig.getVersionsCollection();
-	else if("releaseSets".equalsIgnoreCase(collectionName)) 
+	else if ("releaseSets".equalsIgnoreCase(collectionName))
 	    mcollection = mconfig.getReleaseSetsCollection();
 	String useid = id;
 
@@ -100,20 +151,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
 	    throw new ResourceNotFoundException("No record available for given id.");
 	}
 
-	return mcollection.find(Filters.eq("ediid", useid)).first();
-    }
-
-    @Override
-    public Document findVersion(String ediid) {
-	return queryResult(ediid, "Versions");
-    }
-
-
-
-
-    @Override
-    public Document findReleaseset(String id) {
-	return queryResult(id, "releasesets");
+	return mcollection.find(Filters.eq("@id", useid)).first();
     }
 
 }

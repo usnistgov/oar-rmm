@@ -18,11 +18,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -47,11 +43,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
 import com.mongodb.util.FongoJSON;
 
-import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
 import gov.nist.oar.rmm.repositories.VersionReleasesetsRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
@@ -149,7 +142,7 @@ public class VersionsReleasesetsRepositoryImplTest implements VersionReleasesets
 	long resCnt = 15;
 	List<DBObject> rdata = (List<DBObject>) r.get("Versions data");
 	for (DBObject rd : rdata) {
-	    System.out.println(rd.get("title"));
+	    //System.out.println(rd.get("title"));
 	}
 	assertEquals(r.get("Versions Count"), resCnt);
     }
@@ -180,7 +173,7 @@ public class VersionsReleasesetsRepositoryImplTest implements VersionReleasesets
 	String titleReleaseSet = "";
 	List<DBObject> rdata = (List<DBObject>) r.get("ReleaseSets data");
 	for (DBObject rd : rdata) {
-	    System.out.println(rd.get("title")+ " ::  "+r.get("ReleaseSets count"));
+//	    System.out.println(rd.get("title")+ " ::  "+r.get("ReleaseSets count"));
 	    titleReleaseSet = rd.get("title").toString();
 	    
 	}
@@ -245,16 +238,11 @@ public class VersionsReleasesetsRepositoryImplTest implements VersionReleasesets
 
     
     private Document queryResult(String id, String collectionName) {
-		
-//	
-//	Pattern legal = Pattern.compile("[^a-z0-9:/-]", Pattern.CASE_INSENSITIVE);
-//	Matcher m = legal.matcher(id);
-//	if (m.find())
-//	    throw new IllegalArgumentException("Illegal identifier");
 
 	DBCollection mcollection = null;
 	if("versions".equalsIgnoreCase(collectionName))
 	    mcollection = versionsCollection;
+		
 	else if("releaseSets".equalsIgnoreCase(collectionName)) 
 	    mcollection = releasesetsCollection;
 	String useid = id;

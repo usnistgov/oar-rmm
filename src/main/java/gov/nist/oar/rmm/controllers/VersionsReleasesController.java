@@ -123,7 +123,7 @@ public class VersionsReleasesController {
     }
 
     @RequestMapping(value = {
-	    "/versions/ark:/{naan:\\d+}/{id}" }, method = RequestMethod.GET, produces = "application/json")
+	    "/versions/ark:/{naan:\\d+}/{id:.+}" }, method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ark identifier.")
     /**
      * Get versions data for given identifier
@@ -204,7 +204,7 @@ public class VersionsReleasesController {
     }
 
     @RequestMapping(value = {
-	    "/releaseSets/ark:/{naan:\\d+}/{id}" }, method = RequestMethod.GET, produces = "application/json")
+	    "/releaseSets/ark:/{naan:\\d+}/{id:.+}" }, method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ark identifier.")
     /**
      * Get all the ReleaseSet for given record id
