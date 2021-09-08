@@ -53,6 +53,10 @@ logging:
 
 #management.add-application-context-header: false
 
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
+
 dbcollections: 
          taxonomy: taxonomy
          resources: apis
