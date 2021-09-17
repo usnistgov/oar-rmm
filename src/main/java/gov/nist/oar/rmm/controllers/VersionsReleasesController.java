@@ -13,8 +13,6 @@
 package gov.nist.oar.rmm.controllers;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -34,14 +32,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.nist.oar.rmm.repositories.VersionReleasesetsRepository;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.*;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@Tag(name = "Versions and Releases API", description =" These endpoints provide search functionality for public data repository metadata")
+@Tag(name = "Versions and Releases API", description = " These endpoints provide search functionality for public data repository metadata")
 /***
  * Main search controller. Searches data in Mongodb database.
  * 
@@ -59,16 +56,16 @@ public class VersionsReleasesController {
     @Autowired
     private VersionReleasesetsRepository repo;
 
-    @Parameters ({
-	    @Parameter(name = "page", description = "Results page you want to retrieve (0..N)"),
-	    @Parameter(name = "size", description = "Number of records per page."),
-	    @Parameter(name = "sort.desc", description = "sort on the fields seperated by comma (one or more)."),
-	    @Parameter(name = "sort.asc", description = "Sort in ascending order seperated by comma (one or more).") })
+    @Parameters({ 
+        @Parameter(name = "page", description = "Results page you want to retrieve (0..N)"),
+        @Parameter(name = "size", description = "Number of records per page."),
+        @Parameter(name = "sort.desc", description = "sort on the fields seperated by comma (one or more)."),
+        @Parameter(name = "sort.asc", description = "Sort in ascending order seperated by comma (one or more).") })
     @Operation(summary = "Get/Search Versions dataset.", description = "Return all the versions available based on query criteria."
-	    + "\n following are some search query examples" + "\n 1. /versions?searchphrase=<phrase or words>"
-	    + "\n 2. /versions?key1=value1&logicalOp=AND&key2=value2..."
-	    + "\n 3. /versions?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
-	    + "\n 5. /versions?sort.desc=<field or comma seperated list of fields>")
+            + "\n following are some search query examples" + "\n 1. /versions?searchphrase=<phrase or words>"
+            + "\n 2. /versions?key1=value1&logicalOp=AND&key2=value2..."
+            + "\n 3. /versions?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
+            + "\n 5. /versions?sort.desc=<field or comma seperated list of fields>")
     @RequestMapping(value = { "/versions" }, method = RequestMethod.GET, produces = "application/json")
     /**
      * Search versions dataset for given record or dataset identifier.
@@ -78,38 +75,38 @@ public class VersionsReleasesController {
      * @return Returns document containing record/document for specific version
      * @throws IOException
      */
-    public Document searchVersions(@Parameter(hidden = true)  @Valid @RequestParam MultiValueMap<String, String> params,
-	    @Parameter(hidden = true)  @PageableDefault(size = 150) Pageable p) throws IOException {
+    public Document searchVersions(@Parameter(hidden = true) @Valid @RequestParam MultiValueMap<String, String> params,
+            @Parameter(hidden = true) @PageableDefault(size = 150) Pageable p) throws IOException {
 
-	/**
-	 * This particular snippet has been added because if there are same name keys
-	 * are used the input parameters will be grouped in array In that case the
-	 * sequence from left to right was not kept as it is. In that case logicalOp was
-	 * always after all the key,value pairs and position of logical operator was
-	 * difficult to determine. Hence the original query string is used for initial
-	 * validation of the request.
-	 */
-	if (request.getQueryString() != null) {
-	    String[] rParams = request.getQueryString().split("&");
-	    String prevParam = "";
-	    for (int i = 0; i < rParams.length; i++) {
-		String paramName = rParams[i].split("=")[0];
-		if (prevParam.equalsIgnoreCase("logicalOp")
-			&& (paramName.equals("include") || paramName.equalsIgnoreCase("exclude"))) {
-		    throw new IllegalArgumentException(
-			    "check parameters, There should be key=value parameter after logicalOp.");
-		}
-		prevParam = paramName;
-	    }
-	}
+        /**
+         * This particular snippet has been added because if there are same name keys
+         * are used the input parameters will be grouped in array In that case the
+         * sequence from left to right was not kept as it is. In that case logicalOp was
+         * always after all the key,value pairs and position of logical operator was
+         * difficult to determine. Hence the original query string is used for initial
+         * validation of the request.
+         */
+        if (request.getQueryString() != null) {
+            String[] rParams = request.getQueryString().split("&");
+            String prevParam = "";
+            for (int i = 0; i < rParams.length; i++) {
+                String paramName = rParams[i].split("=")[0];
+                if (prevParam.equalsIgnoreCase("logicalOp")
+                        && (paramName.equals("include") || paramName.equalsIgnoreCase("exclude"))) {
+                    throw new IllegalArgumentException(
+                            "check parameters, There should be key=value parameter after logicalOp.");
+                }
+                prevParam = paramName;
+            }
+        }
 
-	logger.info(
-		"Search request sent to" + request.getRequestURI() + " with query string:" + request.getQueryString());
-	return repo.findVersion(params, p);
+        logger.info(
+                "Search request sent to" + request.getRequestURI() + " with query string:" + request.getQueryString());
+        return repo.findVersion(params, p);
     }
 
     @RequestMapping(value = { "/versions/{id}" }, method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Get NERDm record of given id.",description = "Resource returns a NERDm Record by given ediid.")
+    @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ediid.")
     /**
      * Get versions data for given identifier
      * 
@@ -118,12 +115,12 @@ public class VersionsReleasesController {
      * @throws IOException
      */
     public Document getRecordVersion(@PathVariable @Valid String id) throws IOException {
-	logger.info("Get record by id: " + id);
-	return repo.findVersion(id);
+        logger.info("Get record by id: " + id);
+        return repo.findVersion(id);
     }
 
     @RequestMapping(value = {
-	    "/versions/ark:/{naan:\\d+}/{id:.+}" }, method = RequestMethod.GET, produces = "application/json")
+            "/versions/ark:/{naan:\\d+}/{id:.+}" }, method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ark identifier.")
     /**
      * Get versions data for given identifier
@@ -134,21 +131,21 @@ public class VersionsReleasesController {
      * @throws IOException
      */
     public Document getVersion(@PathVariable @Valid String id, @PathVariable String naan) throws IOException {
-	String ediid = "ark:/" + naan + "/" + id;
-	logger.info("Get record by full ARK id: " + ediid);
-	return repo.findVersion(ediid);
+        String ediid = "ark:/" + naan + "/" + id;
+        logger.info("Get record by full ARK id: " + ediid);
+        return repo.findVersion(ediid);
     }
 
-    @Parameters ({
-	    @Parameter(name = "page", description = "Results page you want to retrieve (0..N)"),
-	    @Parameter(name = "size", description = "Number of records per page."),
-	    @Parameter(name = "sort.desc", description = "sort on the fields seperated by comma (one or more)."),
-	    @Parameter(name = "sort.asc", description = "Sort in ascending order seperated by comma (one or more).") })
+    @Parameters({ 
+        @Parameter(name = "page", description = "Results page you want to retrieve (0..N)"),
+        @Parameter(name = "size", description = "Number of records per page."),
+        @Parameter(name = "sort.desc", description = "sort on the fields seperated by comma (one or more)."),
+        @Parameter(name = "sort.asc", description = "Sort in ascending order seperated by comma (one or more).") })
     @Operation(summary = "Search Releasesets repository.", description = "Returns all the documents in Releaseset collection based on input criteria."
-	    + "\n following are some search query examples" + "\n 1. /releaseSets?searchphrase=<phrase or words>"
-	    + "\n 2. /releaseSets?key1=value1&logicalOp=AND&key2=value2..."
-	    + "\n 3. /releaseSets?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
-	    + "\n 5. /releaseSets?sort.desc=<field or comma seperated list of fields>")
+            + "\n following are some search query examples" + "\n 1. /releaseSets?searchphrase=<phrase or words>"
+            + "\n 2. /releaseSets?key1=value1&logicalOp=AND&key2=value2..."
+            + "\n 3. /releaseSets?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
+            + "\n 5. /releaseSets?sort.desc=<field or comma seperated list of fields>")
     @RequestMapping(value = { "/releaseSets" }, method = RequestMethod.GET, produces = "application/json")
     /**
      * Search the Releassets repository, if no parameters given returns whole
@@ -159,38 +156,39 @@ public class VersionsReleasesController {
      * @return Returns document containing result count and results array.
      * @throws IOException
      */
-    public Document serachReleasesets(@Parameter(hidden = true)  @Valid @RequestParam MultiValueMap<String, String> params,
-	    @Parameter(hidden = true)  @PageableDefault(size = 150) Pageable p) throws IOException {
+    public Document serachReleasesets(
+            @Parameter(hidden = true) @Valid @RequestParam MultiValueMap<String, String> params,
+            @Parameter(hidden = true) @PageableDefault(size = 150) Pageable p) throws IOException {
 
-	/**
-	 * This particular snippet has been added because if there are same name keys
-	 * are used the input parameters will be grouped in array In that case the
-	 * sequence from left to right was not kept as it is. In that case logicalOp was
-	 * always after all the key,value pairs and position of logical operator was
-	 * difficult to determine. Hence the original query string is used for initial
-	 * validation of the request.
-	 */
-	if (request.getQueryString() != null) {
-	    String[] rParams = request.getQueryString().split("&");
-	    String prevParam = "";
-	    for (int i = 0; i < rParams.length; i++) {
-		String paramName = rParams[i].split("=")[0];
-		if (prevParam.equalsIgnoreCase("logicalOp")
-			&& (paramName.equals("include") || paramName.equalsIgnoreCase("exclude"))) {
-		    throw new IllegalArgumentException(
-			    "check parameters, There should be key=value parameter after logicalOp.");
-		}
-		prevParam = paramName;
-	    }
-	}
+        /**
+         * This particular snippet has been added because if there are same name keys
+         * are used the input parameters will be grouped in array In that case the
+         * sequence from left to right was not kept as it is. In that case logicalOp was
+         * always after all the key,value pairs and position of logical operator was
+         * difficult to determine. Hence the original query string is used for initial
+         * validation of the request.
+         */
+        if (request.getQueryString() != null) {
+            String[] rParams = request.getQueryString().split("&");
+            String prevParam = "";
+            for (int i = 0; i < rParams.length; i++) {
+                String paramName = rParams[i].split("=")[0];
+                if (prevParam.equalsIgnoreCase("logicalOp")
+                        && (paramName.equals("include") || paramName.equalsIgnoreCase("exclude"))) {
+                    throw new IllegalArgumentException(
+                            "check parameters, There should be key=value parameter after logicalOp.");
+                }
+                prevParam = paramName;
+            }
+        }
 
-	logger.info(
-		"Search request sent to" + request.getRequestURI() + " with query string:" + request.getQueryString());
-	return repo.findReleaseset(params, p);
+        logger.info(
+                "Search request sent to" + request.getRequestURI() + " with query string:" + request.getQueryString());
+        return repo.findReleaseset(params, p);
     }
 
     @RequestMapping(value = { "/releaseSets/{id}" }, method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Get NERDm record of given id.",description = "Resource returns a NERDm Record by given ediid.")
+    @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ediid.")
     /**
      * Get ReleaseSet for given id to get all the versions
      * 
@@ -199,12 +197,12 @@ public class VersionsReleasesController {
      * @throws IOException
      */
     public Document getReleaseSets(@PathVariable @Valid String id) throws IOException {
-	logger.info("Get record by id: " + id);
-	return repo.findReleaseset(id);
+        logger.info("Get record by id: " + id);
+        return repo.findReleaseset(id);
     }
 
     @RequestMapping(value = {
-	    "/releaseSets/ark:/{naan:\\d+}/{id:.+}" }, method = RequestMethod.GET, produces = "application/json")
+            "/releaseSets/ark:/{naan:\\d+}/{id:.+}" }, method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Get NERDm record of given id.", description = "Resource returns a NERDm Record by given ark identifier.")
     /**
      * Get all the ReleaseSet for given record id
@@ -215,8 +213,8 @@ public class VersionsReleasesController {
      * @throws IOException
      */
     public Document getReleaseSets(@PathVariable @Valid String id, @PathVariable String naan) throws IOException {
-	String ediid = "ark:/" + naan + "/" + id;
-	logger.info("Get record by full ARK id: " + ediid);
-	return repo.findReleaseset(ediid);
+        String ediid = "ark:/" + naan + "/" + id;
+        logger.info("Get record by full ARK id: " + ediid);
+        return repo.findReleaseset(ediid);
     }
 }
