@@ -323,4 +323,20 @@ public class MongoConfig {
 		credentials.add(MongoCredential.createCredential(user, dbname, password.toCharArray()));
 		return new MongoClient(servers, credentials);
 	}
+	
+	/**
+	 * Return versions collection name string.
+	 * @return
+	 */
+	public String getVersionsName() {
+	    return this.versions;
+	}
+	
+	   /**
+     * Return releaseSets collection name string.
+     * @return
+     */
+    public String getReleaseSetsName() {
+        return this.releasesets;
+    }
 }

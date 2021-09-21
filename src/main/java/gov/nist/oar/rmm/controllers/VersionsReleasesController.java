@@ -146,7 +146,7 @@ public class VersionsReleasesController {
             + "\n 2. /releaseSets?key1=value1&logicalOp=AND&key2=value2..."
             + "\n 3. /releaseSets?searchphrase=<phrase or words>&key=value..." + "\n 4. /records?page=1&size=2"
             + "\n 5. /releaseSets?sort.desc=<field or comma seperated list of fields>")
-    @RequestMapping(value = { "/releaseSets" }, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = { "/releaseSets", "/releasesets" }, method = RequestMethod.GET, produces = "application/json")
     /**
      * Search the Releassets repository, if no parameters given returns whole
      * collection

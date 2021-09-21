@@ -43,7 +43,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
     @Override
     public Document findVersion(MultiValueMap<String, String> param, Pageable p) {
 
-        return this.queryResults(param, p, "Versions");
+        return this.queryResults(param, p, mconfig.getVersionsName());
     }
 
     /**
@@ -56,7 +56,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
      */
     @Override
     public Document findReleaseset(MultiValueMap<String, String> param, Pageable p) {
-        return this.queryResults(param, p, "ReleaseSets");
+        return this.queryResults(param, p, mconfig.getReleaseSetsName());
     }
 
     /**
@@ -72,9 +72,9 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
         ProcessRequest request = new ProcessRequest();
         request.parseSearch(param);
         MongoCollection<Document> mcollection = null;
-        if ("versions".equalsIgnoreCase(collectionName))
+        if (mconfig.getVersionsName().equalsIgnoreCase(collectionName))
             mcollection = mconfig.getVersionsCollection();
-        else if ("releaseSets".equalsIgnoreCase(collectionName))
+        else if (mconfig.getReleaseSetsName().equalsIgnoreCase(collectionName))
             mcollection = mconfig.getReleaseSetsCollection();
 
         long count = 0;
@@ -102,7 +102,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
      */
     @Override
     public Document findVersion(String ediid) {
-        return queryResult(ediid, "versions");
+        return queryResult(ediid, mconfig.getVersionsName());
     }
 
     /**
@@ -113,7 +113,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
      */
     @Override
     public Document findReleaseset(String id) {
-        return queryResult(id, "releasesets");
+        return queryResult(id, mconfig.getReleaseSetsName());
     }
 
     /**
