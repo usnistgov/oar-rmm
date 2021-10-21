@@ -56,6 +56,12 @@ logging:
 springdoc:
   swagger-ui:
     tagsSorter: alpha
+    path: /swagger-ui.html
+#    configUrl: /v3/api-docs/swagger-config
+#    enabled: true 
+    disable-swagger-default-url: true
+#  packagesToScan: gov.nist.oar.rmm
+#  pathsToMatch: /rmm
 
 dbcollections: 
          taxonomy: taxonomy

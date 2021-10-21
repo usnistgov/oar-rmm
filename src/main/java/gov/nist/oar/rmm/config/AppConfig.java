@@ -15,6 +15,8 @@ package gov.nist.oar.rmm.config;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,8 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 
 @SpringBootApplication
 @RefreshScope
@@ -101,14 +105,23 @@ public class AppConfig {
     @Bean
     public OpenAPI customOpenAPI(@Value("1.1.0") String appVersion) {
 	appVersion = VERSION;
+	List<Server> servers = new ArrayList<>();
+	servers.add(new Server().url("/rmm"));
+	String description = "These are set of APIs which return the NIST public data repository related information."
+			+ " First one is the Search and discover API to get the dataset results for given criteria or dataset identifier."
+			+ " Second is to get different versions of the records or metadata for given dataset."
+			+ " Third one is to get the usage metrics for different datasets";
+	
        return new OpenAPI()
-//        .components(new Components().addSecuritySchemes("basicScheme",
-//                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
-	       .components(new Components())
-        .info(new Info().title("Resource Metadata Management API").version(appVersion)
+        .components(new Components().addSecuritySchemes("basicScheme",
+                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
+	       .components(new Components()).servers(servers)
+        .info(new Info().title("Resource Metadata Management API")
+                .description(description)
+                .version(appVersion)
+                
                 .license(new License().name("NIST Software").url("https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications")));
     }
-    
     
     /**
      * The service name
