@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.*;
 //import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@Tag(name = "Metrics API", description = "This set of endpoints  serve the usage metrics for data distribution by public data repository.")
+@Tag(name = "Usage Metrics API", description = "This set of endpoints  serve the usage metrics for data distribution by public data repository.")
 
 @Validated
 @RequestMapping("/usagemetrics")
