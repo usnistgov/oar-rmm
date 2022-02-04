@@ -40,6 +40,7 @@ import de.flapdoodle.embed.process.runtime.Network;
 import gov.nist.oar.rmm.repositories.MetricsRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+
 @TestInstance(Lifecycle.PER_CLASS)
 public class MetricsRepositoryImplTest implements MetricsRepository {
 	private static final String CONNECTION_STRING = "mongodb://%s:%d";
