@@ -62,7 +62,7 @@ public class CustomRepositoryImpl implements CustomRepository {
 	request.parseSearch(params);
 	MongoCollection<Document> mcollection = mconfig.getRecordCollection();
 	long count = 0;
-	count = mcollection.count(request.getFilter());
+	count = mcollection.countDocuments(request.getFilter());
 //		if(request.getFilters().size() == 0)
 //			count = mcollection.count(null);
 //		for(int i=0; i<request.getFilters().size(); i++) {
@@ -122,13 +122,13 @@ public class CustomRepositoryImpl implements CustomRepository {
 	String useid = ediid;
 
 	logger.debug("Searching for " + ediid + " as " + useid);
-	long count = mcollection.count(Filters.eq("ediid", useid));
+	long count = mcollection.countDocuments(Filters.eq("ediid", useid));
 	if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
 	    // allow an ediid be an abbreviation of the ARK ID as specified
 	    // by its local portion
 	    useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + ediid;
 	    logger.debug("Searching for " + ediid + " as " + useid);
-	    count = mcollection.count(Filters.eq("ediid", useid));
+	    count = mcollection.countDocuments(Filters.eq("ediid", useid));
 	}
 	if (count == 0) {
 	    // return new Document("Message", "No record available for given id.");

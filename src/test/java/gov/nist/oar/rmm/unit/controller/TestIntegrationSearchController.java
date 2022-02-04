@@ -21,53 +21,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.nio.charset.Charset;
 
-import javax.inject.Inject;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import gov.nist.oar.rmm.config.AppConfig;
+import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.controllers.SearchController;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-//@RunWith(MockitoJUnitRunner.class)
-@ContextConfiguration
-@SpringBootTest(classes = AppConfig.class)
-//@WebAppConfiguration
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = SearchController.class)
+@ContextConfiguration(classes = AppConfig.class)
+@ImportAutoConfiguration(RefreshAutoConfiguration.class)
+@TestPropertySource("classpath:application-test.yml")
 public class TestIntegrationSearchController {
 
 	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
 			MediaType.APPLICATION_JSON.getType(),
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 	
-	private  MockMvc mockMvc;
+	 @Autowired
+	  private MockMvc mockMvc;
 
-	@Autowired
-	private CustomRepository customRepo;
+	 @MockBean
+	    MongoConfig mongoConfig;
+	 
+	 @MockBean
+	 private CustomRepository customRepo;
 
-	@Autowired
-	private SearchController searchController;
-    
-	@Inject
-	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-    
-	@Before
-	public void setup() {
-		this.mockMvc = MockMvcBuilders.standaloneSetup(searchController)
-				.setCustomArgumentResolvers(pageableArgumentResolver).build();
-	}
-	
 	@Test
 	public void shouldFindRecords() throws Exception {
 		mockMvc.perform(get("/records"))

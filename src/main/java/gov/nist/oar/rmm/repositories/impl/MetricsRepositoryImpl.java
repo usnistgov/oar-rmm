@@ -41,7 +41,7 @@ public class MetricsRepositoryImpl implements MetricsRepository {
 	request.parseSearch(params);
 
 	long count = 0;
-	count = mdCollection.count(request.getFilter());
+	count = mdCollection.countDocuments(request.getFilter());
 
 	AggregateIterable<Document> aggre = null;
 	try {
