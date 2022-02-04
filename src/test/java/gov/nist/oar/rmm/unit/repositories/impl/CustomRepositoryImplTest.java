@@ -73,7 +73,7 @@ public class CustomRepositoryImplTest {
 	@BeforeAll
 	void setup() throws Exception {
 		String ip = "localhost";
-		int port = 231432;
+		int port = 21432;
 
 		ImmutableMongodConfig mongodConfig = MongodConfig.builder()
 				.version(Version.Main.PRODUCTION)

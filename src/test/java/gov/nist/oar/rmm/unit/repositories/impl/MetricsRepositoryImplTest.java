@@ -56,7 +56,7 @@ public class MetricsRepositoryImplTest implements MetricsRepository {
 	@BeforeAll
 	void setup() throws Exception {
 		String ip = "localhost";
-		int port = 233432;
+		int port = 22432;
 
 		ImmutableMongodConfig mongodConfig = MongodConfig.builder()
 				.version(Version.Main.PRODUCTION)
