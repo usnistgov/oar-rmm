@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -55,7 +56,7 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
-
+@TestPropertySource("classpath:bootstrap-test.yml")
 @TestInstance(Lifecycle.PER_CLASS)
 public class CustomRepositoryImplTest {
 	private static final String CONNECTION_STRING = "mongodb://%s:%d";

@@ -61,7 +61,7 @@ import gov.nist.oar.rmm.repositories.CustomRepository;
 @WebMvcTest(controllers = SearchController.class)
 @ContextConfiguration(classes = AppConfig.class)
 @ImportAutoConfiguration(RefreshAutoConfiguration.class)
-@TestPropertySource("classpath:application-test.yml")
+@TestPropertySource("classpath:bootstrap-test.yml")
 public class TestSearchController {
 
 	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(

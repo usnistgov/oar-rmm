@@ -21,6 +21,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -40,8 +42,9 @@ import de.flapdoodle.embed.process.runtime.Network;
 import gov.nist.oar.rmm.repositories.MetricsRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-
+@ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
+@TestPropertySource("classpath:bootstrap-test.yml")
 public class MetricsRepositoryImplTest implements MetricsRepository {
 	private static final String CONNECTION_STRING = "mongodb://%s:%d";
 	private Logger logger = LoggerFactory.getLogger(MetricsRepositoryImplTest.class);

@@ -22,4 +22,21 @@ dbcollections:
 server: 
     port: 8085
     contextPath: /oar-rmm-service
+    max-http-header-size: 65536
+    tomcat:
+      accesslog:
+        directory: /tmp/log/test/rmm
+        enabled: true
+        file-date-format: yyyy-MM-dd
+        prefix: tomcat-access-log
+        suffix: .log
+        rotate: true
+      accept-count: 100
+      max-connections: 10000
+      max-threads: 200
+      min-spare-threads: 10
+
+logging:
+  file: /tmp/rmmapp.log
+  exception-conversion-word: '%wEx'
     
