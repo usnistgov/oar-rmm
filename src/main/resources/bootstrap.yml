@@ -27,7 +27,7 @@ server:
     max-http-header-size: 65536
     tomcat:
       accesslog:
-        directory: /tmp/log/rmm
+        directory: /var/log/rmm
         enabled: true
         file-date-format: yyyy-MM-dd
         prefix: tomcat-access-log

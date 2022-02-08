@@ -141,8 +141,6 @@ public class CustomRepositoryImplTest {
 
 		ProcessRequest request = new ProcessRequest();
 		request.parseSearch(params);
-
-		// DBObject dQ = (DBObject) request.getFilter();
 		long count = 0;
 		if (request.getFilter() == null)
 			count = mongoTemplate.getCollection("record").countDocuments();
