@@ -32,7 +32,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
 
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -43,6 +42,7 @@ import io.swagger.v3.oas.models.servers.Server;
 @SpringBootApplication
 @RefreshScope
 @ComponentScan(basePackages = { "gov.nist.oar.rmm" })
+
 /**
  * Application configuration. Spring Boot initialization.
  * 

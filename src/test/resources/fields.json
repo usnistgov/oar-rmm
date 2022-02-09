@@ -1,0 +1,443 @@
+[
+  {
+    "name": "@type",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Resource type",
+    "item_type": "string",
+    "values": [
+      {
+        "description": "a data collection, service, or web site that is publically available from NIST",
+        "value": "nrdp:PublicDataResource",
+        "label": "Public Data Resource"
+      },
+      {
+        "description": "a data collection, service, or web site that is publically available from NIST",
+        "value": "nrdp:DataPublication",
+        "label": "NIST Data Publication"
+      },
+      {
+        "description": "a web site featuring tools and services useful for research",
+        "value": "nrd:Portal",
+        "label": "Research Portal"
+      },
+      {
+        "description": "a data collection from the NIST Standard Reference Data program",
+        "value": "nrdp:SRD",
+        "label": "Standard Referernce Dataset"
+      }
+    ],
+    "tips": {
+      "search": "the type of resource"
+    },
+    "type": "array"
+  },
+  {
+
+    "name": "@id",
+    "tags": [
+      "id"
+    ],
+    "label": "Repository identifier",
+    "tips": {
+      "search": ""
+    },
+    "type": "string"
+  },
+  {
+    "_id": {
+      "timestamp": 1640161125,
+      "machineIdentifier": 8657994,
+      "processIdentifier": -4122,
+      "counter": 13990205,
+      "time": 1640161125000,
+      "date": "2021-12-22T08:18:45.000+0000",
+      "timeSecond": 1640161125
+    },
+    "name": "title",
+    "tags": [
+      "searchable",
+      "filterable"
+    ],
+    "label": "Resource Title",
+    "tips": {
+      "search": ""
+    },
+    "type": "string"
+  },
+  {
+    "_id": {
+      "timestamp": 1640161125,
+      "machineIdentifier": 8657994,
+      "processIdentifier": -4122,
+      "counter": 13990206,
+      "time": 1640161125000,
+      "date": "2021-12-22T08:18:45.000+0000",
+      "timeSecond": 1640161125
+    },
+    "name": "contactPoint",
+    "tags": [
+      "filterable"
+    ],
+    "label": "Point of Contact",
+    "tips": {
+      "search": "a person or group that can be contacted about this resource"
+    },
+    "type": "object"
+  },
+  {
+
+    "name": "contactPoint.hasEmail",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Email address to contact",
+    "tips": {
+      "search": "the contact's email address"
+    },
+    "type": "object"
+  },
+  {
+    "_id": {
+      "timestamp": 1640161125,
+      "machineIdentifier": 8657994,
+      "processIdentifier": -4122,
+      "counter": 13990208,
+      "time": 1640161125000,
+      "date": "2021-12-22T08:18:45.000+0000",
+      "timeSecond": 1640161125
+    },
+    "name": "contactPoint.fn",
+    "tags": [
+      "searchable",
+      "filterable"
+    ],
+    "label": "Contact's full name",
+    "tips": {
+      "search": "the contact person or group's full name"
+    },
+    "type": "string"
+  },
+  {
+    "name": "modified",
+    "tags": [],
+    "label": "Date of last updates",
+    "tips": {
+      "search": "The date that this resource was last updated"
+    },
+    "type": "date"
+  },
+  {
+    "_id": {
+      "timestamp": 1640161125,
+      "machineIdentifier": 8657994,
+      "processIdentifier": -4122,
+      "counter": 13990210,
+      "time": 1640161125000,
+      "date": "2021-12-22T08:18:45.000+0000",
+      "timeSecond": 1640161125
+    },
+    "name": "issued",
+    "tags": [],
+    "label": "First Release date",
+    "tips": {
+      "search": "The date that this resource was first released"
+    },
+    "type": "date"
+  },
+  {
+    "name": "ediid",
+    "tags": [
+      "searchable",
+      "id"
+    ],
+    "label": "The EDI's assigned identifier",
+    "tips": {
+      "search": "The NIST EDI-assigned identifier"
+    },
+    "type": "string"
+  },
+  {
+    "name": "landingPage",
+    "tags": [
+      "searchable",
+      "filterable"
+    ],
+    "label": "Resource Home Page",
+    "tips": {
+      "search": "The home page for the resource"
+    },
+    "type": "url"
+  },
+  {
+    "name": "description",
+    "tags": [
+      "searchable",
+      "filterable"
+    ],
+    "label": "Resource Description",
+    "tips": {
+      "search": "A summary of what this resource is about"
+    },
+    "type": "string"
+  },
+  {
+    "name": "keyword",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Subject keywords",
+    "item_type": "string",
+    "tips": {
+      "search": "keywords that describe what this resource is about"
+    },
+    "type": "array"
+  },
+  {
+    "name": "topic",
+    "tags": [
+      ""
+    ],
+    "label": "Research Topic",
+    "tips": {
+      "search": ""
+    },
+    "type": "object"
+  },
+  {
+    "name": "topic.tag",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Research Topic",
+    "tips": {
+      "search": "vocabulary terms that describe whatthis resource is about"
+    },
+    "type": "str"
+  },
+  {
+    "_id": {
+      "timestamp": 1640161125,
+      "machineIdentifier": 8657994,
+      "processIdentifier": -4122,
+      "counter": 13990217,
+      "time": 1640161125000,
+      "date": "2021-12-22T08:18:45.000+0000",
+      "timeSecond": 1640161125
+    },
+    "name": "references",
+    "tags": [
+      ""
+    ],
+    "label": "Related Literature References",
+    "items_type": "object",
+    "tips": {
+      "search": ""
+    },
+    "type": "array"
+  },
+  {
+    "name": "references.refType",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Role of the Reference",
+    "tips": {
+      "search": "Term describing what kind of reference this is to the resource"
+    },
+    "type": "string"
+  },
+  {
+    "name": "reference.location",
+    "tags": [
+      ""
+    ],
+    "label": "URL for accessing the reference",
+    "tips": {
+      "search": ""
+    },
+    "type": "url"
+  },
+  {
+    "name": "accessLevel",
+    "tags": [
+      ""
+    ],
+    "label": "Access status",
+    "values": [
+      {
+        "tips": {
+          "search": "available without restrictions"
+        },
+        "value": "public"
+      },
+      {
+        "tips": {
+          "search": "some restrictions apply for access"
+        },
+        "value": "restricted public"
+      },
+      {
+        "tips": {
+          "search": "not publically available"
+        },
+        "value": "non-public"
+      }
+    ],
+    "tips": {
+      "search": "Access status: public=available without restrictions, restricted public=some restrictions apply, non-public=not publically available"
+    },
+    "type": "string"
+  },
+  {
+    "name": "doi",
+    "tags": [
+      "searchable",
+      "id",
+      "filterable"
+    ],
+    "label": "DOI",
+    "tips": {
+      "search": "The persistent Digital Object Identifier (for reference purposes)"
+    },
+    "type": "string"
+  },
+  {
+    "name": "components",
+    "tags": [
+      ""
+    ],
+    "label": "Resource component",
+    "item_type": "object",
+    "tips": {
+      "search": "a part of a resource (like a downloadable file or an API)"
+    },
+    "type": "array"
+  },
+  {
+    "name": "components.@type",
+    "tags": [
+      ""
+    ],
+    "label": "Type of the dataset/file",
+    "item_type": "string",
+    "values": [
+      {
+        "value": "nrdp:DataFile",
+        "label": "Downloadable data file"
+      },
+      {
+        "desription": "another resource that is part of this one",
+        "value": "nrdp:IncludedResource",
+        "label": "Included resource"
+      },
+      {
+        "desription": "a subcollection within this resource",
+        "value": "nrdp:Subcollection",
+        "label": "Collection"
+      },
+      {
+        "desription": "a web page where data within this dataset can be searched for",
+        "value": "nrd:SearchPage",
+        "label": "Search Page"
+      },
+      {
+        "desription": "a software tool that is useful for research",
+        "value": "nrd:Tool",
+        "label": "Tool"
+      }
+    ],
+    "tips": {
+      "search": "a name identifying the type of component"
+    },
+    "type": "array"
+  },
+  {
+    "name": "components.title",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Title of dataset item/file",
+    "tips": {
+      "search": ""
+    },
+    "type": "string"
+  },
+  {
+    "_id": {
+      "timestamp": 1640161125,
+      "machineIdentifier": 8657994,
+      "processIdentifier": -4122,
+      "counter": 13990225,
+      "time": 1640161125000,
+      "date": "2021-12-22T08:18:45.000+0000",
+      "timeSecond": 1640161125
+    },
+    "name": "components.description",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Description of data file/collection",
+    "tips": {
+      "search": ""
+    },
+    "type": "string"
+  },
+  {
+    "name": "components.topic",
+    "tags": [
+      ""
+    ],
+    "label": "Research Topic",
+    "tips": {
+      "search": ""
+    },
+    "type": "object"
+  },
+  {
+    "name": "components.filepath",
+    "tags": [
+      "searchable"
+    ],
+    "label": "Full data file or collection path",
+    "tips": {
+      "search": ""
+    },
+    "type": "string"
+  },
+  {
+    "name": "components.mediaType",
+    "tags": [
+      ""
+    ],
+    "label": "File's download content type",
+    "tips": {
+      "search": ""
+    },
+    "type": "string"
+  },
+  {
+    "name": "components.format",
+    "tags": [
+      ""
+    ],
+    "label": "Data File's format information",
+    "tips": {
+      "search": ""
+    },
+    "type": "object"
+  },
+  {
+    "name": "components.describedBy",
+    "tags": [
+      ""
+    ],
+    "label": "Data file description",
+    "item_type": "string",
+    "tips": {
+      "search": ""
+    },
+    "type": "string"
+  }
+]

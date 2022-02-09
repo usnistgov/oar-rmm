@@ -13,6 +13,7 @@
 package gov.nist.oar.rmm.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -25,10 +26,13 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
+//import com.mongodb.Mongo;
+//import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -269,14 +273,23 @@ public class MongoConfig {
 	}
 
 	/**
-	 * Get Mongo instance to run queries.
+	 * MongoClient : Initialize mongoclient for db operations
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public Mongo mongo() throws Exception {
-		servers.add(new ServerAddress(host, port));
-		credentials.add(MongoCredential.createCredential(user, dbname, password.toCharArray()));
-		return new MongoClient(servers, credentials);
+	public MongoClient mongo() throws Exception {
+		
+		MongoCredential credential = MongoCredential.createCredential(user, dbname, password.toCharArray());
+
+	    MongoClientSettings settings = MongoClientSettings.builder()
+	            .credential(credential)
+	            .applyToSslSettings(builder -> builder.enabled(false))
+	            .applyToClusterSettings(builder -> 
+	                builder.hosts(Arrays.asList(new ServerAddress(host, port))))
+	            .build();
+
+	    MongoClient mongoClient = MongoClients.create(settings);
+	    return mongoClient;
 	}
 }
