@@ -15,6 +15,7 @@ package gov.nist.oar.rmm.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 //import com.mongodb.Mongo;
 //import com.mongodb.MongoClient;
@@ -281,15 +283,23 @@ public class MongoConfig {
 	public MongoClient mongo() throws Exception {
 		
 		MongoCredential credential = MongoCredential.createCredential(user, dbname, password.toCharArray());
-
-	    MongoClientSettings settings = MongoClientSettings.builder()
-	            .credential(credential)
-	            .applyToSslSettings(builder -> builder.enabled(false))
-	            .applyToClusterSettings(builder -> 
-	                builder.hosts(Arrays.asList(new ServerAddress(host, port))))
+//
+	    MongoClientSettings settings = MongoClientSettings.builder() 
+	    		.applyToSslSettings(builder -> builder.enabled(false))
+	            .applyConnectionString(new ConnectionString("mongodb://"+user+":"+password+"@"+host+":"+port))
+	            .applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS).maxSize(200))
+	            .applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS))
+	    		
+//	            .credential(credential)
+//	            .applyToSslSettings(builder -> builder.enabled(false))
+//	            .applyToClusterSettings(builder -> 
+//	                builder.hosts(Arrays.asList(new ServerAddress(host, port))))
+//	            
 	            .build();
 
 	    MongoClient mongoClient = MongoClients.create(settings);
+		
+		
 	    return mongoClient;
 	}
 }
