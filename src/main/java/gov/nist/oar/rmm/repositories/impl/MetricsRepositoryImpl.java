@@ -1,5 +1,8 @@
 package gov.nist.oar.rmm.repositories.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 
 import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.repositories.MetricsRepository;
@@ -42,12 +46,19 @@ public class MetricsRepositoryImpl implements MetricsRepository {
 
 	long count = 0;
 	count = mdCollection.countDocuments(request.getFilter());
-
+	MongoCursor<Document> iter = null;
 	AggregateIterable<Document> aggre = null;
+	List<Document> batch = new ArrayList<>();
 	try {
 	    aggre = mdCollection.aggregate(request.getQueryList());
+	    iter = aggre.iterator();
+	    while (iter.hasNext()) {
+	        batch.add(iter.next());
+	    }
 	} catch (Exception e) {
 	    logger.error(e.getMessage());
+	}finally {
+	    if (iter != null) { iter.close();}
 	}
 
 	Document resultDoc = new Document();
@@ -56,7 +67,7 @@ public class MetricsRepositoryImpl implements MetricsRepository {
 	    return resultDoc;
 	}
 	resultDoc.put("PageSize", request.getPageSize());
-	resultDoc.put(collectionName, aggre);
+	resultDoc.put(collectionName, batch);
 	return resultDoc;
     }
 

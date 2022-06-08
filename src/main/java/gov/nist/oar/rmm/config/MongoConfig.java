@@ -285,7 +285,7 @@ public class MongoConfig {
 		MongoCredential credential = MongoCredential.createCredential(user, dbname, password.toCharArray());
 //
 	    MongoClientSettings settings = MongoClientSettings.builder() 
-	    		.applyToSslSettings(builder -> builder.enabled(false))
+//	    		.applyToSslSettings(builder -> builder.enabled(false))
 	            .applyConnectionString(new ConnectionString("mongodb://"+user+":"+password+"@"+host+":"+port))
 	            .applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS).maxSize(200))
 	            .applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS))
