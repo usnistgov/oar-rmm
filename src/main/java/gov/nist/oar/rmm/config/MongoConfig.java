@@ -281,25 +281,21 @@ public class MongoConfig {
 	 * @throws Exception
 	 */
 	public MongoClient mongo() throws Exception {
-		
-		MongoCredential credential = MongoCredential.createCredential(user, dbname, password.toCharArray());
-//
-	    MongoClientSettings settings = MongoClientSettings.builder() 
-//	    		.applyToSslSettings(builder -> builder.enabled(false))
-	            .applyConnectionString(new ConnectionString("mongodb://"+user+":"+password+"@"+host+":"+port))
-	            .applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS).maxSize(200))
-	            .applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS))
-	    		
-//	            .credential(credential)
-//	            .applyToSslSettings(builder -> builder.enabled(false))
-//	            .applyToClusterSettings(builder -> 
-//	                builder.hosts(Arrays.asList(new ServerAddress(host, port))))
-//	            
-	            .build();
+            String dburl = "mongodb://"+host+":"+port;
+            MongoCredential credential = MongoCredential.createCredential(user, dbname,
+                                                                          password.toCharArray());
+            MongoClientSettings settings = MongoClientSettings.builder() 
+                    .credential(credential)
+                    .applyConnectionString(new ConnectionString(dburl))
+                    .applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS)
+                                                                     .maxSize(200).minSize(5))
+                    .applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS)
+                                                             .readTimeout(15, TimeUnit.SECONDS))
+                    .build();
 
-	    MongoClient mongoClient = MongoClients.create(settings);
-		
-		
-	    return mongoClient;
-	}
+            MongoClient mongoClient = MongoClients.create(settings);
+                
+                
+            return mongoClient;
+        }
 }
