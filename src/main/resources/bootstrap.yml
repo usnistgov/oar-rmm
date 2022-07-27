@@ -68,6 +68,8 @@ dbcollections:
          resources: apis
          records: record 
          recordfields: fields
+         versions: versions
+         releasesets: releasesets
          recordMetrics: recordMetrics
          fileMetrics: fileMetrics
          repoMetrics: repoMetrics

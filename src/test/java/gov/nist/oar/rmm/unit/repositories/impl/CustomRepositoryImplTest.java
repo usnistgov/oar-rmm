@@ -60,7 +60,7 @@ public class CustomRepositoryImplTest implements CustomRepositoryTest {
 	@Before
 	public void initIt() throws Exception {
 	
-		 recordsCollection = fongoRule.getDB("TestDBtemp").getCollection("recordstest");
+		recordsCollection = fongoRule.getDB("TestDBtemp").getCollection("recordstest");
 	    	JSONParser parser = new JSONParser();
 	    	JSONArray a;
 	    	File file = new File(this.getClass().getClassLoader().getResource("record.json").getFile());

@@ -58,6 +58,9 @@ public class MongoConfig {
 	private MongoCollection<Document> fileMetricsCollection;
 	private MongoCollection<Document> uniqueUsersCollection;
 	private MongoCollection<Document> repoMetricsCollection;
+	// versions and releases support
+	private MongoCollection<Document> versionsCollection;
+	private MongoCollection<Document> releaseSetsCollection; 
 	List<ServerAddress> servers = new ArrayList<ServerAddress>();
 	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
 
@@ -85,6 +88,12 @@ public class MongoConfig {
 	@Value("${dbcollections.repoMetrics}")
 	private String repoMetrics;
 	
+	@Value("${dbcollections.versions}")
+	private String versions;
+	
+	@Value("${dbcollections.releasesets}")
+	private String releasesets;
+	
 	@Value("${oar.mongodb.port}")
 	private int port;
 	@Value("${oar.mongodb.host}")
@@ -111,6 +120,8 @@ public class MongoConfig {
 		this.setfileMetricsCollection(fileMetrics);
 		this.setUniqueUsersMetricsCollection(uniqueusers);
 		this.setRepoMetricsCollection(repoMetrics);
+		this.setVersionsCollection(versions);
+		this.setReleaseSetsCollection(releasesets);
 
 	}
 
@@ -268,6 +279,39 @@ public class MongoConfig {
 		recordFieldsCollection = mongoDb.getCollection(recordFields);
 	}
 
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getVersionsCollection() {
+		return this.versionsCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setVersionsCollection(String versions) {
+	    this.versionsCollection = mongoDb.getCollection(versions);
+	}
+	
+	
+	/***
+	 * Get records collection from Mongodb
+	 * 
+	 * @return
+	 */
+	public MongoCollection<Document> getReleaseSetsCollection() {
+		return this.releaseSetsCollection;
+	}
+
+	/**
+	 * Set records collection
+	 */
+	private void setReleaseSetsCollection(String releasesets) {
+	    this.releaseSetsCollection = mongoDb.getCollection(releasesets);
+	}
 	/**
 	 * Get Mongo instance to run queries.
 	 * 
@@ -279,4 +323,20 @@ public class MongoConfig {
 		credentials.add(MongoCredential.createCredential(user, dbname, password.toCharArray()));
 		return new MongoClient(servers, credentials);
 	}
+	
+	/**
+	 * Return versions collection name string.
+	 * @return
+	 */
+	public String getVersionsName() {
+	    return this.versions;
+	}
+	
+	   /**
+     * Return releaseSets collection name string.
+     * @return
+     */
+    public String getReleaseSetsName() {
+        return this.releasesets;
+    }
 }
