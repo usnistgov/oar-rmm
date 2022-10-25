@@ -13,7 +13,9 @@
 package gov.nist.oar.rmm.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
@@ -25,10 +27,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+//import com.mongodb.Mongo;
+//import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -313,30 +319,28 @@ public class MongoConfig {
 	    this.releaseSetsCollection = mongoDb.getCollection(releasesets);
 	}
 	/**
-	 * Get Mongo instance to run queries.
+	 * MongoClient : Initialize mongoclient for db operations
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public Mongo mongo() throws Exception {
-		servers.add(new ServerAddress(host, port));
-		credentials.add(MongoCredential.createCredential(user, dbname, password.toCharArray()));
-		return new MongoClient(servers, credentials);
-	}
-	
-	/**
-	 * Return versions collection name string.
-	 * @return
-	 */
-	public String getVersionsName() {
-	    return this.versions;
-	}
-	
-	   /**
-     * Return releaseSets collection name string.
-     * @return
-     */
-    public String getReleaseSetsName() {
-        return this.releasesets;
-    }
+	public MongoClient mongo() throws Exception {
+            String dburl = "mongodb://"+host+":"+port;
+            MongoCredential credential = MongoCredential.createCredential(user, dbname,
+                                                                          password.toCharArray());
+            MongoClientSettings settings = MongoClientSettings.builder() 
+                    .credential(credential)
+                    .applyConnectionString(new ConnectionString(dburl))
+                    .applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS)
+                                                                     .maxSize(200).minSize(5))
+                    .applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS)
+                                                             .readTimeout(15, TimeUnit.SECONDS))
+                    .build();
+
+            MongoClient mongoClient = MongoClients.create(settings);
+                
+                
+            return mongoClient;
+        }
+
 }

@@ -1,0 +1,624 @@
+{
+    "ResultCount": 5,
+    "PageSize": 0,
+    "ResultData": [
+        {
+            "_id": {
+                "$oid": "58af64268e7b500095b0eb1f"
+            },
+            "license": "http://www.nist.gov/open/license.cfm",
+            "accessLevel": "public",
+            "description": [
+                "References contained in this database are from Bibliography on Atomic Energy Levels and Spectra, NBS Special Publication 363 and Supplements, as well as current references since the last published bibliography collected by the NIST Atomic Spectroscopy Data Center (http://www.nist.gov/physlab/div842/grp01/asdc_info.cfm). These references pertain to atomic structure and spectra that arise from interactions or excitations involving electrons in the outer shells of free atoms and atomic ions, or from inner shell excitations corresponding to frequencies up to the soft x-ray range.   Please note that this database does not contain references to atomic transition probabilities, line intensities, or broadening. These references can be found in two other bibliographic databases maintained by the same Data Center:    NIST Atomic Transition Probability Bibliographic Database (http://physics.nist.gov/fvalbib) and NIST Atomic Spectral Line Broadening Bibliographic Database (http://physics.nist.gov/linebrbib).    References to publications containing critically compiled data can be found in a separate database of NIST compilations of atomic spectroscopy data (http://physics.nist.gov/PhysRefData/datarefs/datarefs_search_form.html)."
+            ],
+            "keyword": [
+                "Actinium",
+                "Aluminium",
+                "Aluminum",
+                "Americium",
+                "Antimony",
+                "Argon",
+                "Arsenic",
+                "Astatine",
+                "Atom",
+                "Atomic Data",
+                "Atomic Ions",
+                "Atomic Physics",
+                "Atomic Properties",
+                "Atomic Spectroscopy",
+                "Atomic energy levels",
+                "Atomic spectra",
+                "Atomic spectral lines",
+                "Barium",
+                "Berkelium",
+                "Beryllium",
+                "Bibliographic Database",
+                "Bibliography",
+                "Bismuth",
+                "Bohrium",
+                "Boron",
+                "Bromine",
+                "Cadmium",
+                "Calcium",
+                "Californium",
+                "Carbon",
+                "Cerium",
+                "Cesium",
+                "Chlorine",
+                "Chromium",
+                "Cobalt",
+                "Columbium",
+                "Copernicium",
+                "Copper",
+                "Curium",
+                "Darmstadtium",
+                "Deuterium",
+                "Doubly Charged",
+                "Doubly Ionized",
+                "Dubnium",
+                "Dysprosium",
+                "Einsteinium",
+                "Element",
+                "Erbium",
+                "Europium",
+                "Fermium",
+                "Flerovium",
+                "Fluorine",
+                "Francium",
+                "Gadolinium",
+                "Gallium",
+                "Germanium",
+                "Gold",
+                "Hafnium",
+                "Hassium",
+                "Helium",
+                "Holmium",
+                "Hydrogen",
+                "Hyperfine structure",
+                "Indium",
+                "Iodine",
+                "Ionization energy",
+                "Ionization potential",
+                "Ionized Atoms",
+                "Iridium",
+                "Iron",
+                "Isotope shifts",
+                "Krypton",
+                "Kurchatovium",
+                "Lanthanum",
+                "Lawrencium",
+                "Lead",
+                "Literature",
+                "Lithium",
+                "Livermorium",
+                "Lutetium",
+                "Magnesium",
+                "Manganese",
+                "Meitnerium",
+                "Mendelevium",
+                "Mercury",
+                "Molybdenum",
+                "Multiply Charged",
+                "Negative Ions",
+                "Neodymium",
+                "Neon",
+                "Neptunium",
+                "Neutral Atoms",
+                "Nickel",
+                "Niobium",
+                "Nitrogen",
+                "Nobelium",
+                "Osmium",
+                "Oxygen",
+                "Palladium",
+                "Phosphorus",
+                "Platinum",
+                "Plutonium",
+                "Polonium",
+                "Potassium",
+                "Praseodymium",
+                "Promethium",
+                "Protactinium",
+                "Quadruply Charged",
+                "Quadruply Ionized",
+                "Radium",
+                "Radon",
+                "Rhenium",
+                "Rhodium",
+                "Roentgenium",
+                "Rubidium",
+                "Ruthenium",
+                "Rutherfordium",
+                "Samarium",
+                "Scandium",
+                "Seaborgium",
+                "Searchable",
+                "Selenium",
+                "Silicium",
+                "Silicon",
+                "Silver",
+                "Singly Charged",
+                "Singly Ionized",
+                "Sodium",
+                "Spectrum",
+                "Stark effect",
+                "Strontium",
+                "Sulfur",
+                "Sulphur",
+                "Tantalum",
+                "Technetium",
+                "Tellurium",
+                "Terbium",
+                "Thallium",
+                "Thorium",
+                "Thulium",
+                "Tin",
+                "Titanium",
+                "Triply Charged",
+                "Triply Ionized",
+                "Tritium",
+                "Tungsten",
+                "Ununbium",
+                "Ununhexium",
+                "Ununoctium",
+                "Ununpentium",
+                "Ununquadium",
+                "Ununseptium",
+                "Ununtrium",
+                "Unununium",
+                "Uranium",
+                "Vanadium",
+                "Xenon",
+                "Ytterbium",
+                "Yttrium",
+                "Zeeman effect",
+                "Zinc",
+                "Zirconium",
+                "wWavelengths"
+            ],
+            "title": "NIST Bibliographic Database on Atomic Energy Levels and Spectra - SRD 169",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "National Institute of Standards and Technology"
+            },
+            "_schema": "https://www.nist.gov/od/dm/nerdm-schema/v0.1#",
+            "modified": "2014-09-19",
+            "topic": [],
+            "language": [
+                "en"
+            ],
+            "ediid": "FDB5909746915200E043065706813E54153",
+            "bureauCode": [
+                "006:55"
+            ],
+            "inventory": [
+                {
+                    "forCollection": "",
+                    "descCount": 0,
+                    "childCollections": [],
+                    "childCount": 0,
+                    "byType": []
+                }
+            ],
+            "programCode": [
+                "006:052"
+            ],
+            "@context": "https://www.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            "contactPoint": {
+                "hasEmail": "mailto:alexander.kramida@nist.gov",
+                "@type": "vcard:Contact",
+                "fn": "Alexander Kramida"
+            },
+            "landingPage": "http://physics.nist.gov/elevbib",
+            "@id": "ark:/88434/pdr02j5x",
+            "@type": [
+                "nrdp:PublicDataResource"
+            ],
+            "_extensionSchemas": [
+                "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
+            ]
+        },
+        {
+            "_id": {
+                "$oid": "58af64268e7b500095b0eb20"
+            },
+            "_schema": "https://www.nist.gov/od/dm/nerdm-schema/v0.1#",
+            "topic": [],
+            "references": [
+                {
+                    "refType": "IsReferencedBy",
+                    "_extensionSchemas": [
+                        "https://www.nist.gov/od/dm/nerdm-schema/v0.1#/definitions/DCiteDocumentReference"
+                    ],
+                    "@type": "deo:BibliographicReference",
+                    "location": "http://physics.nist.gov/PhysRefData/MolSpec/Diatomic/Html/intro.html"
+                }
+            ],
+            "_extensionSchemas": [
+                "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
+            ],
+            "landingPage": "http://www.nist.gov/pml/data/msd-di/index.cfm",
+            "title": "NIST Diatomic Spectral Database - SRD 114",
+            "inventory": [
+                {
+                    "forCollection": "",
+                    "descCount": 0,
+                    "childCollections": [],
+                    "childCount": 0,
+                    "byType": []
+                }
+            ],
+            "programCode": [
+                "006:052"
+            ],
+            "@context": "https://www.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            "description": [
+                "This database contains the rotational spectral lines observed and reported in the open literature for 121 diatomic molecules through July 2002. The isotopic molecular species, assigned quantum numbers, observed frequency, estimated measurement uncertainty, and reference are given for each transition reported. Derived molecular properties, such as rotational constants, hyperfine structure constants, electric dipole moments, rotational g-factors and internuclear distances, are listed with one standard deviation uncertainties for all species."
+            ],
+            "language": [
+                "en"
+            ],
+            "bureauCode": [
+                "006:55"
+            ],
+            "contactPoint": {
+                "hasEmail": "mailto:data@nist.gov",
+                "@type": "vcard:Contact",
+                "fn": "data@nist.gov"
+            },
+            "accessLevel": "public",
+            "@id": "ark:/88434/pdr02g70",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "National Institute of Standards and Technology"
+            },
+            "keyword": [
+                "diatomic molecules",
+                "electric dipole moments",
+                "hyperfine structure",
+                "internuclear distances",
+                "microwave spectra",
+                "rotational constants",
+                "rotational spectra"
+            ],
+            "license": "http://www.nist.gov/open/license.cfm",
+            "modified": "2005-11-01",
+            "ediid": "FDB5909746695200E043065706813E54113",
+            "@type": [
+                "nrdp:PublicDataResource"
+            ]
+        },
+        {
+            "_id": {
+                "$oid": "58af64268e7b500095b0eb21"
+            },
+            "_schema": "https://www.nist.gov/od/dm/nerdm-schema/v0.1#",
+            "topic": [
+                {
+                    "scheme": "https://www.nist.gov/od/dm/nist-themes/v1.0",
+                    "tag": "Information Technology: Biometrics",
+                    "@type": "Concept"
+                }
+            ],
+            "references": [
+                {
+                    "refType": "IsReferencedBy",
+                    "_extensionSchemas": [
+                        "https://www.nist.gov/od/dm/nerdm-schema/v0.1#/definitions/DCiteDocumentReference"
+                    ],
+                    "@type": "deo:BibliographicReference",
+                    "location": "https://s3.amazonaws.com/nist-srd/SD18/readme_sd18.pdf"
+                }
+            ],
+            "_extensionSchemas": [
+                "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
+            ],
+            "landingPage": "https://www.nist.gov/srd/nist-special-database-18",
+            "title": "NIST Mugshot Identification Database (MID) - NIST Special Database 18",
+            "theme": [
+                "Biometrics"
+            ],
+            "inventory": [
+                {
+                    "forCollection": "",
+                    "descCount": 3,
+                    "childCollections": [],
+                    "childCount": 3,
+                    "byType": [
+                        {
+                            "descCount": 3,
+                            "forType": "dcat:Distribution",
+                            "childCount": 3
+                        },
+                        {
+                            "descCount": 1,
+                            "forType": "nrd:AccessPage",
+                            "childCount": 1
+                        },
+                        {
+                            "descCount": 2,
+                            "forType": "nrdp:DataFile",
+                            "childCount": 2
+                        }
+                    ]
+                }
+            ],
+            "programCode": [
+                "006:052"
+            ],
+            "@context": "https://www.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            "description": [
+                "This database was distributed for use in development and testing of automated mugshot identification systems. The database consists of one zipped file, containing a total of 3,248 images of variable size using PNG format for the images and TXT format for corresponding metadata files. There are images of 1,573 individuals (cases) 1,495 male and 78 female. \r\n\r\n The database contains both front and side (profile) views when available. Separating front views and profiles, there are 131 cases with two or more front views and 1,418 with only one front view. Profiles have 89 cases with two or more profiles and 1,268 with only one profile. Cases with both fronts and profiles have 89 cases with two or more of both fronts and profiles, 27 with two or more fronts and one profile, and 1,217 with only one front and one profile."
+            ],
+            "language": [
+                "en"
+            ],
+            "bureauCode": [
+                "006:55"
+            ],
+            "contactPoint": {
+                "hasEmail": "mailto:patricia.flanagan@nist.gov",
+                "fn": "Patricia Flanagan"
+            },
+            "accessLevel": "public",
+            "@id": "ark:/88434/pdr02n0x",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "National Institute of Standards and Technology"
+            },
+            "keyword": [
+                "8 bit gray scales",
+                "facial recognition",
+                "front views",
+                "law enforcement",
+                "matching",
+                "mugshots",
+                "profile views",
+                "profiles"
+            ],
+            "license": "http://www.nist.gov/open/license.cfm",
+            "modified": "2005-01-09",
+            "ediid": "1E651A532AFD8816E0531A570681A662439",
+            "components": [
+                {
+                    "accessURL": "https://www.nist.gov/srd/nist-special-database-18",
+                    "description": "This database is being distributed for use in developing and testing of mugshot identification systems. The database contains images of 1,573 individuals (cases) for a total of 3,248 imagesstored in PNG format. The mugshots are mainly of male cases, with the database containing 1495 male cases and 78 female cases. The gender and age of each individual are stored in a text file that accompanies each image.",
+                    "format": "the downloaded file is in zipped format with the images in PNG format",
+                    "title": "Special  Database 18 -NIST Mugshot Identification Database (MID)",
+                    "mediaType": "application/zip",
+                    "@type": [
+                        "nrd:AccessPage",
+                        "dcat:Distribution"
+                    ]
+                },
+                {
+                    "description": "zipped file of PNG and TXT formatted files of Special Database 18",
+                    "format": {
+                        "description": "zip file with PNG and text formatted files"
+                    },
+                    "filepath": "sd18.zip",
+                    "mediaType": "application/zip",
+                    "downloadURL": "https://s3.amazonaws.com/nist-srd/SD18/sd18.zip",
+                    "title": "NIST Special Database 18 zipped file",
+                    "@type": [
+                        "nrdp:DataFile",
+                        "dcat:Distribution"
+                    ],
+                    "_extensionSchemas": [
+                        "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/DataFile"
+                    ]
+                },
+                {
+                    "description": "MD5 hash files names for the PNG and text formatted files in the zipped download for Special Database 18",
+                    "format": {
+                        "description": "text file with hash names for PNG and text formatted files"
+                    },
+                    "filepath": "hashed_zipped_files.txt",
+                    "mediaType": "application/msword",
+                    "downloadURL": "https://s3.amazonaws.com/nist-srd/SD18/hashed_zipped_files.txt",
+                    "title": "MD5 file of Special Database 18",
+                    "@type": [
+                        "nrdp:DataFile",
+                        "dcat:Distribution"
+                    ],
+                    "_extensionSchemas": [
+                        "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/DataFile"
+                    ]
+                }
+            ],
+            "@type": [
+                "nrdp:PublicDataResource"
+            ]
+        },
+        {
+            "_id": {
+                "$oid": "58af64268e7b500095b0eb22"
+            },
+            "license": "http://www.nist.gov/open/license.cfm",
+            "accessLevel": "public",
+            "description": [
+                "The NIST X-ray Photoelectron Spectroscopy (XPS) Database gives easy access to the energies of many photoelectron and Auger-electron spectral lines.  Resulting from a critical evaluation of the published literature, the database contains over 33,000 line positions, chemical shifts, doublet splittings, and energy separations of photoelectron and Auger-electron lines.  A highly interactive program allows the user to search by element, line type, line energy, and many other variables.  Users can easily identify unknown measured lines by matching to previous measurements."
+            ],
+            "keyword": [
+                "Auger electron",
+                "Auger electron spectroscopy",
+                "Auger kinetic energy",
+                "Auger parameter",
+                "ESCA",
+                "X ray photoelectron spectroscopy",
+                "XPS",
+                "doublet separation",
+                "electron spectroscopy for chemical analysis",
+                "material database",
+                "photoelectron",
+                "photoelectron spectroscopy",
+                "photoemission",
+                "surface analysis"
+            ],
+            "title": "NIST X-ray Photoelectron Spectroscopy Database XPS ,Version 4.1 - SRD 20",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "National Institute of Standards and Technology"
+            },
+            "_schema": "https://www.nist.gov/od/dm/nerdm-schema/v0.1#",
+            "modified": "2012-10-10",
+            "topic": [],
+            "language": [
+                "en"
+            ],
+            "ediid": "ECBCC1C130062ED9E04306570681B10712",
+            "bureauCode": [
+                "006:55"
+            ],
+            "inventory": [
+                {
+                    "forCollection": "",
+                    "descCount": 0,
+                    "childCollections": [],
+                    "childCount": 0,
+                    "byType": []
+                }
+            ],
+            "programCode": [
+                "006:052"
+            ],
+            "@context": "https://www.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            "contactPoint": {
+                "hasEmail": "mailto:data@nist.gov",
+                "@type": "vcard:Contact",
+                "fn": "data@nist.gov"
+            },
+            "landingPage": "http://srdata.nist.gov/xps/",
+            "@id": "ark:/88434/pdr02cgw",
+            "@type": [
+                "nrdp:PublicDataResource"
+            ],
+            "_extensionSchemas": [
+                "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
+            ]
+        },
+        {
+            "_id": {
+                "$oid": "58af64268e7b500095b0eb23"
+            },
+            "_schema": "https://www.nist.gov/od/dm/nerdm-schema/v0.1#",
+            "topic": [
+                {
+                    "scheme": "https://www.nist.gov/od/dm/nist-themes/v1.0",
+                    "tag": "Information Technology: Biometrics",
+                    "@type": "Concept"
+                }
+            ],
+            "references": [
+                {
+                    "refType": "IsReferencedBy",
+                    "_extensionSchemas": [
+                        "https://www.nist.gov/od/dm/nerdm-schema/v0.1#/definitions/DCiteDocumentReference"
+                    ],
+                    "@type": "deo:BibliographicReference",
+                    "location": "http://www.nist.gov/manuscript-publication-search.cfm?pub_id=904685"
+                }
+            ],
+            "_extensionSchemas": [
+                "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
+            ],
+            "landingPage": "http://www.nist.gov/itl/iad/ig/sd32.cfm",
+            "title": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
+            "theme": [
+                "Biometrics"
+            ],
+            "inventory": [
+                {
+                    "forCollection": "",
+                    "descCount": 2,
+                    "childCollections": [],
+                    "childCount": 2,
+                    "byType": [
+                        {
+                            "descCount": 2,
+                            "forType": "dcat:Distribution",
+                            "childCount": 2
+                        },
+                        {
+                            "descCount": 2,
+                            "forType": "nrdp:DataFile",
+                            "childCount": 2
+                        }
+                    ]
+                }
+            ],
+            "programCode": [
+                "006:045"
+            ],
+            "@context": "https://www.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            "description": [
+                "Multiple Encounter Dataset (MEDS-I) is a test corpus organized from an extract of submissions of deceased persons with prior multiple encounters. MEDS is provided to assist the FBI and partner organizations refine tools, techniques, and procedures for face recognition as it supports Next Generation Identification (NGI), forensic comparison, training, and analysis, and face image conformance and inter-agency exchange standards. The MITRE Corporation (MITRE) prepared MEDS in the FBI Data Analysis Support Laboratory (DASL) with support from the FBI Biometric Center of Excellence."
+            ],
+            "language": [
+                "en"
+            ],
+            "bureauCode": [
+                "006:55"
+            ],
+            "contactPoint": {
+                "hasEmail": "mailto:patricia.flanagan@nist.gov",
+                "fn": "Patricia Flanagan"
+            },
+            "accessLevel": "public",
+            "@id": "ark:/88434/pdr02nbd",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "National Institute of Standards and Technology"
+            },
+            "keyword": [
+                "face",
+                "biometrics",
+                "forensic"
+            ],
+            "license": "http://www.nist.gov/open/license.cfm",
+            "modified": "2011-07-11",
+            "ediid": "26DEA39AD677678AE0531A570681F32C1449",
+            "components": [
+                {
+                    "accessURL": "http://www.nist.gov/itl/iad/ig/sd32.cfm",
+                    "description": "Zip file with JPEG formatted face image files.",
+                    "format": {
+                        "description": "JPEG formatted images"
+                    },
+                    "title": "Multiple Encounter Dataset (MEDS)",
+                    "mediaType": "application/zip",
+                    "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
+                    "filepath": "NIST_SD32_MEDS-I_face.zip",
+                    "@type": [
+                        "nrdp:DataFile",
+                        "dcat:Distribution"
+                    ],
+                    "_extensionSchemas": [
+                        "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/DataFile"
+                    ]
+                },
+                {
+                    "accessURL": "http://www.nist.gov/itl/iad/ig/sd32.cfm",
+                    "description": "zip file with html page with jpeg images of faces",
+                    "format": {
+                        "description": "zip file with html and jpeg formatted images"
+                    },
+                    "title": "Multiple Encounter Dataset(MEDS-I)",
+                    "mediaType": "application/zip",
+                    "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_html.zip",
+                    "filepath": "NIST_SD32_MEDS-I_html.zip",
+                    "@type": [
+                        "nrdp:DataFile",
+                        "dcat:Distribution"
+                    ],
+                    "_extensionSchemas": [
+                        "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/DataFile"
+                    ]
+                }
+            ],
+            "@type": [
+                "nrdp:PublicDataResource"
+            ]
+        }
+    ]
+}

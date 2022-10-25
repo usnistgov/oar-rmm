@@ -5,7 +5,7 @@ spring:
     active: default
   cloud:
     config:
-      uri: http://localhost:8087
+      uri: http://localhost:8084
        
 
 #spring:
@@ -23,7 +23,7 @@ server:
       context-path:  /rmm
     error:
       include-stacktrace: never
-    connection-timeout: 60000
+#     connection-timeout: 60000
     max-http-header-size: 65536
     tomcat:
       accesslog:
@@ -41,7 +41,7 @@ server:
     
 logging:
   file: rmmapp.log
-  path : /var/log/rmm
+#  path : /tmp/log/rmm
   exception-conversion-word: '%wEx'
 #  
 #security:
@@ -56,6 +56,12 @@ logging:
 springdoc:
   swagger-ui:
     tagsSorter: alpha
+    path: /swagger-ui.html
+#    configUrl: /v3/api-docs/swagger-config
+#    enabled: true 
+    disable-swagger-default-url: true
+#  packagesToScan: gov.nist.oar.rmm
+#  pathsToMatch: /rmm
 
 dbcollections: 
          taxonomy: taxonomy

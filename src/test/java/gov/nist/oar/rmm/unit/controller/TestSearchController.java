@@ -12,104 +12,235 @@
  */
 package gov.nist.oar.rmm.unit.controller;
 
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import gov.nist.oar.rmm.config.AppConfig;
+import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.controllers.SearchController;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = SearchController.class)
+@ContextConfiguration(classes = AppConfig.class)
+@ImportAutoConfiguration(RefreshAutoConfiguration.class)
+@TestPropertySource("classpath:bootstrap-test.yml")
 public class TestSearchController {
 
 	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
 			MediaType.APPLICATION_JSON.getType(),
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 	
-	private  MockMvc mockMvc;
-	
-	@Mock
-	@Autowired
-	private CustomRepository customRepo;
-	
-    @InjectMocks
-    @Autowired
-	private SearchController searchController;
-    
-    @Inject
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-    
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		this.mockMvc = MockMvcBuilders.standaloneSetup(searchController)
-				 //.setControllerAdvice(new GlobalExceptionHandler())
-				.setCustomArgumentResolvers(pageableArgumentResolver).build();
+	 @Autowired
+	  private MockMvc mockMvc;
+	 
+	 @Autowired
+	  private ObjectMapper objectMapper;
+	 
+	 @MockBean
+	    MongoConfig mongoConfig;
+	 
+	 @MockBean
+	 private CustomRepository customRepo;
+
+	@Test
+	public void shouldFindRecords() throws Exception {
+		
+		String recordTest = "";
+		try {
+			recordTest = new String ( Files.readAllBytes( Paths.get(this.getClass().getClassLoader().getResource("recordTest.json").getFile()) ) );
+		}catch(Exception exp) {
+			System.out.print(exp.getMessage());
+		}
+		Document record = Document.parse(recordTest);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		when(customRepo.find(params)).thenReturn(record);
+		mockMvc.perform(get("/records"))
+		.andExpect(status().is(200))
+		.andExpect(jsonPath("$.ResultData.[0].title", is("NIST Bibliographic Database on Atomic Energy Levels and Spectra - SRD 169")))
+		.andExpect(content().contentType("application/json"))
+		.andExpect(jsonPath("$.ResultCount",is(5)));
 	}
 	
 	@Test
-	public void shouldFindAll() throws Exception {
-		Document resultDoc = new Document();
-		resultDoc.put("ResultCount", 134);
-		resultDoc.put("PageSize", 134);
-		ArrayList<Document> aList = new ArrayList<Document>();
+	public void shouldFindTaxonomyBylevel() throws Exception {
+		
 		JSONParser parser = new JSONParser();
+		List<Document> listTaxonomy = new LinkedList<Document>();
     	JSONArray a;
-    	File file = new File(this.getClass().getClassLoader().getResource("record.json").getFile());
-		try {
+    	File file = new File(this.getClass().getClassLoader().getResource("taxonomy.json").getFile());
+		
+    	
+    	try {
 			a = (JSONArray) parser.parse(new FileReader(file));
-		  for (Object o : a)
-    	  {
-			 Document d = Document.parse(o.toString()); 
-			 aList.add(d);
-    	  }
+			for (Object o : a) {
+				Document doc = Document.parse(o.toString());
+				listTaxonomy.add(doc);
+			}
 		} catch (IOException | ParseException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
-		resultDoc.put("ResultData", aList);
-		Map<String,String> params = new HashMap<String,String>();
-//		when(customRepo.find(params)).thenReturn(resultDoc);
-		//mockMvc.perform(get("/records"))
-		//.andExpect(status().isOk());
-		//.andExpect(jsonPath("$.ResultCount",is(134)));
-		//assertEquals(134, Integer.parseInt(resultDoc.get("ResultCount").toString()));
 		
-		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("level", "1");
+		when(customRepo.findtaxonomy(params)).thenReturn(listTaxonomy);
+		mockMvc.perform(get("/taxonomy?level=1"))
+		.andExpect(status().isOk());
 	}
 	
-//	@Test
-//	public void shouldFindByTitle() throws Exception {
-//		mockMvc.perform(get("/taxonomy?level=1"))
-//		.andExpect(status().isOk());
-//	}
+	@Test
+	public void shouldFindByTitle() throws Exception {
+		
+		String recordTest = "";
+		try {
+			recordTest = new String ( Files.readAllBytes( Paths.get(this.getClass().getClassLoader().getResource("recordTest.json").getFile()) ) );
+		}catch(Exception exp) {
+			System.out.print(exp.getMessage());
+		}
+		Document record = Document.parse(recordTest);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.add("title", "NIST Bibliographic");
+		when(customRepo.find(params)).thenReturn(record);
+		mockMvc.perform(get("/records?title=NIST Bibliographic"))
+		.andExpect(jsonPath("$.ResultData.[0].title", is("NIST Bibliographic Database on Atomic Energy Levels and Spectra - SRD 169")))
+		.andExpect(content().contentType("application/json"))
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void shouldFindRecordById() throws Exception {
+		
+		String recordTest = "";
+		try {
+			recordTest = new String ( Files.readAllBytes( Paths.get(this.getClass().getClassLoader().getResource("recordTest.json").getFile()) ) );
+		}catch(Exception exp) {
+			System.out.print(exp.getMessage());
+		}
+		Document record = Document.parse(recordTest);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.add("@id", "ark:/88434/pdr02j5x");
+		when(customRepo.find(params)).thenReturn(record);
+		
+		mockMvc.perform(get("/records?@id=ark:/88434/pdr02j5x"))
+		.andExpect(status().is(200))
+		.andDo(print())
+		.andExpect(jsonPath("$.ResultData.[0].title", is("NIST Bibliographic Database on Atomic Energy Levels and Spectra - SRD 169")));
+	}
+	@Test
+	public void shouldFindTaxonomy() throws Exception {
+		JSONParser parser = new JSONParser();
+		List<Document> listTaxonomy = new LinkedList<Document>();
+    	JSONArray a;
+    	File file = new File(this.getClass().getClassLoader().getResource("taxonomy.json").getFile());
+		
+    	
+    	try {
+			a = (JSONArray) parser.parse(new FileReader(file));
+			for (Object o : a) {
+				Document doc = Document.parse(o.toString());
+				listTaxonomy.add(doc);
+			}
+		} catch (IOException | ParseException e) {
 
+			e.printStackTrace();
+		}
+    	Map<String, String> params = new HashMap<String, String>();
+		when(customRepo.findtaxonomy(params)).thenReturn(listTaxonomy);
+		mockMvc.perform(get("/taxonomy"))
+		.andExpect(status().is(200))
+		.andDo(print())
+		.andExpect(jsonPath("$[0].term", is("Advanced Communications")));
+	}
+
+	@Test
+	public void shouldFindRecordFields() throws Exception {
+		
+		JSONParser parser = new JSONParser();
+		List<Document> fieldsTest = new LinkedList<Document>();
+    	JSONArray a;
+    	File file = new File(this.getClass().getClassLoader().getResource("fields.json").getFile());
+		
+    	
+    	try {
+			a = (JSONArray) parser.parse(new FileReader(file));
+			for (Object o : a) {
+				Document doc = Document.parse(o.toString());
+				fieldsTest.add(doc);
+			}
+		} catch (IOException | ParseException e) {
+
+			e.printStackTrace();
+		}
+
+		when(customRepo.findFieldnames()).thenReturn(fieldsTest);
+		mockMvc.perform(get("/records/fields"))
+		.andExpect(status().is(200))
+		.andDo(print())
+		.andExpect(jsonPath("$[0].name", is("@type")));
+	}
+	
+	@Test
+	public void shouldFindResourceApis() throws Exception {
+		
+		JSONParser parser = new JSONParser();
+		List<Document> resourcesTest = new LinkedList<Document>();
+    	JSONArray a;
+    	File resources = new File(this.getClass().getClassLoader().getResource("resourceApi.json").getFile());
+		
+    	
+    	try {
+			a = (JSONArray) parser.parse(new FileReader(resources));
+			for (Object o : a) {
+				Document doc = Document.parse(o.toString());
+				resourcesTest.add(doc);
+			}
+		} catch (IOException | ParseException e) {
+
+			e.printStackTrace();
+		}
+    	
+    	when(customRepo.findResourceApis()).thenReturn(resourcesTest);
+		mockMvc.perform(get("/resourceApi"))
+		.andExpect(status().is(200))
+		.andDo(print())
+		.andExpect(jsonPath("$[0].name", is("NIST Enterprise Data Inventory (EDI)")));
+	}
 }

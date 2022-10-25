@@ -13,6 +13,7 @@
 package gov.nist.oar.rmm.repositories.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -28,6 +29,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 
 import gov.nist.oar.rmm.config.AppConfig;
@@ -35,7 +37,7 @@ import gov.nist.oar.rmm.config.MongoConfig;
 import gov.nist.oar.rmm.exceptions.ResourceNotFoundException;
 import gov.nist.oar.rmm.repositories.CustomRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
-
+import static com.mongodb.client.model.Aggregates.*;
 /**
  * Custom Repository interface implementation
  * 
@@ -52,6 +54,7 @@ public class CustomRepositoryImpl implements CustomRepository {
     @Autowired
     AppConfig appconfig;
 
+    
     /**
      * Find the record with given search parameters. Returns JSON document of
      * results.
@@ -61,25 +64,31 @@ public class CustomRepositoryImpl implements CustomRepository {
 	ProcessRequest request = new ProcessRequest();
 	request.parseSearch(params);
 	MongoCollection<Document> mcollection = mconfig.getRecordCollection();
+	 MongoCursor<Document> iter = null;
 	long count = 0;
-	count = mcollection.count(request.getFilter());
-//		if(request.getFilters().size() == 0)
-//			count = mcollection.count(null);
-//		for(int i=0; i<request.getFilters().size(); i++) {
-//			count += mcollection.count(request.getFilters().get(i));
-//		}
-	// logger.info("Result Count :" + count);
+	count = mcollection.countDocuments(request.getFilter());
+	
 	AggregateIterable<Document> aggre = null;
+	List<Document> batch = new ArrayList<>();
 	try {
 	    aggre = mcollection.aggregate(request.getQueryList());
+//	    aggre.batchSize(1);
+	    iter = aggre.iterator();
+	    
+	    while (iter.hasNext()) {
+	        batch.add(iter.next());
+	    }
 	} catch (Exception e) {
 	    logger.error(e.getMessage());
 	}
-
+	finally {
+	      if (iter != null) {
+	        iter.close();
+	      }}
 	Document resultDoc = new Document();
 	resultDoc.put("ResultCount", count);
 	resultDoc.put("PageSize", request.getPageSize());
-	resultDoc.put("ResultData", aggre);
+	resultDoc.put("ResultData", batch);
 	return resultDoc;
     }
 
@@ -122,13 +131,13 @@ public class CustomRepositoryImpl implements CustomRepository {
 	String useid = ediid;
 
 	logger.debug("Searching for " + ediid + " as " + useid);
-	long count = mcollection.count(Filters.eq("ediid", useid));
+	long count = mcollection.countDocuments(Filters.eq("ediid", useid));
 	if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
 	    // allow an ediid be an abbreviation of the ARK ID as specified
 	    // by its local portion
 	    useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + ediid;
 	    logger.debug("Searching for " + ediid + " as " + useid);
-	    count = mcollection.count(Filters.eq("ediid", useid));
+	    count = mcollection.countDocuments(Filters.eq("ediid", useid));
 	}
 	if (count == 0) {
 	    // return new Document("Message", "No record available for given id.");
