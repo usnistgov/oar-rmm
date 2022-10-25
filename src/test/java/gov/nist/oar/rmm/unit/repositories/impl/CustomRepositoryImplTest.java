@@ -100,6 +100,7 @@ public class CustomRepositoryImplTest {
 			}
 		} catch (IOException | ParseException e) {
 
+
 			e.printStackTrace();
 		}
 
@@ -110,6 +111,7 @@ public class CustomRepositoryImplTest {
 			for (Object o : a) {
 				Document doc = Document.parse(o.toString());
 				mongoTemplate.save(doc, "taxonomy");
+
 			}
 		} catch (IOException | ParseException e) {
 
