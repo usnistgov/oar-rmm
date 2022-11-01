@@ -78,7 +78,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
             mcollection = mconfig.getReleaseSetsCollection();
 
         long count = 0;
-        count = mcollection.count(request.getFilter());
+        count = mcollection.countDocuments(request.getFilter());
 
         AggregateIterable<Document> aggre = null;
         try {
@@ -138,13 +138,13 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
         String useid = id;
 
         logger.debug("Searching for " + id + " as " + useid);
-        long count = mcollection.count(Filters.eq("@id", useid));
+        long count = mcollection.countDocuments(Filters.eq("@id", useid));
         if (count == 0 && useid.length() < 30 && !useid.startsWith("ark:")) {
             // allow an id be an abbreviation of the ARK ID as specified
             // by its local portion
             useid = "ark:/" + appconfig.getDefaultNAAN() + "/" + id;
             logger.debug("Searching for " + id + " as " + useid);
-            count = mcollection.count(Filters.eq("@id", useid));
+            count = mcollection.countDocuments(Filters.eq("@id", useid));
         }
         if (count == 0) {
             // return new Document("Message", "No record available for given id.");

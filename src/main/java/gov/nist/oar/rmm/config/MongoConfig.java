@@ -343,4 +343,19 @@ public class MongoConfig {
             return mongoClient;
         }
 
+	/**
+ 	 * Return versions collection name string.
+ 	 * @return
+ 	 */
+ 	public String getVersionsName() {
+ 	    return this.versions;
+ 	}
+
+ 	   /**
+      * Return releaseSets collection name string.
+      * @return
+      */
+     public String getReleaseSetsName() {
+         return this.releasesets;
+     }
 }
