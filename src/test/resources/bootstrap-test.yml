@@ -18,6 +18,12 @@ dbcollections:
          resources: apis
          records: record 
          recordfields: fields
+         versions: versions
+         releasesets: releasesets
+         recordMetrics: recordMetrics
+         fileMetrics: fileMetrics
+         repoMetrics: repoMetrics
+         uniqueUsers: uniqueUsers
       
 server: 
     port: 8085
