@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,17 +29,20 @@ import org.bson.conversions.Bson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.junit.Test;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -56,8 +60,10 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
-@TestPropertySource("classpath:bootstrap-test.yml")
+import org.junit.jupiter.api.Test;
+@ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
+@TestPropertySource("classpath:bootstrap-test.yml")
 public class CustomRepositoryImplTest {
 	private static final String CONNECTION_STRING = "mongodb://%s:%d";
 
@@ -100,6 +106,7 @@ public class CustomRepositoryImplTest {
 			}
 		} catch (IOException | ParseException e) {
 
+
 			e.printStackTrace();
 		}
 
@@ -110,6 +117,7 @@ public class CustomRepositoryImplTest {
 			for (Object o : a) {
 				Document doc = Document.parse(o.toString());
 				mongoTemplate.save(doc, "taxonomy");
+
 			}
 		} catch (IOException | ParseException e) {
 
@@ -177,9 +185,16 @@ public class CustomRepositoryImplTest {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		params.add("title", "Enterprise Data Inventory");
 		Document r1 = find(params);
-		Document rData = (Document) r1.get("ResultData");
-		String title = rData.getString("title");
-
+		
+		
+		 AggregateIterable<Document> aggregateIterable =  (AggregateIterable<Document>) r1.get("ResultData");
+	        Iterator iterator = aggregateIterable.iterator();
+	        String title = "";
+	        while (iterator.hasNext()) {
+	            Document d =(Document) iterator.next();
+	            title = d.getString("title");
+	            break;
+	        }
 		assertEquals("Enterprise Data Inventory", title);
 
 	}
