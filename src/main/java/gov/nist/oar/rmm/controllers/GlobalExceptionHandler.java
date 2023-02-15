@@ -50,13 +50,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     WebRequest request;
 
     private String formatStackTrace(Exception exc) {
-        PrintWriter out = new PrintWriter(new CharArrayWriter(1024));
+        CharArrayWriter out = new CharArrayWriter(1024);
+        PrintWriter pw = new PrintWriter(out);
         try {
-            exc.printStackTrace(out);
+            exc.printStackTrace(pw);
             return out.toString();
         }
         finally {
-            out.close();
+            pw.close();
         }
     }
 
