@@ -108,8 +108,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ErrorInfo object with error details
      */
     public ErrorInfo unexpectedError(Exception exception) {
-	logger.error("Unexpected Exception while responding to " + request.getDescription(false) + ": "
-                     + exception.getMessage() + "\n" + formatStackTrace(exception));
+	logger.error("Sending 500 for unexpected exception while responding to " +
+                     request.getDescription(false) + ": " + exception.getMessage() + "\n" +
+                     formatStackTrace(exception));
 	return new ErrorInfo(request.getContextPath(), "Unexpected server error",
                              HttpStatus.CONFLICT.toString());
     }
@@ -125,8 +126,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ErrorInfo object with error details
      */
     public ErrorInfo illegalInputError(IllegalArgumentException exception) {
-	logger.error("Illegal parameters encountered while responding to " + request.getDescription(false) +
-                     ": " + exception.getMessage() + "\n" + formatStackTrace(exception));
+	logger.error("Sending 400 for illegal parameters encountered while responding to " +
+                     request.getDescription(false) + ": " + exception.getMessage() + "\nOrigin: " +
+                     formatOrigin(exception));
 	return new ErrorInfo(request.getContextPath(), "Illegal input request",
                              HttpStatus.BAD_REQUEST.toString());
     }
@@ -142,7 +144,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ErrorInfo object with error details
      */
     public ErrorInfo keywordNotFound(KeyWordNotFoundException exception) {
-	logger.error("KeywordNotFoundException encountered while responding to " +
+	logger.error("Sending 404 for KeywordNotFoundException encountered while responding to " +
                      request.getDescription(false) + ": " + exception.getMessage() + "\n" +
                      formatStackTrace(exception));
 	return new ErrorInfo(request.getContextPath(), "KeyWordNotFoundException",
@@ -159,7 +161,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ErrorInfo object with error details
      */
     public ErrorInfo resourceNotFound(ResourceNotFoundException exception) {
-	logger.error("Resource not found: " + request.getDescription(false) +
+	logger.error("Sending 404: Resource not found: " + request.getDescription(false) +
                      " (" + exception.getMessage() + ")");
 	return new ErrorInfo(request.getContextPath(), "Request resource not found",
                              HttpStatus.NOT_FOUND.toString());
@@ -175,8 +177,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ErrorInfo object with error details
      */
     public ErrorInfo unexpectedIOError(IOException exception) {
-	logger.error("Unexpected IOException while responding to " + request.getDescription(false) + ": "
-                     + exception.getMessage() + "\n" + formatStackTrace(exception));
+	logger.error("Sending 500 for unexpected IOException while responding to " +
+                     request.getDescription(false) + ": " + exception.getMessage() + "\n" +
+                     formatStackTrace(exception));
 	return new ErrorInfo(request.getContextPath(), "Unexpected IOException",
                              HttpStatus.INTERNAL_SERVER_ERROR.toString());
     }
@@ -191,9 +194,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ErrorInfo object with error details
      */
     public ErrorInfo internalError(Exception exception) {
-	logger.error("----Caught Internal Error Exception----\n" + request.getDescription(false)
-		+ "\n Detail BadRequestException:" + exception.getStackTrace());
-	return new ErrorInfo(request.getContextPath(), "InternalServer Error",
+	logger.error("Sending 500 for unexpected exception while responding to " +
+                     request.getDescription(false) + ": " + exception.getMessage() + "\n" +
+                     formatStackTrace(exception));
+	return new ErrorInfo(request.getContextPath(), "Internal server error",
 		HttpStatus.INTERNAL_SERVER_ERROR.toString());
     }
 
