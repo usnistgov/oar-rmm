@@ -77,7 +77,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     public ErrorInfo jsonMappingError(JsonMappingException exception) {
 	logger.error("JSON mapping error while responding to " + request.getDescription(false) + ": "
-                     + exception.getMessage() + "; origin:\n" + formatOrigin(exception));
+                     + exception.getMessage() + "\n  Origin: " + formatOrigin(exception));
 	return new ErrorInfo(request.getContextPath(), "JSON processing error",
                              HttpStatus.CONFLICT.toString());
     }
@@ -127,7 +127,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     public ErrorInfo illegalInputError(IllegalArgumentException exception) {
 	logger.error("Sending 400 for illegal parameters encountered while responding to " +
-                     request.getDescription(false) + ": " + exception.getMessage() + "\nOrigin: " +
+                     request.getDescription(false) + ": " + exception.getMessage() + "\n  Origin: " +
                      formatOrigin(exception));
 	return new ErrorInfo(request.getContextPath(), "Illegal input request",
                              HttpStatus.BAD_REQUEST.toString());
