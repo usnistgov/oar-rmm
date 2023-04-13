@@ -78,11 +78,18 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
             mcollection = mconfig.getReleaseSetsCollection();
 
         long count = 0;
+        MongoCursor<Document> iter = null;
+        List<Document> batch = new ArrayList<>();
         count = mcollection.countDocuments(request.getFilter());
 
         AggregateIterable<Document> aggre = null;
         try {
             aggre = mcollection.aggregate(request.getQueryList());
+            iter = aggre.iterator();
+    	    
+    	    while (iter.hasNext()) {
+    	        batch.add(iter.next());
+    	    }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -90,7 +97,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
         Document resultDoc = new Document();
         resultDoc.put(collectionName + " Count", count);
         resultDoc.put("PageSize", request.getPageSize());
-        resultDoc.put(collectionName + " data", aggre);
+        resultDoc.put(collectionName + " data", batch);
         return resultDoc;
     }
 
