@@ -1,5 +1,7 @@
 package gov.nist.oar.rmm.repositories.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 
 import gov.nist.oar.rmm.config.AppConfig;
