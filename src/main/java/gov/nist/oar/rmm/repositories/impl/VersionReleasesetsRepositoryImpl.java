@@ -1,5 +1,7 @@
 package gov.nist.oar.rmm.repositories.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 
 import gov.nist.oar.rmm.config.AppConfig;
@@ -78,11 +81,18 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
             mcollection = mconfig.getReleaseSetsCollection();
 
         long count = 0;
+        MongoCursor<Document> iter = null;
+        List<Document> batch = new ArrayList<>();
         count = mcollection.countDocuments(request.getFilter());
 
         AggregateIterable<Document> aggre = null;
         try {
             aggre = mcollection.aggregate(request.getQueryList());
+            iter = aggre.iterator();
+    	    
+    	    while (iter.hasNext()) {
+    	        batch.add(iter.next());
+    	    }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -90,7 +100,7 @@ public class VersionReleasesetsRepositoryImpl implements VersionReleasesetsRepos
         Document resultDoc = new Document();
         resultDoc.put(collectionName + " Count", count);
         resultDoc.put("PageSize", request.getPageSize());
-        resultDoc.put(collectionName + " data", aggre);
+        resultDoc.put(collectionName + " data", batch);
         return resultDoc;
     }
 
