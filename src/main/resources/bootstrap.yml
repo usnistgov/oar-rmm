@@ -33,8 +33,8 @@ server:
         prefix: tomcat-access-log
         suffix: .log
         rotate: true
-      accept-count: 100
-      max-connections: 10000
+      accept-count: 400
+      max-connections: 250
       max-threads: 200
       min-spare-threads: 10
 #        
