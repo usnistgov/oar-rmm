@@ -1,14 +1,21 @@
-FROM maven:3.5-jdk-8-alpine
+FROM eclipse-temurin:8-jdk-focal
 
-RUN  apk update && apk upgrade && apk add netcat-openbsd zip git less \
-                                          gnupg shadow python nss wget
+# a hack that gets around an installation problem with update-alternatives, openjdk-8-jdk-headless
 
+RUN mkdir -p /usr/share/man/man1
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y netcat-openbsd  \
+                                            zip git less gnupg python gcc curl \
+                                            make maven liblzma5 ca-certificates
+
+# ARG gosu_arch=
+# ENV GOSU_ARCH $gosu_arch
 # ENV GOSU_VERSION 1.10
-# RUN set -ex; arch=amd64; \
+# RUN set -ex; [ -n "$GOSU_ARCH" ] || arch=$(uname -r | awk -F- '{print $NF}'); \
 #     wget -O /usr/local/bin/gosu \
-#    "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$arch"; \
+#    "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$GOSU_ARCH"; \
 #     wget -O /usr/local/bin/gosu.asc \
-# "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$arch.asc";\
+# "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$GOSU_ARCH.asc";\
 #     export GNUPGHOME="$(mktemp -d)"; \
 #     gpg --keyserver ha.pool.sks-keyservers.net \
 #          --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
@@ -21,19 +28,6 @@ RUN  apk update && apk upgrade && apk add netcat-openbsd zip git less \
 # this is set to match identity information of the host user that is
 # launching the container.
 #
-
-
-RUN apk --no-cache add ca-certificates
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
-
-RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-2.29-r0.apk
-RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-bin-2.29-r0.apk
-
-RUN apk add glibc-2.29-r0.apk glibc-bin-2.29-r0.apk
-
-RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-i18n-2.29-r0.apk
-RUN apk add glibc-bin-2.29-r0.apk glibc-i18n-2.29-r0.apk
-RUN /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8
 RUN sed --in-place -e '/CREATE_MAIL_SPOOL/ s/=yes/=no/' /etc/default/useradd
 ARG devuser=developer
 ARG devuid=1000
@@ -55,6 +49,7 @@ RUN chmod a+rx /app/entrypoint.sh
 
 WORKDIR /app/dev
 USER $devuser
+
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 
 
