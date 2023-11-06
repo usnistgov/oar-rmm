@@ -5,14 +5,6 @@ RUN apt-get update && apt-get install -y netcat-openbsd zip git less \
                                             python3 curl maven gnupg
 RUN cd /usr/bin && ln -s python3 python
 
-# Define an argument for MongoDB version which can be passed at build time
-ARG MONGO_VERSION=4.4
-
-# Install MongoDB
-RUN curl -fsSL https://www.mongodb.org/static/pgp/server-$MONGO_VERSION.asc | apt-key add -
-RUN apt-key list
-RUN echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/$MONGO_VERSION multiverse" | tee /etc/apt/sources.list.d/mongodb-org-$MONGO_VERSION.list
-
 # Create the user that build/test operations should run as.  Normally,
 # this is set to match identity information of the host user that is
 # launching the container.
