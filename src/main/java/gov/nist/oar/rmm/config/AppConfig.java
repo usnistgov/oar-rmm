@@ -28,9 +28,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.resource.PathResourceResolver;
+// import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
+
+import org.springframework.boot.autoconfigure.*;
+import org.springframework.boot.autoconfigure.jdbc.*;
+import org.springframework.context.annotation.*;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -39,7 +45,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
-@SpringBootApplication
+@SpringBootApplication (exclude={DataSourceAutoConfiguration.class})
 @RefreshScope
 @ComponentScan(basePackages = { "gov.nist.oar.rmm" })
 
@@ -50,7 +56,7 @@ import io.swagger.v3.oas.models.servers.Server;
  * 
  *
  */
-public class AppConfig {
+public class AppConfig implements WebMvcConfigurer{
 
     private static Logger log = LoggerFactory.getLogger(AppConfig.class);
 
@@ -73,21 +79,33 @@ public class AppConfig {
 	SpringApplication.run(AppConfig.class, args);
     }
 
-    /**
-     * Add CORS
-     * 
-     * @return
-     */
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-	return new WebMvcConfigurerAdapter() {
-	    @Override
-	    public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**");
-	    }
-	    
 
-	    @Override
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+     
+            System.out.println("WebMvcConfigurer - addResourceHandlers() function get loaded...");
+        registry.addResourceHandler("/resources/static/**")
+                .addResourceLocations("/resources/");
+
+        registry
+            .addResourceHandler("/**")
+            .addResourceLocations("/")
+            .setCachePeriod(3600)
+            .resourceChain(true)
+
+            .addResolver(new PathResourceResolver());
+     }
+   
+
+     
+    @Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**");
+			}
+                @Override
             public void configurePathMatch(PathMatchConfigurer configurer) {
                 UrlPathHelper uhlpr = configurer.getUrlPathHelper();
                 if (uhlpr == null) {
@@ -98,9 +116,8 @@ public class AppConfig {
 	        configurer.setUseRegisteredSuffixPatternMatch(true);
 	        configurer.setUseSuffixPatternMatch(false);
             }
-	    
-	};
-    }
+		};
+	}
     
     @Bean
     public OpenAPI customOpenAPI(@Value("1.1.0") String appVersion) {
