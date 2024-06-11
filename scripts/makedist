@@ -90,5 +90,5 @@ $PACKAGE_DIR/scripts/record_deps.py ${DISTNAMES[0]} $version \
 #
 # A distribution file should be called DISTNAME-${vers4fn}.DISTEXT
 #
-cp $targetdir/*.jar $DIST_DIR/${DISTNAMES[0]}-$vers4fn.jar
+cp $targetdir/${DISTNAMES[0]}*.jar $DIST_DIR/${DISTNAMES[0]}-$vers4fn.jar
 
