@@ -6,17 +6,7 @@ spring:
   cloud:
     config:
       uri: http://localhost:8084
-       
-
-#spring:
-#  application:
-#    name: oar-rmm-service
-##  data:
-##    mongodb:
-##      host: localhost
-##      port: 27017
-##      database: TestDB
-      
+             
 server: 
     port: 8085
     servlet:
@@ -27,7 +17,7 @@ server:
     max-http-header-size: 65536
     tomcat:
       accesslog:
-        directory: /var/log/rmm
+        directory: /tmp/rmm
         enabled: true
         file-date-format: yyyy-MM-dd
         prefix: tomcat-access-log

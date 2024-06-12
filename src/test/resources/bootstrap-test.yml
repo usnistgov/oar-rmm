@@ -6,8 +6,8 @@ spring:
   data:
     mongodb:
       host: localhost
-      port: 27017
-      database: TestDB
+      port: 3122
+      database: TEST
       
   profiles:
     active:
