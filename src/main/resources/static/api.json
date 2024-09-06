@@ -12,11 +12,10 @@
     "servers": [
         {
             "url": "https://data.nist.gov/rmm",
-            "description": "Production server"
+            "description": "data.nist.gov"
         },
         {
-            "url": "/rmm",
-            "description": "Mock server"
+            "url": "/rmm"
         }
     ],
     "tags": [
