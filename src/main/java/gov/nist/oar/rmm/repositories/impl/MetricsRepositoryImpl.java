@@ -14,7 +14,7 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
-import gov.nist.oar.rmm.config.MongoConfig;
+import gov.nist.oar.rmm.config.MetricsMongoConfig;
 import gov.nist.oar.rmm.repositories.MetricsRepository;
 import gov.nist.oar.rmm.utilities.ProcessRequest;
 
@@ -24,7 +24,7 @@ public class MetricsRepositoryImpl implements MetricsRepository {
     private Logger logger = LoggerFactory.getLogger(MetricsRepositoryImpl.class);
 
     @Autowired
-    MongoConfig mconfig;
+    MetricsMongoConfig mconfig;
 
     /**
      * Get the input requested parameters and process to create Mongodb query,

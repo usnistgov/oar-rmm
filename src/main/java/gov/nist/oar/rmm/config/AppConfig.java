@@ -116,6 +116,9 @@ public class AppConfig implements WebMvcConfigurer{
 	        configurer.setUseRegisteredSuffixPatternMatch(true);
 	        configurer.setUseSuffixPatternMatch(false);
             }
+
+            
+                
 		};
 	}
     
