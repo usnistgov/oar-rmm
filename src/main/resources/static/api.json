@@ -1,0 +1,1624 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Resource Metadata Management API",
+        "description": "These are set of APIs which return the NIST public data repository related information. First one is the Search and discover API to get the dataset results for given criteria or dataset identifier.  Second is to get different versions of the records or metadata for given dataset. Third one is to get the usage metrics for different datasets",
+        "license": {
+            "name": "NIST Software",
+            "url": "https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications"
+        },
+        "version": "1.1.0"
+    },
+    "servers": [
+        {
+            "url": "https://data.nist.gov/rmm",
+            "description": "data.nist.gov"
+        },
+        {
+            "url": "/rmm"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Discovery/Search API",
+            "description": " These endpoints provide search functionality for public data repository metadata"
+        },{
+            "name": "Usage Metrics API",
+            "description": "This set of endpoints  serve the usage metrics for data distribution by public data repository."
+        },{
+            "name": "Versions and Releases API",
+            "description": " These endpoints provide search functionality for public data repository metadata"
+        }
+    ],
+    "paths": {
+        "/versions": {
+            "get": {
+                "tags": [
+                    "Versions and Releases API"
+                ],
+                "summary": "Get/Search Versions dataset.",
+                "description": "Return all the versions available based on query criteria.\n following are some search query examples\n 1. /versions?searchphrase=<phrase or words>\n 2. /versions?key1=value1&logicalOp=AND&key2=value2...\n 3. /versions?searchphrase=<phrase or words>&key=value...\n 4. /records?page=1&size=2\n 5. /versions?sort.desc=<field or comma seperated list of fields>",
+                "operationId": "searchVersions",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "description": "Results page you want to retrieve (0..N)"
+                    },
+                    {
+                        "name": "size",
+                        "description": "Number of records per page."
+                    },
+                    {
+                        "name": "sort.desc",
+                        "description": "sort on the fields seperated by comma (one or more)."
+                    },
+                    {
+                        "name": "sort.asc",
+                        "description": "Sort in ascending order seperated by comma (one or more)."
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/versions/{id}": {
+            "get": {
+                "tags": [
+                    "Versions and Releases API"
+                ],
+                "summary": "Get NERDm record of given id.",
+                "description": "Resource returns a NERDm Record by given ediid.",
+                "operationId": "getRecordVersion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/versions/ark:/{naan}/{id}": {
+            "get": {
+                "tags": [
+                    "Versions and Releases API"
+                ],
+                "summary": "Get NERDm record of given id.",
+                "description": "Resource returns a NERDm Record by given ark identifier.",
+                "operationId": "getVersion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "naan",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usagemetrics/totalusers": {
+            "get": {
+                "tags": [
+                    "Usage Metrics API"
+                ],
+                "summary": "Total Unique Users",
+                "description": "Returns all the metrics information related to datasets.",
+                "operationId": "totalUsers",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usagemetrics/repo": {
+            "get": {
+                "tags": [
+                    "Usage Metrics API"
+                ],
+                "summary": "Repository Metrics",
+                "description": "Returns all the metrics information related to complete repository.",
+                "operationId": "repoMetrics",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usagemetrics/records": {
+            "get": {
+                "tags": [
+                    "Usage Metrics API"
+                ],
+                "summary": "Metrics List of datasets",
+                "description": "Get the metrics for given dataset or list of datasets.\n following are some search query examples\n 1. /records\n /records?page=1&size=2\n /recorsd?sort.desc=<field or comma seperated list of fields>",
+                "operationId": "searchRecord",
+                "parameters": [
+                    {
+                        "name": "recordid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "description": "Results page you want to retrieve (0..N)"
+                    },
+                    {
+                        "name": "size",
+                        "description": "Number of records per page."
+                    },
+                    {
+                        "name": "sort.desc",
+                        "description": "sort on the fields seperated by comma (one or more)."
+                    },
+                    {
+                        "name": "sort.asc",
+                        "description": "Sort in ascending order seperated by comma (one or more)."
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usagemetrics/records/**": {
+            "get": {
+                "tags": [
+                    "Usage Metrics API"
+                ],
+                "summary": "Dataset metrics",
+                "description": "Returns all the metrics information related to given datasets.",
+                "operationId": "getRecord",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usagemetrics/files": {
+            "get": {
+                "tags": [
+                    "Usage Metrics API"
+                ],
+                "summary": "All Files Metrics",
+                "description": "Returns all the metrics information related to files.",
+                "operationId": "listFile",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usagemetrics/files/**": {
+            "get": {
+                "tags": [
+                    "Usage Metrics API"
+                ],
+                "summary": "File Metrics",
+                "description": "Returns all the metrics information related to requested file or list of files from given dataset.",
+                "operationId": "getFile",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/taxonomy": {
+            "get": {
+                "tags": [
+                    "Discovery/Search API"
+                ],
+                "summary": "Get all taxonomy data.",
+                "description": "This resource returns all the taxonomy used in RMM service.",
+                "operationId": "serachTaxonomy",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Document"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/resourceApi": {
+            "get": {
+                "tags": [
+                    "Discovery/Search API"
+                ],
+                "summary": "Get all Resource apis.",
+                "description": "This will return other Resource apis available at NIST.",
+                "operationId": "searchApis",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Document"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/releaseSets/{id}": {
+            "get": {
+                "tags": [
+                    "Versions and Releases API"
+                ],
+                "summary": "Get NERDm record of given id.",
+                "description": "Resource returns a NERDm Record by given ediid.",
+                "operationId": "getReleaseSets",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/releaseSets/ark:/{naan}/{id}": {
+            "get": {
+                "tags": [
+                    "Versions and Releases API"
+                ],
+                "summary": "Get NERDm record of given id.",
+                "description": "Resource returns a NERDm Record by given ark identifier.",
+                "operationId": "getReleaseSets_1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "naan",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/releaseSets": {
+            "get": {
+                "tags": [
+                    "Versions and Releases API"
+                ],
+                "summary": "Search Releasesets repository.",
+                "description": "Returns all the documents in Releaseset collection based on input criteria.\n following are some search query examples\n 1. /releaseSets?searchphrase=<phrase or words>\n 2. /releaseSets?key1=value1&logicalOp=AND&key2=value2...\n 3. /releaseSets?searchphrase=<phrase or words>&key=value...\n 4. /records?page=1&size=2\n 5. /releaseSets?sort.desc=<field or comma seperated list of fields>",
+                "operationId": "serachReleasesets",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "description": "Results page you want to retrieve (0..N)"
+                    },
+                    {
+                        "name": "size",
+                        "description": "Number of records per page."
+                    },
+                    {
+                        "name": "sort.desc",
+                        "description": "sort on the fields seperated by comma (one or more)."
+                    },
+                    {
+                        "name": "sort.asc",
+                        "description": "Sort in ascending order seperated by comma (one or more)."
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/releasesets": {
+            "get": {
+                "tags": [
+                    "Versions and Releases API"
+                ],
+                "summary": "Search Releasesets repository.",
+                "description": "Returns all the documents in Releaseset collection based on input criteria.\n following are some search query examples\n 1. /releaseSets?searchphrase=<phrase or words>\n 2. /releaseSets?key1=value1&logicalOp=AND&key2=value2...\n 3. /releaseSets?searchphrase=<phrase or words>&key=value...\n 4. /records?page=1&size=2\n 5. /releaseSets?sort.desc=<field or comma seperated list of fields>",
+                "operationId": "serachReleasesets_1",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "description": "Results page you want to retrieve (0..N)"
+                    },
+                    {
+                        "name": "size",
+                        "description": "Number of records per page."
+                    },
+                    {
+                        "name": "sort.desc",
+                        "description": "sort on the fields seperated by comma (one or more)."
+                    },
+                    {
+                        "name": "sort.asc",
+                        "description": "Sort in ascending order seperated by comma (one or more)."
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/records": {
+            "get": {
+                "tags": [
+                    "Discovery/Search API"
+                ],
+                "summary": "Get/Search NERDm records.",
+                "description": "Resource returns all the data if no request parameter mentioned.\n following are some search query examples\n 1. /records?searchphrase=<phrase or words>\n 2. /records?key1=value1&logicalOp=AND&key2=value2...\n 3. /records?searchphrase=<phrase or words>&key=value...\n 4. /records?page=1&size=2\n 5. /recorsd?sort.desc=<field or comma seperated list of fields>",
+                "operationId": "search",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "description": "Results page you want to retrieve (0..N)"
+                    },
+                    {
+                        "name": "size",
+                        "description": "Number of records per page."
+                    },
+                    {
+                        "name": "sort.desc",
+                        "description": "sort on the fields seperated by comma (one or more)."
+                    },
+                    {
+                        "name": "sort.asc",
+                        "description": "Sort in ascending order seperated by comma (one or more)."
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/records/{id}": {
+            "get": {
+                "tags": [
+                    "Discovery/Search API"
+                ],
+                "summary": "Get NERDm record of given id.",
+                "description": "Resource returns a NERDm Record by given ediid.",
+                "operationId": "record",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/records/fields": {
+            "get": {
+                "tags": [
+                    "Discovery/Search API"
+                ],
+                "summary": "Get all fields in the NERDm records.",
+                "description": "This resource returns NERDm fields. ** will be changed soon",
+                "operationId": "recordFields",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Document"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/records/ark:/{naan}/{id}": {
+            "get": {
+                "tags": [
+                    "Discovery/Search API"
+                ],
+                "summary": "Get NERDm record of given id.",
+                "description": "Resource returns a NERDm Record by given ark identifier.",
+                "operationId": "record_1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "naan",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "empty": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orig/records": {
+            "get": {
+                "tags": [
+                    "Discovery/Search API"
+                ],
+                "operationId": "extrasearch",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorInfo"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Document"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ErrorInfo": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "httpStatus": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Document": {
+                "type": "object",
+                "properties": {
+                    "empty": {
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}
