@@ -96,7 +96,7 @@ public class MetricsMongoConfig {
 	public void initIt() throws Exception {
 
 		mongoClient = (MongoClient) this.mongo();
-		log.info("########## " + metricsdbname + " ########");
+		log.info("########## Metrics databasenaem:" + metricsdbname + " ########");
 
 		this.setMongodb(this.metricsdbname);
 
