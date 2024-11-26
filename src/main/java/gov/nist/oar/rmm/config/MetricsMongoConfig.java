@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import  jakarta.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -55,9 +55,10 @@ public class MetricsMongoConfig {
 	// @Autowired
 	MongoClient mongoClient;
 
-	private MongoDatabase  mongoDb;
+	private MongoDatabase mongoDb;
 
-	//these are collections to collect and serve logs from parsing distribution service
+	// these are collections to collect and serve logs from parsing distribution
+	// service
 	private MongoCollection<Document> recordMetricsCollection;
 	private MongoCollection<Document> fileMetricsCollection;
 	private MongoCollection<Document> uniqueUsersCollection;
@@ -66,16 +67,15 @@ public class MetricsMongoConfig {
 	List<ServerAddress> servers = new ArrayList<ServerAddress>();
 	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
 
-
 	@Value("${dbcollections.recordMetrics}")
 	private String recordMetrics;
-	
+
 	@Value("${dbcollections.fileMetrics}")
 	private String fileMetrics;
-	
+
 	@Value("${dbcollections.uniqueUsers}")
 	private String uniqueusers;
-	
+
 	@Value("${dbcollections.repoMetrics}")
 	private String repoMetrics;
 
@@ -90,7 +90,6 @@ public class MetricsMongoConfig {
 	private String metricshost;
 	@Value("${oar.metrics.mongodb.database.name}")
 	private String metricsdbname;
-
 
 	@PostConstruct
 	public void initIt() throws Exception {
@@ -139,9 +138,9 @@ public class MetricsMongoConfig {
 	 * Set records collection
 	 */
 	private void setRepoMetricsCollection(String repoMetrics) {
-	    this.repoMetricsCollection = mongoDb.getCollection(repoMetrics);
+		this.repoMetricsCollection = mongoDb.getCollection(repoMetrics);
 	}
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -155,9 +154,9 @@ public class MetricsMongoConfig {
 	 * Set records collection
 	 */
 	private void setUniqueUsersMetricsCollection(String uniqueusers) {
-	    this.uniqueUsersCollection = mongoDb.getCollection(uniqueusers);
+		this.uniqueUsersCollection = mongoDb.getCollection(uniqueusers);
 	}
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -171,10 +170,9 @@ public class MetricsMongoConfig {
 	 * Set records collection
 	 */
 	private void setfileMetricsCollection(String fileMetrics) {
-	    fileMetricsCollection = mongoDb.getCollection(fileMetrics);
+		fileMetricsCollection = mongoDb.getCollection(fileMetrics);
 	}
-	
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -188,10 +186,8 @@ public class MetricsMongoConfig {
 	 * Set records collection
 	 */
 	private void setRecordMetricsCollection(String recordMetrics) {
-	    recordMetricsCollection = mongoDb.getCollection(recordMetrics);
+		recordMetricsCollection = mongoDb.getCollection(recordMetrics);
 	}
-	
-	
 
 	/**
 	 * MongoClient : Initialize mongoclient for db operations
@@ -200,28 +196,22 @@ public class MetricsMongoConfig {
 	 * @throws Exception
 	 */
 	public MongoClient mongo() throws Exception {
-            String dburl = "mongodb://"+metricshost+":"+metricsport;
-			// System.out.println("dburl ::"+ dburl);
-            MongoCredential credential = MongoCredential.createCredential(user, metricsdbname,
-                                                                          password.toCharArray());
-            MongoClientSettings settings = MongoClientSettings.builder() 
-                    .credential(credential)
-                    .applyConnectionString(new ConnectionString(dburl))
-                    .applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS)
-                                                                     .maxSize(200).minSize(5))
-                    .applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS)
-                                                             .readTimeout(15, TimeUnit.SECONDS))
-                    .build();
+		String dburl = "mongodb://" + metricshost + ":" + metricsport;
+		// System.out.println("dburl ::" + dburl);
+		MongoCredential credential = MongoCredential.createCredential(user, metricsdbname,
+				password.toCharArray());
+		MongoClientSettings settings = MongoClientSettings.builder()
+				.credential(credential)
+				.applyConnectionString(new ConnectionString(dburl))
+				.applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS)
+						.maxSize(200).minSize(5))
+				.applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS)
+						.readTimeout(15, TimeUnit.SECONDS))
+				.build();
 
-            MongoClient mongoClient = MongoClients.create(settings);
-                
-                
-            return mongoClient;
-        }
+		MongoClient mongoClient = MongoClients.create(settings);
 
-	
-
-	
-
+		return mongoClient;
+	}
 
 }

@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import  jakarta.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -55,19 +55,20 @@ public class MongoConfig {
 	// @Autowired
 	MongoClient mongoClient;
 
-	private MongoDatabase mongoDb;
+	private MongoDatabase mongodb;
 	private MongoCollection<Document> recordsCollection;
 	private MongoCollection<Document> taxonomyCollection;
 	private MongoCollection<Document> resourceApiCollection;
 	private MongoCollection<Document> recordFieldsCollection;
-	//these are collections to collect and serve logs from parsing distribution service
+	// these are collections to collect and serve logs from parsing distribution
+	// service
 	private MongoCollection<Document> recordMetricsCollection;
 	private MongoCollection<Document> fileMetricsCollection;
 	private MongoCollection<Document> uniqueUsersCollection;
 	private MongoCollection<Document> repoMetricsCollection;
 	// versions and releases support
 	private MongoCollection<Document> versionsCollection;
-	private MongoCollection<Document> releaseSetsCollection; 
+	private MongoCollection<Document> releaseSetsCollection;
 	List<ServerAddress> servers = new ArrayList<ServerAddress>();
 	List<MongoCredential> credentials = new ArrayList<MongoCredential>();
 
@@ -85,22 +86,22 @@ public class MongoConfig {
 
 	@Value("${dbcollections.recordMetrics}")
 	private String recordMetrics;
-	
+
 	@Value("${dbcollections.fileMetrics}")
 	private String fileMetrics;
-	
+
 	@Value("${dbcollections.uniqueUsers}")
 	private String uniqueusers;
-	
+
 	@Value("${dbcollections.repoMetrics}")
 	private String repoMetrics;
-	
+
 	@Value("${dbcollections.versions}")
 	private String versions;
-	
+
 	@Value("${dbcollections.releasesets}")
 	private String releasesets;
-	
+
 	@Value("${oar.mongodb.port}")
 	private int port;
 	@Value("${oar.mongodb.host}")
@@ -111,9 +112,6 @@ public class MongoConfig {
 	private String user;
 	@Value("${oar.mongodb.read.password}")
 	private String password;
-
-	
-
 
 	@PostConstruct
 	public void initIt() throws Exception {
@@ -132,7 +130,7 @@ public class MongoConfig {
 		this.setRepoMetricsCollection(repoMetrics);
 		this.setVersionsCollection(versions);
 		this.setReleaseSetsCollection(releasesets);
-	
+
 	}
 
 	/**
@@ -142,7 +140,7 @@ public class MongoConfig {
 	 */
 
 	public MongoDatabase getMongoDb() {
-		return mongoDb;
+		return mongodb;
 	}
 
 	/**
@@ -151,7 +149,7 @@ public class MongoConfig {
 	 * @param dbname
 	 */
 	private void setMongodb(String dbname) {
-		mongoDb = mongoClient.getDatabase(dbname);
+		mongodb = mongoClient.getDatabase(dbname);
 	}
 
 	/***
@@ -167,9 +165,9 @@ public class MongoConfig {
 	 * Set records collection
 	 */
 	private void setRepoMetricsCollection(String repoMetrics) {
-	    this.repoMetricsCollection = mongoDb.getCollection(repoMetrics);
+		this.repoMetricsCollection = mongodb.getCollection(repoMetrics);
 	}
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -183,9 +181,9 @@ public class MongoConfig {
 	 * Set records collection
 	 */
 	private void setUniqueUsersMetricsCollection(String uniqueusers) {
-	    this.uniqueUsersCollection = mongoDb.getCollection(uniqueusers);
+		this.uniqueUsersCollection = mongodb.getCollection(uniqueusers);
 	}
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -199,10 +197,9 @@ public class MongoConfig {
 	 * Set records collection
 	 */
 	private void setfileMetricsCollection(String fileMetrics) {
-	    fileMetricsCollection = mongoDb.getCollection(fileMetrics);
+		fileMetricsCollection = mongodb.getCollection(fileMetrics);
 	}
-	
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -216,9 +213,9 @@ public class MongoConfig {
 	 * Set records collection
 	 */
 	private void setRecordMetricsCollection(String recordMetrics) {
-	    recordMetricsCollection = mongoDb.getCollection(recordMetrics);
+		recordMetricsCollection = mongodb.getCollection(recordMetrics);
 	}
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -232,7 +229,7 @@ public class MongoConfig {
 	 * Set records collection
 	 */
 	private void setRecordCollection(String record) {
-		recordsCollection = mongoDb.getCollection(record);
+		recordsCollection = mongodb.getCollection(record);
 	}
 
 	/***
@@ -250,7 +247,7 @@ public class MongoConfig {
 	 * @param taxonomy
 	 */
 	private void setTaxonomyCollection(String taxonomy) {
-		taxonomyCollection = mongoDb.getCollection(taxonomy);
+		taxonomyCollection = mongodb.getCollection(taxonomy);
 	}
 
 	/***
@@ -268,7 +265,7 @@ public class MongoConfig {
 	 * @param resourceApi
 	 */
 	private void setResourceApiCollection(String resourceApi) {
-		resourceApiCollection = mongoDb.getCollection(resourceApi);
+		resourceApiCollection = mongodb.getCollection(resourceApi);
 	}
 
 	/***
@@ -286,10 +283,9 @@ public class MongoConfig {
 	 * @param recordFields
 	 */
 	private void setRecordFieldsCollection(String recordFields) {
-		recordFieldsCollection = mongoDb.getCollection(recordFields);
+		recordFieldsCollection = mongodb.getCollection(recordFields);
 	}
 
-	
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -303,10 +299,9 @@ public class MongoConfig {
 	 * Set records collection
 	 */
 	private void setVersionsCollection(String versions) {
-	    this.versionsCollection = mongoDb.getCollection(versions);
+		this.versionsCollection = mongodb.getCollection(versions);
 	}
-	
-	
+
 	/***
 	 * Get records collection from Mongodb
 	 * 
@@ -320,8 +315,9 @@ public class MongoConfig {
 	 * Set records collection
 	 */
 	private void setReleaseSetsCollection(String releasesets) {
-	    this.releaseSetsCollection = mongoDb.getCollection(releasesets);
+		this.releaseSetsCollection = mongodb.getCollection(releasesets);
 	}
+
 	/**
 	 * MongoClient : Initialize mongoclient for db operations
 	 * 
@@ -329,39 +325,39 @@ public class MongoConfig {
 	 * @throws Exception
 	 */
 	public MongoClient mongo() throws Exception {
-            String dburl = "mongodb://"+host+":"+port;
-			// System.out.println("dburl ::"+ dburl);
-            MongoCredential credential = MongoCredential.createCredential(user, dbname,
-                                                                          password.toCharArray());
-            MongoClientSettings settings = MongoClientSettings.builder() 
-                    .credential(credential)
-                    .applyConnectionString(new ConnectionString(dburl))
-                    .applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS)
-                                                                     .maxSize(200).minSize(5))
-                    .applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS)
-                                                             .readTimeout(15, TimeUnit.SECONDS))
-                    .build();
+		String dburl = "mongodb://" + host + ":" + port;
+		// System.out.println("dburl ::"+ dburl);
+		MongoCredential credential = MongoCredential.createCredential(user, dbname,
+				password.toCharArray());
+		MongoClientSettings settings = MongoClientSettings.builder()
+				.credential(credential)
+				.applyConnectionString(new ConnectionString(dburl))
+				.applyToConnectionPoolSettings(builder -> builder.maxWaitTime(10, TimeUnit.SECONDS)
+						.maxSize(200).minSize(5))
+				.applyToSocketSettings(builder -> builder.connectTimeout(10, TimeUnit.SECONDS)
+						.readTimeout(15, TimeUnit.SECONDS))
+				.build();
 
-            MongoClient mongoClient = MongoClients.create(settings);
-                
-                
-            return mongoClient;
-        }
+		MongoClient mongoClient = MongoClients.create(settings);
 
+		return mongoClient;
+	}
 
 	/**
- 	 * Return versions collection name string.
- 	 * @return
- 	 */
- 	public String getVersionsName() {
- 	    return this.versions;
- 	}
+	 * Return versions collection name string.
+	 * 
+	 * @return
+	 */
+	public String getVersionsName() {
+		return this.versions;
+	}
 
- 	   /**
-      * Return releaseSets collection name string.
-      * @return
-      */
-     public String getReleaseSetsName() {
-         return this.releasesets;
-     }
+	/**
+	 * Return releaseSets collection name string.
+	 * 
+	 * @return
+	 */
+	public String getReleaseSetsName() {
+		return this.releasesets;
+	}
 }

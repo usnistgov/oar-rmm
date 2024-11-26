@@ -10,7 +10,7 @@
 //  * that they have been modified.
 //  * @author: Deoyani Nandrekar-Heinis
 //  */
-// package gov.nist.oar.rmm.unit.repositories.impl;
+// package gov.nist.oar.rmm.repositories.impl;
 
 // import static org.junit.Assert.assertEquals;
 

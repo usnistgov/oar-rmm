@@ -1,130 +1,340 @@
+
 // package gov.nist.oar.rmm.repositories.impl;
 
-// import com.fasterxml.jackson.databind.ObjectMapper;
+// /**
+//  * This software was developed at the National Institute of Standards and Technology by employees of
+//  * the Federal Government in the course of their official duties. Pursuant to title 17 Section 105
+//  * of the United States Code this software is not subject to copyright protection and is in the
+//  * public domain. This is an experimental system. NIST assumes no responsibility whatsoever for its
+//  * use by other parties, and makes no guarantees, expressed or implied, about its quality,
+//  * reliability, or any other characteristic. We would appreciate acknowledgement if the software is
+//  * used. This software can be redistributed and/or modified freely provided that any derivative
+//  * works bear some notice that they are derived from it, and any modified versions bear some notice
+//  * that they have been modified.
+//  * @author: Deoyani Nandrekar-Heinis
+//  */
 
-// import de.flapdoodle.embed.mongo.commands.MongoImportArguments;
-// import de.flapdoodle.embed.mongo.commands.ServerAddress;
-// import de.flapdoodle.embed.mongo.config.Net;
-// import de.flapdoodle.embed.mongo.distribution.Version;
-// import de.flapdoodle.embed.mongo.transitions.ExecutedMongoImportProcess;
-// import de.flapdoodle.embed.mongo.transitions.MongoImport;
-// import de.flapdoodle.embed.mongo.transitions.Mongod;
-// import de.flapdoodle.embed.mongo.transitions.RunningMongodProcess;
-// import de.flapdoodle.reverse.StateID;
-// import de.flapdoodle.reverse.TransitionWalker;
-// import de.flapdoodle.reverse.Transitions;
-// import de.flapdoodle.reverse.transitions.Start;
-// import gov.nist.oar.rmm.config.AppConfig;
+// import static org.assertj.core.api.Assertions.assertThat;
+// import static org.junit.Assert.assertEquals;
 
-// import org.junit.jupiter.api.AfterAll;
-// import org.junit.jupiter.api.BeforeAll;
+// import java.io.File;
+// import java.io.FileReader;
+// import java.io.IOException;
+// import java.util.ArrayList;
+// import java.util.HashMap;
+// import java.util.Iterator;
+// import java.util.List;
+// import java.util.Map;
+
+// import org.bson.Document;
+// import org.bson.conversions.Bson;
+// import org.json.simple.JSONArray;
+// import org.json.simple.parser.JSONParser;
+// import org.json.simple.parser.ParseException;
 // import org.junit.jupiter.api.Test;
+// import org.junit.BeforeClass;
+// import org.junit.jupiter.api.AfterAll;
+// import org.junit.jupiter.api.Assertions;
+// import org.junit.jupiter.api.BeforeAll;
+// import org.junit.jupiter.api.DisplayName;
 // import org.junit.jupiter.api.TestInstance;
+// import org.junit.jupiter.api.TestInstance.Lifecycle;
 // import org.junit.jupiter.api.extension.ExtendWith;
+// import org.junit.jupiter.api.Assertions;
 // import org.junit.runner.RunWith;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 // import org.springframework.beans.factory.annotation.Autowired;
-// // import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties.System;
-// // import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties.Application;
-// import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch.File;
+// import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+// import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+// import org.springframework.boot.autoconfigure.SpringBootApplication;
 // import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 // import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 // import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 // import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
+// import org.springframework.context.annotation.Import;
+// import org.springframework.data.mongodb.core.MongoTemplate;
+// import org.springframework.test.annotation.DirtiesContext;
 // import org.springframework.test.context.ActiveProfiles;
+// import org.springframework.test.context.ContextConfiguration;
 // import org.springframework.test.context.TestPropertySource;
-// import org.springframework.test.context.event.annotation.AfterTestClass;
 // import org.springframework.test.context.junit.jupiter.SpringExtension;
 // import org.springframework.test.context.junit4.SpringRunner;
+// import org.springframework.util.LinkedMultiValueMap;
+// import org.springframework.util.MultiValueMap;
 
-// import java.io.IOException;
-// import java.nio.file.Files;
-// import java.nio.file.Paths;
-// import java.util.Arrays;
-// import java.util.List;
-// import java.util.Objects;
+// import com.mongodb.BasicDBObjectBuilder;
+// import com.mongodb.DBObject;
+// import com.mongodb.client.AggregateIterable;
+// import com.mongodb.client.FindIterable;
+// import com.mongodb.client.MongoClient;
+// import com.mongodb.client.MongoClients;
 
-// import static org.assertj.core.api.Assertions.assertThat;
+// // import de.flapdoodle.embed.mongo.MongodExecutable;
+// // import de.flapdoodle.embed.mongo.MongodStarter;
+// // import de.flapdoodle.embed.mongo.config.ImmutableMongodConfig;
+// // import de.flapdoodle.embed.mongo.config.MongodConfig;
+// import de.flapdoodle.embed.mongo.config.Net;
+// import de.flapdoodle.embed.mongo.distribution.Version;
+// import de.flapdoodle.embed.mongo.transitions.RunningMongodProcess;
+// import de.flapdoodle.embed.process.runtime.Network;
+// import de.flapdoodle.reverse.TransitionWalker;
+// import de.flapdoodle.reverse.transitions.Start;
+// import gov.nist.oar.rmm.config.AppConfig;
+// import gov.nist.oar.rmm.utilities.ProcessRequest;
+// import de.flapdoodle.embed.mongo.commands.ImmutableMongodArguments;
+// import de.flapdoodle.embed.mongo.commands.MongodArguments;
+// import de.flapdoodle.embed.mongo.config.Net;
+// import de.flapdoodle.embed.mongo.distribution.Version;
+// import de.flapdoodle.embed.mongo.transitions.ImmutableMongod;
+// import de.flapdoodle.embed.mongo.transitions.Mongod;
+// import de.flapdoodle.embed.mongo.transitions.RunningMongodProcess;
+// import de.flapdoodle.embed.process.io.ImmutableProcessOutput;
+// import de.flapdoodle.embed.process.io.ProcessOutput;
+// import de.flapdoodle.embed.process.io.Processors;
+// import de.flapdoodle.embed.process.io.Slf4jLevel;
+// import de.flapdoodle.reverse.TransitionWalker;
+// import de.flapdoodle.reverse.transitions.Start;
+// import de.flapdoodle.embed.mongo.client.*;
+// import org.slf4j.Logger;
 
-// @AutoConfigureMockMvc
-// @AutoConfigureDataMongo
-// @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-// @ActiveProfiles("test")
-// @TestPropertySource("classpath:bootstrap-test.yml")
+// // import de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration;
+// import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+// import org.springframework.test.context.DynamicPropertyRegistry;
+// import org.springframework.test.context.DynamicPropertySource;
 
+// // @DataMongoTest
+// // @Import(EmbeddedMongoAutoConfiguration.class)
 
-// public class CustomRepositoryImplTest {
+// @RunWith(SpringRunner.class)
+// // @ContextConfiguration(classes = AppConfig.class, locations =
+// // "/bootstrap-test.yml")
+// // @DirtiesContext
 
-// //  private BooksController booksController;
+// // @DataMongoTest
+// @ContextConfiguration(classes = AppConfig.class)
+// @TestPropertySource(properties = { "/bootstrap-test.yml",
+//         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.EnableAutoConfiguration" })
+// // @ExtendWith(SpringExtension.class)
+// @DirtiesContext
+// public class CustomRepositoryTest {
 
-//  @Autowired
-//  private CustomRepositoryImpl customRepositoryImpl;
+//     // private TransitionWalker.ReachedState<RunningMongodProcess> _runningMongoDb;
 
-//  private final ObjectMapper objectMapper = new ObjectMapper();
+//     // private MongoClient _mongo;
 
-//  private static TransitionWalker.ReachedState<RunningMongodProcess> mongoDProcess;
+//     // private int mongdbPort = 9326; // Default port
 
-//  private static TransitionWalker.ReachedState<ExecutedMongoImportProcess> mongoImportProcess;
+//     // public void startMongo() throws IOException {
 
-//  @BeforeAll
-//  public static void setUp() {
-//   String os = System.getProperty("os.name");
-  
+//     // _runningMongoDb = Mongod.instance()
+//     // .withNet(Start.to(Net.class)
+//     // .initializedWith(Net.defaults().withPort(mongdbPort)))
+//     // .start(Version.V3_6_2);
 
-//   // String path = getClass().getClassLoader().getResource("fields.json").getPath();
-  
-// String path = "something";
+//     // // ServerAddress serverAddress =
+//     // _runningMongoDb.current().getServerAddress();
+//     // _mongo = new MongoClient("localhost", mongdbPort);
 
-//   if (os != null && os.toLowerCase().contains("windows")) {
-//    path = path.substring(1);
-//   }
+//     // // To prevent reusing temp file with mongo data.
+//     // // removeAll();
 
-//   MongoImportArguments arguments = MongoImportArguments.builder()
-//     .databaseName("TestDB")
-//     .collectionName("fields")
-//     .importFile(path)
-//     .isJsonArray(true)
-//     .upsertDocuments(true)
-//     .build();
+//     // }
 
-//   Version.Main version = Version.Main.PRODUCTION;
+//     // public void setMongdbPort(int mongdbPort) {
+//     // this.mongdbPort = mongdbPort;
+//     // }
 
-//   mongoDProcess = Mongod.builder()
-//     .net(Start.to(Net.class).initializedWith(Net.defaults().withPort(27124)) )
-//     .build()
-//     .transitions(version)
-//     .walker()
-//     .initState(StateID.of(RunningMongodProcess.class));
+//     // @DisplayName("given object to save"
+//     // + " when save object using MongoDB template"
+//     // + " then object is saved")
+//     // @Test
+//     // public void test(@Autowired MongoTemplate mongoTemplate) {
+//     // // given
+//     // DBObject objectToSave = BasicDBObjectBuilder.start()
+//     // .add("key", "value")
+//     // .get();
 
-//   Transitions mongoImportTransitions = MongoImport.instance()
-//     .transitions(version)
-//     .replace(Start.to(MongoImportArguments.class).initializedWith(arguments))
-//     .addAll(Start.to(ServerAddress.class).initializedWith(mongoDProcess.current().getServerAddress()));
+//     // // when
+//     // mongoTemplate.save(objectToSave, "collection");
 
-//   mongoImportProcess = mongoImportTransitions.walker().initState(StateID.of(ExecutedMongoImportProcess.class));
+//     // // then
+//     // assertThat(mongoTemplate.findAll(DBObject.class,
+//     // "collection")).extracting("key")
+//     // .containsOnly("value");
+//     // }
 
-//   // booksController = new BooksController(booksService);
-//  }
+//     @Test
+//     void example() {
+//         String test = "";
+//         assertThat(test).isEmpty();
+//     }
 
-//  @AfterAll
-//  public static void tearDownAfterAll() {
-//   mongoImportProcess.close();
-//   mongoDProcess.close();
-//  }
-
-//  @AfterTestClass
-//  public static void tearDownAfterTestClass() {
-//   mongoImportProcess.close();
-//   mongoDProcess.close();
-//  }
-
-//  @Test
-//  public void testSearch() throws IOException {
-//   // List<org.bson.Document> filedList = customRepositoryImpl.findFieldnames();
-
-//   String fields = Files.readString(Paths.get("src/test/resources/fields.json"));
- 
-//   // System.out.println(fields);
-//   // assertThat(filedList).usingRecursiveComparison()
-//   //   .isEqualTo(Arrays.asList(fields));
-//  }
+//     // void example(@Autowired final MongoTemplate mongoTemplate) {
+//     // Assertions.assertNotNull(mongoTemplate.getDb());
+//     // ArrayList<String> collectionNames = mongoTemplate.getDb()
+//     // .listCollectionNames()
+//     // .into(new ArrayList<>());
+//     // assertThat(collectionNames).isEmpty();
+//     // }
 // }
+// // private static final String CONNECTION_STRING = "mongodb://%s:%d";
+
+// // private Logger logger = LoggerFactory
+// // .getLogger(CustomRepositoryTest.class);
+// // private MongodExecutable mongodExecutable;
+// // private MongoTemplate mongoTemplate;
+
+// // @AfterAll
+// // void clean() {
+// // mongodExecutable.stop();
+// // }
+
+// // @BeforeAll
+// // void setup() throws Exception {
+// // String ip = "localhost";
+// // int port = 21432;
+
+// // ImmutableMongodConfig mongodConfig = MongodConfig.builder()
+// // .version(Version.Main.PRODUCTION)
+// // .net(new Net(ip, port, Network.localhostIsIPv6())).build();
+
+// // MongodStarter starter = MongodStarter.getDefaultInstance();
+// // mongodExecutable = starter.prepare(mongodConfig);
+// // mongodExecutable.start();
+// // mongoTemplate = new MongoTemplate(
+// // MongoClients.create(String.format(CONNECTION_STRING, ip, port)),
+// // "test");
+
+// // JSONParser parser = new JSONParser();
+// // JSONArray a;
+// // File file = new File(this.getClass().getClassLoader()
+// // .getResource("record.json").getFile());
+
+// // try {
+// // a = (JSONArray) parser.parse(new FileReader(file));
+// // for (Object o : a) {
+// // Document doc = Document.parse(o.toString());
+// // mongoTemplate.save(doc, "record");
+// // }
+// // } catch (IOException | ParseException e) {
+
+// // e.printStackTrace();
+// // }
+
+// // file = new File(this.getClass().getClassLoader()
+// // .getResource("taxonomy.json").getFile());
+// // try {
+// // a = (JSONArray) parser.parse(new FileReader(file));
+// // for (Object o : a) {
+// // Document doc = Document.parse(o.toString());
+// // mongoTemplate.save(doc, "taxonomy");
+
+// // }
+// // } catch (IOException | ParseException e) {
+
+// // e.printStackTrace();
+// // }
+// // }
+
+// // @DisplayName("Test a Test " + " when save object using MongoDB template"
+// // + " then object is saved")
+// // @Test
+// // public void test() throws Exception {
+// // // given
+// // DBObject objectToSave = BasicDBObjectBuilder.start().add("key", "value")
+// // .get();
+
+// // // when
+// // mongoTemplate.save(objectToSave, "collection");
+
+// // // then
+// // assertThat(mongoTemplate.findAll(DBObject.class, "collection"))
+// // .extracting("key").containsOnly("value");
+
+// // logger.info("count ::"
+// // + mongoTemplate.getCollection("collection").countDocuments());
+
+// // }
+
+// // public Document find(MultiValueMap<String, String> params) {
+
+// // ProcessRequest request = new ProcessRequest();
+// // request.parseSearch(params);
+// // long count = 0;
+// // if (request.getFilter() == null)
+// // count = mongoTemplate.getCollection("record").countDocuments();
+// // else {
+// // Bson b = request.getFilter();
+// // count = mongoTemplate.getCollection("record").countDocuments(b);
+// // }
+
+// // List<Bson> dList = request.getQueryList();
+
+// // AggregateIterable<Document> ag = mongoTemplate.getCollection("record")
+// // .aggregate(dList);
+// // logger.info("Count :" + count);
+// // Document resultDoc = new Document();
+// // resultDoc.put("ResultCount", count);
+// // resultDoc.put("PageSize", request.getPageSize());
+// // resultDoc.put("ResultData", ag);
+// // return resultDoc;
+// // }
+
+// // @Test
+// // public void testFindRecords() {
+
+// // MultiValueMap<String, String> params = new LinkedMultiValueMap<String,
+// // String>();
+
+// // Document r = find(params);
+// // long resCnt = 134;
+// // assertEquals(r.get("ResultCount"), resCnt);
+// // }
+
+// // @Test
+// // public void testFindRecordKeyValue() {
+// // //// Test with parameters
+// // MultiValueMap<String, String> params = new LinkedMultiValueMap<String,
+// // String>();
+// // params.add("title", "Enterprise Data Inventory");
+// // Document r1 = find(params);
+
+// // AggregateIterable<Document> aggregateIterable = (AggregateIterable<Document>)
+// // r1.get("ResultData");
+// // Iterator iterator = aggregateIterable.iterator();
+// // String title = "";
+// // while (iterator.hasNext()) {
+// // Document d = (Document) iterator.next();
+// // title = d.getString("title");
+// // break;
+// // }
+// // assertEquals("Enterprise Data Inventory", title);
+
+// // }
+
+// // public FindIterable<Document> testfindtaxonomy(Map<String, String> param) {
+// // ProcessRequest request = new ProcessRequest();
+
+// // Bson b = request.parseTaxonomy(param);
+// // FindIterable<Document> results = mongoTemplate.getCollection("taxonomy")
+// // .find();
+
+// // return results;
+
+// // }
+
+// // @Test
+// // public void testTaxonomy() {
+// // Map<String, String> params = new HashMap<String, String>();
+// // FindIterable<Document> docs = testfindtaxonomy(params);
+// // int count = 0;
+// // for (Document doc : docs) {
+// // count++;
+// // }
+// // assertEquals(249, count);
+
+// // }
+
+// // }
