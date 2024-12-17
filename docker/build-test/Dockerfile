@@ -26,8 +26,13 @@ RUN java_certs=$JAVA_HOME/lib/security/cacerts; \
 RUN sed --in-place -e '/CREATE_MAIL_SPOOL/ s/=yes/=no/' /etc/default/useradd
 ARG devuser=ubuntu
 ARG devuid=1000
+RUN grep -qs "^${devuser}:" /etc/group && grep -qs :${devuid}: /etc/group || \
+    groupmod -n ${devuser}os ${devuser}
 RUN grep -qs :${devuid}: /etc/group || \
     groupadd --gid $devuid $devuser
+RUN grep -qs "^${devuser}:" /etc/passwd && \
+    grep -qsE ":${devuid}:[[:digit:]]+:" /etc/passwd ||    \
+    usermod -l ${devuser}os -d /home/${devuser}os -m $devuser
 RUN grep -qsE ":${devuid}:[[:digit:]]+:" /etc/passwd ||    \
     useradd -m --comment "OAR Developer" --shell /bin/bash \
             --gid $devuid --uid $devuid $devuser
