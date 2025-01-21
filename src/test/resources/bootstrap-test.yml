@@ -1,18 +1,55 @@
 spring:
-
   application:
-    name: oar-rmm-service
-  
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: TestDB
-      
+    name: oar-rmm
   profiles:
-    active:
-      dev
-      
+    active: test
+             
+server: 
+    port: 8085
+    servlet:
+      context-path:  /rmm
+    error:
+      include-stacktrace: never
+#     connection-timeout: 60000
+    max-http-header-size: 65536
+    tomcat:
+      accesslog:
+        directory: /tmp/rmm
+        enabled: true
+        file-date-format: yyyy-MM-dd
+        prefix: tomcat-access-log
+        suffix: .log
+        rotate: true
+      accept-count: 400
+      max-connections: 250
+      max-threads: 200
+      min-spare-threads: 10
+#        
+    
+logging:
+  file: rmmapp.log
+#  path : /tmp/log/rmm
+  exception-conversion-word: '%wEx'
+#  
+#security:
+#    headers:
+#      frame: true
+#      xss: true
+#      hsts: all
+#    enable-csrf: false
+
+#management.add-application-context-header: false
+
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
+    path: /swagger-ui.html
+#    configUrl: /v3/api-docs/swagger-config
+#    enabled: true 
+    disable-swagger-default-url: true
+#  packagesToScan: gov.nist.oar.rmm
+#  pathsToMatch: /rmm
+
 dbcollections: 
          taxonomy: taxonomy
          resources: apis
@@ -24,25 +61,19 @@ dbcollections:
          fileMetrics: fileMetrics
          repoMetrics: repoMetrics
          uniqueUsers: uniqueUsers
-      
-server: 
-    port: 8085
-    contextPath: /oar-rmm-service
-    max-http-header-size: 65536
-    tomcat:
-      accesslog:
-        directory: /tmp/log/test/rmm
-        enabled: true
-        file-date-format: yyyy-MM-dd
-        prefix: tomcat-access-log
-        suffix: .log
-        rotate: true
-      accept-count: 100
-      max-connections: 10000
-      max-threads: 200
-      min-spare-threads: 10
-
-logging:
-  file: /tmp/rmmapp.log
-  exception-conversion-word: '%wEx'
     
+oar.mongodb.read.user: oarop
+oar.mongodb.read.password: pav#37
+oar.mongodb.readwrite.user: oarrw
+oar.mongodb.readwrite.password: ght#68
+oar.mongodb.admin.user: admin
+oar.mongodb.admin.password: lsb#58
+oar.mongodb.port:  3333
+oar.mongodb.host: mongodb
+oar.mongodb.database.name: TestDB
+oar.id.ark_naan.default: "88434"
+oar.readlogs.time: */3 * * * *
+oar.metrics.mongodb.port:  12027
+oar.metrics.mongodb.host: localhost
+oar.metrics.mongodb.database.name: Metrics
+de.flapdoodle.mongodb.embedded.version: 4.0.2

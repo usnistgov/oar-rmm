@@ -9,3 +9,7 @@
 /bin/
 /.apt_generated/
 *~
+.vscode/*
+m2repo/*
+*.log
+VERSION
