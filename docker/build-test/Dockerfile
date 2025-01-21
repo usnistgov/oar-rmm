@@ -1,4 +1,5 @@
-FROM eclipse-temurin:8-jdk-focal 
+# FROM eclipse-temurin:8-jdk-focal 
+FROM eclipse-temurin:21-jdk
 
 RUN mkdir -p /usr/share/man/man1
 RUN apt-get update && apt-get install -y netcat-openbsd zip git less \
@@ -7,7 +8,7 @@ RUN cd /usr/bin && ln -s python3 python
 
 COPY cacerts/README.md cacerts/*.crt /usr/local/share/ca-certificates/
 RUN update-ca-certificates
-RUN java_certs=$JAVA_HOME/jre/lib/security/cacerts; \
+RUN java_certs=$JAVA_HOME/lib/security/cacerts; \
     add_certs=`ls /usr/local/share/ca-certificates/*.crt`; \
     [ -z "$add_certs" ] || { \
         for crt in $add_certs; do \
@@ -23,11 +24,16 @@ RUN java_certs=$JAVA_HOME/jre/lib/security/cacerts; \
 # launching the container.
 #
 RUN sed --in-place -e '/CREATE_MAIL_SPOOL/ s/=yes/=no/' /etc/default/useradd
-ARG devuser=developer
+ARG devuser=ubuntu
 ARG devuid=1000
+RUN grep -qs "^${devuser}:" /etc/group && grep -qs :${devuid}: /etc/group || \
+    groupmod -n ${devuser}os ${devuser}
 RUN grep -qs :${devuid}: /etc/group || \
     groupadd --gid $devuid $devuser
-RUN grep -qs ":${devuid}:[[:digit:]]+:" /etc/passwd || \
+RUN grep -qs "^${devuser}:" /etc/passwd && \
+    grep -qsE ":${devuid}:[[:digit:]]+:" /etc/passwd ||    \
+    usermod -l ${devuser}os -d /home/${devuser}os -m $devuser
+RUN grep -qsE ":${devuid}:[[:digit:]]+:" /etc/passwd ||    \
     useradd -m --comment "OAR Developer" --shell /bin/bash \
             --gid $devuid --uid $devuid $devuser
 RUN mkdir /home/$devuser/.m2
@@ -36,7 +42,7 @@ VOLUME /app/dev
 VOLUME /app/dist
 COPY settings.xml /app/mvn-user-settings.xml
 COPY settings.xml /home/$devuser/.m2/settings.xml
-RUN chown $devuser:$devuser /home/$devuser/.m2/settings.xml && \
+RUN chown $devuser:$devuid /home/$devuser/.m2/settings.xml && \
     chmod a+r /home/$devuser/.m2/settings.xml
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod a+rx /app/entrypoint.sh

@@ -1,7 +1,7 @@
 package gov.nist.oar.rmm.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.bson.Document;
 import org.slf4j.Logger;
