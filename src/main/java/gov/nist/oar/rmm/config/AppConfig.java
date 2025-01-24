@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,12 +32,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
-// import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.util.UrlPathHelper;
-
-import org.springframework.boot.autoconfigure.*;
-import org.springframework.boot.autoconfigure.jdbc.*;
-import org.springframework.context.annotation.*;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -84,16 +80,11 @@ public class AppConfig implements WebMvcConfigurer{
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
      
             System.out.println("WebMvcConfigurer - addResourceHandlers() function get loaded...");
-        registry.addResourceHandler("/resources/static/**")
-                .addResourceLocations("/resources/");
-
-        registry
-            .addResourceHandler("/**")
-            .addResourceLocations("/")
-            .setCachePeriod(3600)
-            .resourceChain(true)
-
-            .addResolver(new PathResourceResolver());
+            registry.addResourceHandler("/**")
+                        .addResourceLocations("classpath:/static/")
+                        .setCachePeriod(3600)
+                        .resourceChain(true)
+                        .addResolver(new PathResourceResolver());
      }
    
 
