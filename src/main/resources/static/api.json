@@ -3,8 +3,12 @@
     "info": {
         "title": "Resource Metadata Management API",
         "description": "These are set of APIs which return the NIST public data repository related information. First one is the Search and discover API to get the dataset results for given criteria or dataset identifier. Second is to get different versions of the records or metadata for given dataset. Third one is to get the usage metrics for different datasets. For any inquiries, please contact the support team at datasupport@nist.gov.",
+        "license": {
+            "name": "NIST Software",
+            "url": "https://www.nist.gov/open/copyright-fair-use-and-licensing-statements-srd-data-software-and-technical-series-publications"
+        },
         "version": "1.2.4"
-    },      
+    },
     "servers": [
         {
             "url": "https://data.nist.gov/rmm",
@@ -17,13 +21,13 @@
     "tags": [
         {
             "name": "Discovery/Search API",
-            "description": " These endpoints provide search functionality for public data repository metadata"
+            "description": " These endpoints provide search functionality for public data repository metadata."
         },{
             "name": "Usage Metrics API",
             "description": "This set of endpoints  serve the usage metrics for data distribution by public data repository."
         },{
             "name": "Versions and Releases API",
-            "description": " These endpoints provide search functionality for public data repository metadata"
+            "description": " These endpoints provide search functionality for public data repository metadata."
         }
     ],
     "paths": {
